@@ -1,4 +1,13 @@
 ## Installation
+
+### Pre requisites
+Laragon (full 6.0)
+Laravel 8
+Php 7.4
+Node 18
+Mysql 8
+
+
 * composer update
 * add/update .env file accordingly
 * php artisan storage:link
