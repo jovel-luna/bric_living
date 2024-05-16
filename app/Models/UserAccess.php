@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\DB;
 class UserAccess extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'user_id',
+        'can_import',
+        'lettings_table_edit',
+    ];
 
     public function checkAccess($type)
     {

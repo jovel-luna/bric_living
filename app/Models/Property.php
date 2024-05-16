@@ -26,6 +26,7 @@ class Property extends Model
         'street',
         'postcode',
         'no_bric_beds',
+        'gas_provider',
         'no_bric_bathrooms',
         'purchase_date',
         'status',

@@ -10,6 +10,10 @@ class Role extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'role'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
