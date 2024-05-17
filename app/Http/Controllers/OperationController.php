@@ -57,6 +57,8 @@ class OperationController extends Controller
             ->leftJoin('entity_properties', 'entity_properties.property_id', '=', 'properties.id')
             ->leftJoin('entities', 'entity_properties.entity_id', '=', 'entities.id')
             ->leftJoin('letting_statuses', 'properties.status', '=', 'letting_statuses.id')
+            ->leftJoin('operation_utilities', 'properties.id', '=', 'operation_utilities.property_id')
+
             ->select(
                 'properties.id',
                 DB::raw("CASE property_phase WHEN 'Acquiring' THEN 1 WHEN 'In Development' THEN 2 WHEN 'Bric Property' THEN 3 WHEN 'External Property' THEN 4 END AS is_property_phase_order"),
@@ -67,6 +69,8 @@ class OperationController extends Controller
                 'properties.postcode',
                 'properties.no_bric_beds',
                 'properties.no_bric_bathrooms',
+                'operation_utilities.gas_provider',
+                'operation_utilities.electric_provider',
                 'properties.purchase_date',
                 'properties.status',
                 'properties.updated_at',

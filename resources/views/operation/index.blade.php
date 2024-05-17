@@ -38,6 +38,8 @@
                                 <th>Postcode</th>
                                 <th>Property Phase</th>
                                 <th>Bric Beds</th>
+                                <th>Gas Provider</th>
+                                <th>Electric Provider</th>
                                 <th>Purchase Date</th>
                                 <th>Action</th>
                             </tr>
@@ -76,19 +78,19 @@
                 getArrayData();
 
                 $('#operation-table').DataTable().destroy();
-                property(property_phase, entity, city, area, no_bric_beds, status, postcode, address, $('#show_limit').val(), $('#searching').val());
+                property(property_phase, entity, city, area, no_bric_beds, '', '', status, postcode, address, $('#show_limit').val(), $('#searching').val());
             });
             $("#show_limit").on("change", function() {
                 var limit = $(this).val();
                 getArrayData();
                 $('#operation-table').DataTable().destroy();
-                property($('select#property_phase').val(), $('select#entity').val(), $('select#city').val(), $('select#area').val(), $('select#no_bric_beds').val(), $('select#status').val(), postcode, address, limit, $('#searching').val());
+                property($('select#property_phase').val(), $('select#entity').val(), $('select#city').val(), $('select#area').val(), $('select#no_bric_beds').val(), '', '', $('select#status').val(), postcode, address, limit, $('#searching').val());
             });
             $('#searching').keyup(function(){
                 var search = $(this).val();
                 getArrayData();
                 $('#operation-table').DataTable().destroy();
-                property($('select#property_phase').val(), $('select#entity').val(), $('select#city').val(), $('select#area').val(), $('select#no_bric_beds').val(), $('select#status').val(), postcode, address, $('#show_limit').val(), search);
+                property($('select#property_phase').val(), $('select#entity').val(), $('select#city').val(), $('select#area').val(), $('select#no_bric_beds').val(), '', '', $('select#status').val(), postcode, address, $('#show_limit').val(), search);
             });
 
             function getArrayData(){
@@ -104,7 +106,7 @@
             }
 
             property();
-            function property(property_phase='',entity='',city='',area='', no_bric_beds='', status='', postcode='', address='', showlimit='',search=''){
+            function property(property_phase='',entity='',city='',area='', no_bric_beds='', gas_provider='', electric_provider='',  status='', postcode='', address='', showlimit='',search=''){
 
                 var paginateStat = true;
                 if (showlimit == '') {
@@ -141,6 +143,8 @@
                             city:city,
                             area:area,
                             no_bric_beds:no_bric_beds,
+                            gas_provider:gas_provider,
+                            electric_provider:electric_provider,
                             status:status,
                             postcode:postcode,
                             address:address,
@@ -161,6 +165,8 @@
                         {data: 'postcode', name: 'postcode', orderable: true},
                         {data: 'property_phase', name: 'property_phase', orderable: true},
                         {data: 'no_bric_beds', name: 'no_bric_beds', orderable: true},
+                        {data: 'gas_provider', name: 'gas_provider', orderable: true},
+                        {data: 'electric_provider', name: 'electric_provider', orderable: true},
                         {data: 'purchase_date', name: 'purchase_date', orderable: true},
                         {data: 'action', name: 'action', orderable: false, searchable: false, render:function(data, type, row){
                             return  '<div class="action-btn d-flex gap-1 justify-content-center">'+
