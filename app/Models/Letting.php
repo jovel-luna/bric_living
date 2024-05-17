@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Support\Facades\Log;
+
 class Letting extends Model
 {
     use HasFactory;
@@ -86,92 +88,73 @@ class Letting extends Model
             'lettings.version',
             'lettings.property_contract_status',
             'lettings.target_weekly_rent',
-        )
-        ->where('properties.property_phase', '=', 'Bric Property')
-        ->orwhere('properties.property_phase', '=', 'External Property')
-        ->where('lettings.archive', '=', 0);
+        );
 
-        if ($request->property_phase) {
-            $lettings = $lettings->where(function($pp) use ($request) {
-                foreach ($request->property_phase as $ppKey => $ppVal) {
-                    $pp->orWhere('properties.property_phase', '=', $ppVal);
-                }
-            });      
-        }
+        $lettings = $lettings->where(function($query) {
+            $query->where('properties.property_phase', '=', 'Bric Property')
+                ->orWhere('properties.property_phase', '=', 'External Property');
+        })->where('lettings.archive', '=', 0);
 
-        if ($request->entity) {
-            $lettings = $lettings->where(function($e) use ($request) {
-                foreach ($request->entity as $eKey => $eVal) {
-                    $e->orWhere('entities.entity', '=', $eVal);
-                }
-            });      
-        }
+        $filters = [
+            'property_phase' => 'properties.property_phase',
+            'entity' => 'entities.entity',
+            'city' => 'properties.city',
+            'area' => 'properties.area',
+            'no_bric_beds' => 'properties.no_bric_beds',
+            'status' => 'properties.status',
+            'postcode' => 'properties.postcode',
+        ];
         
-        if ($request->city) {
-            $lettings = $lettings->where(function($c) use ($request) {
-                foreach ($request->city as $cKey => $cVal) {
-                    $c->orWhere('properties.city', '=', $cVal);
-                }
-            });      
-        }
-        if ($request->area) {
-            $lettings = $lettings->where(function($a) use ($request) {
-                foreach ($request->area as $aKey => $aVal) {
-                    $a->orWhere('properties.area', '=', $aVal);
-                }
-            });      
-        }
-        if ($request->no_bric_beds) {
-            $lettings = $lettings->where(function($nbb) use ($request) {
-                foreach ($request->no_bric_beds as $nbbKey => $nbbVal) {
-                    $nbb->orWhere('properties.no_bric_beds', '=', $nbbVal);
-                }
-            });      
-        }
-        if ($request->status) {
-            $lettings = $lettings->where(function($s) use ($request) {
-                foreach ($request->status as $sKey => $sVal) {
-                    $s->orWhere('properties.status', '=', $sVal);
-                }
-            });      
-        }
-        if ($request->postcode) {
-            $lettings = $lettings->where(function($pc) use ($request) {
-                foreach ($request->postcode as $pcKey => $pcVal) {
-                    $pc->orWhere('properties.postcode', '=', $pcVal);
-                }
-            });      
-        }
-        if ($request->address) {
-            $lettings = $lettings->where(function($add) use ($request) {
-                foreach ($request->address as $addKey => $addVal) {
-                    $add->orWhere(DB::raw("CONCAT(house_no_or_name,' ',street)"), 'like', '%' . $addVal . '%');
-                }
-            });      
+        foreach ($filters as $key => $column) {
+            if ($request->filled($key)) {
+                $lettings = $lettings->where(function($query) use ($request, $key, $column) {
+                    foreach ($request->$key as $value) {
+                        $query->orWhere($column, '=', $value);
+                    }
+                });
+            }
         }
 
-        if ($request->search) {         
-            $lettings = $lettings->where(function($q) use ($request) {
-                $q->orWhere('properties.property_phase', 'like', '%' . $request->search . '%');
-                $q->orWhere('properties.city', 'like', '%' . $request->search . '%');
-                $q->orWhere('properties.area', 'like', '%' . $request->search . '%');
-                $q->orWhere(DB::raw("CONCAT(house_no_or_name,' ',street)"), 'like', '%' . $request->search . '%');
-                $q->orWhere('properties.postcode', 'like', '%' . $request->search . '%');
-                $q->orWhere('properties.no_bric_beds', 'like', '%' . $request->search . '%');
-                $q->orWhere('properties.no_bric_bathrooms', 'like', '%' . $request->search . '%');
-                $q->orWhere('entities.entity', 'like', '%' . $request->search . '%');
+        if ($request->filled('address')) {
+            $lettings = $lettings->where(function($query) use ($request) {
+                foreach ($request->address as $address) {
+                    $query->orWhere(DB::raw("CONCAT(house_no_or_name,' ',street)"), 'like', '%' . $address . '%');
+                }
             });
         }
 
-        if ($request->property_contract_status) {
-            $lettings = $lettings->where(function($ct) use ($request) {
-                foreach ($request->property_contract_status as $addKey => $addVal) {
-                    $ct->orWhere('lettings.property_contract_status', $request->property_contract_status);
-                }
-            });      
+        if ($request->filled('search')) {
+            $lettings = $lettings->where(function($query) use ($request) {
+                $search = $request->search;
+                $query->orWhere('properties.property_phase', 'like', '%' . $search . '%')
+                      ->orWhere('properties.city', 'like', '%' . $search . '%')
+                      ->orWhere('properties.area', 'like', '%' . $search . '%')
+                      ->orWhere(DB::raw("CONCAT(house_no_or_name,' ',street)"), 'like', '%' . $search . '%')
+                      ->orWhere('properties.postcode', 'like', '%' . $search . '%')
+                      ->orWhere('properties.no_bric_beds', 'like', '%' . $search . '%')
+                      ->orWhere('properties.no_bric_bathrooms', 'like', '%' . $search . '%')
+                      ->orWhere('entities.entity', 'like', '%' . $search . '%');
+            });
         }
 
-        $lettings = $lettings->orderBy('is_property_phase_order', 'asc')->orderBy('properties.updated_at', 'desc')->get();
+        if ($request->filled('property_contract_status')) {
+            $lettings = $lettings->where(function($query) use ($request) {
+                foreach ($request->property_contract_status as $status) {
+                    $query->orWhere('lettings.property_contract_status', '=', $status);
+                }
+            });
+        }
+
+        
+        $lettingsSql = $lettings->orderBy('is_property_phase_order', 'asc')
+                         ->orderBy('properties.updated_at', 'desc')
+                         ->toSql();
+        Log::info($lettingsSql);
+
+        $lettings = $lettings->orderBy('is_property_phase_order', 'asc')
+                            ->orderBy('properties.updated_at', 'desc')
+                            ->get();
+
         return $lettings;
     }
     public function getLettingsHistory($request){
