@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\EntityController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AcquisitionController;
@@ -55,6 +56,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('tenant', App\Http\Controllers\TenantController::class);
     // Route::resource('document', App\Http\Controllers\FileController::class);
     Route::resource('letting-status', 'App\Http\Controllers\LettingStatusController');
+
+    Route::resource('location', App\Http\Controllers\LocationController::class);
     
 
     Route::get('/settings/getUserAccounts', [App\Http\Controllers\SettingController::class, 'getSettingsUsers'])->name('get.user-accounts');
