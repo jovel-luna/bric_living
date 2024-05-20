@@ -92,7 +92,8 @@ class Letting extends Model
 
         $lettings = $lettings->where(function($query) {
             $query->where('properties.property_phase', '=', 'Bric Property')
-                ->orWhere('properties.property_phase', '=', 'External Property');
+                ->orWhere('properties.property_phase', '=', 'External Property')
+                ->orWhere('properties.property_phase', '=', 'In Development');
         })->where('lettings.archive', '=', 0);
 
         $filters = [

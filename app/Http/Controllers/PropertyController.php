@@ -134,6 +134,8 @@ class PropertyController extends Controller
                 $properties->purchase_date = $purchase_date;
                 $properties->save();
                 $propertyID = $properties->id;
+
+                Letting::addLettingData($propertyID); // create letting after property creation 
     
                 $ep = new EntityProperties();
                 $ep->entity_id = $request->formData['entity'];
@@ -202,7 +204,7 @@ class PropertyController extends Controller
                 $activity->description = 'Created new internal property';
                 $activity->location = 'Create New External Property Page';
                 $activity->save();
-    
+
                 return [
                     "status" => 1,
                     "data" => 'Success'
