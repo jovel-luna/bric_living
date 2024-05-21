@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Location;
+use DataTables;
 use Illuminate\Http\Request;
 
 class LocationController extends Controller
@@ -12,9 +13,22 @@ class LocationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('property.add-location');
+
+        $locations = Location::select(['id', 'postcode', 'city', 'area'])->get();
+
+        if ($request->ajax()) {
+            return Datatables::of($locations)
+                ->addIndexColumn()
+                ->addColumn('checkbox', function($location) {
+                    return '<input type="checkbox" class="selectItem" value="" checked>';
+                })
+                ->rawColumns(['checkbox'])
+                ->make(true);
+        }
+
+        return view('property_locations.index');
     }
 
     /**
@@ -24,7 +38,7 @@ class LocationController extends Controller
      */
     public function create()
     {
-        //
+        return view('property_locations.create');
     }
 
     /**
@@ -35,18 +49,27 @@ class LocationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Location::create([
+            'postcode' => $request->postcode,
+            'city' => $request->city,
+            'area' => $request->area
+            
+        ]);
+
+        return view('property_locations.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Location  $location
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Location $location)
+    public function show($id)
     {
-        //
+        $location = Location::where('id', $id)->first();
+
+        return view('property_locations.show')->with('location', $location);;
     }
 
     /**
@@ -64,22 +87,40 @@ class LocationController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Location  $location
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Location $location)
+    public function update(Request $request, $id)
     {
-        //
+        $location = Location::find($id);
+
+        if (isset($request->city)) {
+            $location->city = $request->city;
+        }
+
+        if (isset($request->area)) {
+            $location->area = $request->area;
+        }
+
+        if (isset($request->postcode)) {
+            $location->postcode = $request->postcode;
+        }
+
+        $location->save();
+        return view('property_locations.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Location  $location
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Location $location)
+    public function destroy($id)
     {
-        //
+        $location = Location::find($id);
+        $location->delete();
+        
+        return view('property_locations.index');
     }
 }
