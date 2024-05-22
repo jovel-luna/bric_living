@@ -15,6 +15,7 @@ use App\Models\OperationBudget;
 use App\Models\OperationExpenditure;
 use App\Models\OperationInsurance;
 use App\Models\LettingStatus;
+use App\Models\Location;
 use App\Models\Development;
 use App\Models\Letting;
 use App\Models\Link;
@@ -79,10 +80,12 @@ class PropertyController extends Controller
         $jsonData = json_decode($jsonString);
         $letting_statuses = LettingStatus::all();
         $entities = DB::table('entities')->select('entity', 'id')->distinct()->orderBy('entity', 'asc')->get();
+        $postcodes = DB::table('locations')->select('postcode', 'id')->distinct()->orderBy('postcode', 'asc')->get();
         $data = [
             'entities' => $entities,
             'letting_statuses' => $letting_statuses,
-            'locations' => $jsonData
+            'locations' => $jsonData,
+            'postcode' => $postcodes
         ];
         return view('property.create', compact('data'));
     }

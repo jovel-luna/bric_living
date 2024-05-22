@@ -59,6 +59,25 @@ class LocationController extends Controller
         return view('property_locations.index');
     }
 
+    public function store_new(Request $request){
+        $location = Location::create([
+            'postcode' => $request->postcode,
+            'city' => $request->city,
+            'area' => $request->area
+            
+        ]);
+
+        return [
+            "data" => $location,
+            "status" => 1,
+            "message" => 'Success'
+        ];
+
+        // return view('property_locations.index');
+    }
+
+
+
     /**
      * Display the specified resource.
      *
@@ -70,6 +89,21 @@ class LocationController extends Controller
         $location = Location::where('id', $id)->first();
 
         return view('property_locations.show')->with('location', $location);;
+    }
+
+    /**
+     * Retrieve Location instance.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function retrieve_instance(Request $request)
+    {
+        $location = Location::where('id', $request->id)->first();
+        return response()->json([
+            'location' => $location
+        ]);
+        
     }
 
     /**
@@ -119,7 +153,7 @@ class LocationController extends Controller
     public function destroy($id)
     {
         $location = Location::find($id);
-        $location->delete();
+        $location->forceDelete();
         
         return view('property_locations.index');
     }

@@ -58,7 +58,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('letting-status', 'App\Http\Controllers\LettingStatusController');
 
     Route::resource('location', App\Http\Controllers\LocationController::class);
-    
+    Route::get('/get-location-postcode', [App\Http\Controllers\LocationController::class, 'retrieve_instance'])->name('location.retrieve_instance');
+    Route::post('/add-location-postcode', [App\Http\Controllers\LocationController::class, 'store_new'])->name('location.add_new');
 
     Route::get('/settings/getUserAccounts', [App\Http\Controllers\SettingController::class, 'getSettingsUsers'])->name('get.user-accounts');
     Route::post('/settings/updateProfileImage/{id}', [App\Http\Controllers\SettingController::class, 'updateUserProfileImage'])->name('update.user-profile-image');

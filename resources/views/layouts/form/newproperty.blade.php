@@ -73,8 +73,13 @@
             <label for="postcode" class="col-form-label">{{ __('Postcode') }}<span class="isRequired"> * </span></label>
 
             <div class="form-group">
-                <input id="postcode" type="text" class="form-control @error('postcode') is-invalid @enderror" name="postcode" value="{{ old('postcode') }}" required autocomplete="postcode" autofocus>
-
+                <select name="postcode" id="postcode" class="form-control form-control-alternative{{ $errors->has('postcode') ? ' is-invalid' : '' }}">
+                    <option value="">Please Select</option>
+                    <option value="0">Add New</option>
+                    @foreach($data['postcode'] as $lsKey => $lsVal)
+                        <option value="{{ $lsVal->id }}">{{ $lsVal->postcode }}</option>
+                    @endforeach
+                </select>
                 @error('postcode')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
