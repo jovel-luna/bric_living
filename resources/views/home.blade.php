@@ -130,7 +130,7 @@
                     bPaginate: paginateStat,
                     order: [],
                     ajax: {
-                        url:'{!! route('home') !!}',
+                        url:"{{route('home') }}",
                         type: "GET",
                         beforeSend: function(){
                             $('.loading-container').show();

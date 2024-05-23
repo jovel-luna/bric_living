@@ -6,6 +6,7 @@ use App\Models\Acquisition;
 use App\Models\Development;
 use App\Models\OperationUtility;
 use App\Models\Letting;
+use App\Models\Location;
 use App\Models\Finance;
 use App\Models\EntityProperties;
 use Illuminate\Support\Facades\DB;
@@ -105,14 +106,14 @@ class Property extends Model
         if ($request->city) {
             $properties = $properties->where(function($c) use ($request) {
                 foreach ($request->city as $cKey => $cVal) {
-                    $c->orWhere('properties.city', '=', $cVal);
+                    $c->orWhere('locations.city', '=', $cVal);
                 }
             });      
         }
         if ($request->area) {
             $properties = $properties->where(function($a) use ($request) {
                 foreach ($request->area as $aKey => $aVal) {
-                    $a->orWhere('properties.area', '=', $aVal);
+                    $a->orWhere('locations.area', '=', $aVal);
                 }
             });      
         }
@@ -133,7 +134,7 @@ class Property extends Model
         if ($request->postcode) {
             $properties = $properties->where(function($pc) use ($request) {
                 foreach ($request->postcode as $pcKey => $pcVal) {
-                    $pc->orWhere('properties.postcode', '=', $pcVal);
+                    $pc->orWhere('locations.postcode', '=', $pcVal);
                 }
             });      
         }
@@ -148,10 +149,10 @@ class Property extends Model
         if ($request->search) {         
             $properties = $properties->where(function($q) use ($request) {
                 $q->orWhere('properties.property_phase', 'like', '%' . $request->search . '%');
-                $q->orWhere('properties.city', 'like', '%' . $request->search . '%');
-                $q->orWhere('properties.area', 'like', '%' . $request->search . '%');
+                $q->orWhere('locations.city', 'like', '%' . $request->search . '%');
+                $q->orWhere('locations.area', 'like', '%' . $request->search . '%');
                 $q->orWhere(DB::raw("CONCAT(house_no_or_name,' ',street)"), 'like', '%' . $request->search . '%');
-                $q->orWhere('properties.postcode', 'like', '%' . $request->search . '%');
+                $q->orWhere('locations.postcode', 'like', '%' . $request->search . '%');
                 $q->orWhere('properties.no_bric_beds', 'like', '%' . $request->search . '%');
                 $q->orWhere('properties.no_bric_bathrooms', 'like', '%' . $request->search . '%');
                 $q->orWhere('entities.entity', 'like', '%' . $request->search . '%');
@@ -233,17 +234,27 @@ class Property extends Model
                         $properties->ref_no = $nextRefNo;
                         $properties->type = 'Internal';
                         $properties->property_phase = $pcVal[0];
-                        $properties->city = $pcVal[2];
-                        $properties->area = $pcVal[3] ? $pcVal[3] : null;
+                        // $properties->city = $pcVal[2];
+                        // $properties->area = $pcVal[3] ? $pcVal[3] : null;
                         $properties->house_no_or_name = strval($pcVal[4]);
                         $properties->street = $pcVal[5];
-                        $properties->postcode = $pcVal[6];
+                        // $properties->postcode = $pcVal[6];
+
+                        $location = Location::create([
+                            'postcode' => $pcVal[6],
+                            'city' => $pcVal[2],
+                            'area' => $pcVal[3] ? $pcVal[3] : null
+                        ]);
+
+                        $properties->location_id = $location->id;
+
                         $properties->no_bric_beds = strval($pcVal[7]);
                         $properties->no_bric_bathrooms = strval($pcVal[8]);
                         $properties->status = $status;
                         $properties->purchase_date = $pcVal[10];
                         $properties->save();
                         $propertyID = $properties->id;
+
     
                         // Acquisition
                         $acquisition = new Acquisition();

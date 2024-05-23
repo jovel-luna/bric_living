@@ -39,14 +39,15 @@ class Development extends Model
         ->leftJoin('letting_statuses', 'properties.status', '=', 'letting_statuses.id')
         ->leftJoin('acquisitions', 'properties.id', '=', 'acquisitions.property_id')
         ->leftJoin('developments', 'properties.id', '=', 'developments.property_id')
+        ->leftJoin('locations', 'properties.location_id', '=', 'locations.id')
         ->select(
             'properties.id',
             DB::raw("CASE property_phase WHEN 'Acquiring' THEN 1 WHEN 'In Development' THEN 2 WHEN 'Bric Property' THEN 3 END AS is_property_phase_order"),
             'properties.property_phase',
-            'properties.city',
-            'properties.area',
+            'locations.city',
+            'locations.area',
             DB::raw("CONCAT(properties.house_no_or_name,' ',properties.street) AS house_and_street"),
-            'properties.postcode',
+            'locations.postcode',
             'properties.no_bric_beds',
             'properties.no_bric_bathrooms',
             'properties.purchase_date',
@@ -85,14 +86,14 @@ class Development extends Model
         if ($request->city) {
             $developments = $developments->where(function($c) use ($request) {
                 foreach ($request->city as $cKey => $cVal) {
-                    $c->orWhere('properties.city', '=', $cVal);
+                    $c->orWhere('locations.city', '=', $cVal);
                 }
             });      
         }
         if ($request->area) {
             $developments = $developments->where(function($a) use ($request) {
                 foreach ($request->area as $aKey => $aVal) {
-                    $a->orWhere('properties.area', '=', $aVal);
+                    $a->orWhere('locations.area', '=', $aVal);
                 }
             });      
         }
@@ -113,7 +114,7 @@ class Development extends Model
         if ($request->postcode) {
             $developments = $developments->where(function($pc) use ($request) {
                 foreach ($request->postcode as $pcKey => $pcVal) {
-                    $pc->orWhere('properties.postcode', '=', $pcVal);
+                    $pc->orWhere('locations.postcode', '=', $pcVal);
                 }
             });      
         }
@@ -128,10 +129,10 @@ class Development extends Model
         if ($request->search) {         
             $developments = $developments->where(function($q) use ($request) {
                 $q->orWhere('properties.property_phase', 'like', '%' . $request->search . '%');
-                $q->orWhere('properties.city', 'like', '%' . $request->search . '%');
-                $q->orWhere('properties.area', 'like', '%' . $request->search . '%');
+                $q->orWhere('locations.city', 'like', '%' . $request->search . '%');
+                $q->orWhere('locations.area', 'like', '%' . $request->search . '%');
                 $q->orWhere(DB::raw("CONCAT(house_no_or_name,' ',street)"), 'like', '%' . $request->search . '%');
-                $q->orWhere('properties.postcode', 'like', '%' . $request->search . '%');
+                $q->orWhere('locations.postcode', 'like', '%' . $request->search . '%');
                 $q->orWhere('properties.no_bric_beds', 'like', '%' . $request->search . '%');
                 $q->orWhere('properties.no_bric_bathrooms', 'like', '%' . $request->search . '%');
                 $q->orWhere('entities.entity', 'like', '%' . $request->search . '%');
