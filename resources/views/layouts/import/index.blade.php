@@ -46,6 +46,7 @@
                                                 <option value="Lettings" {{ $data['referrer'] == '/letting' ? 'selected': ''}}>Lettings</option>
                                                 <option value="Contract Status">Contract Status</option>
                                                 <option value="Finance" {{ $data['referrer'] == '/finance' ? 'selected': ''}}>Finance</option>
+                                                <option value="Locations" {{ $data['referrer'] == '/location' ? 'selected': ''}}>Locations</option>
                                             </select>
                                         </div>
                                     </div>
@@ -68,6 +69,9 @@
                                                 case '/finance':
                                                     $dlUrl = url('sample-sheet-format-download/finance');
                                                     break;
+                                                case '/location':
+                                                $dlUrl = url('sample-sheet-format-download/Locations');
+                                                break;
                                             }
                                             
                                         }else{

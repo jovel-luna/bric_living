@@ -44,10 +44,10 @@
         </div>
         <!-- City -->
         <div class="mb-3">
-            <label for="city" class="col-form-label">{{ __('City') }}<span class="isRequired"> * </span></label>
+            <label for="city" class="col-form-label">{{ __('City') }}</label>
 
             <div class="form-group">
-                <input id="city" type="text" class="form-control @error('city') is-invalid @enderror" name="city" value="{{ old('city') }}" required autocomplete="city" autofocus>
+                <input id="city" type="text" class="form-control @error('city') is-invalid @enderror" name="city" value="{{ old('city') }}" required autocomplete="city" autofocus disabled>
                 @error('city')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -57,10 +57,10 @@
         </div>
         <!-- Area -->
         <div class="mb-3">
-            <label for="area" class="col-form-label">{{ __('Area') }}<span class="isRequired"> * </span></label>
+            <label for="area" class="col-form-label">{{ __('Area') }}</label>
 
             <div class="form-group">
-                <input id="area" type="text" class="form-control @error('area') is-invalid @enderror" name="area" value="{{ old('area') }}" required autocomplete="area" autofocus>
+                <input id="area" type="text" class="form-control @error('area') is-invalid @enderror" name="area" value="{{ old('area') }}" required autocomplete="area" autofocus disabled>
                 @error('area')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>

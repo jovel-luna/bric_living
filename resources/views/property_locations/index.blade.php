@@ -18,6 +18,15 @@
                             Add New
                         </a>
                     </div>
+                    @if (!request()->is('acquisition') && hasAccess('can_import') === 'true')
+                        <div class="form-actions">
+                            <a href="{{ route('view.import') }}"
+                                class="import-btn d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                                <img src="{{ url('storage/image/excel.svg') }}" alt="Excel" style="width:20px;" />
+                                Import
+                            </a>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -25,6 +34,13 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
+                @if (Session::has('success'))
+                    <div class="alert-container p-3">
+                        <div class="alert alert-success p-3">
+                            <strong>Success:</strong> {{ Session::get('success') }}
+                        </div>
+                    </div>
+                @endif
                 <div class="col-md-12">
                     <table id="locations-table" class="table table-bordered letting-table property-list-table m-0"
                         style="width:100%;">
@@ -40,6 +56,7 @@
                         <tbody>
                         </tbody>
                     </table>
+
                 </div>
             </div>
         </div>

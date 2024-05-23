@@ -155,6 +155,6 @@ class LocationController extends Controller
         $location = Location::find($id);
         $location->forceDelete();
         
-        return view('property_locations.index');
+        return redirect()->route('location.index')->with('success', 'Location has been successfully deleted!');
     }
 }

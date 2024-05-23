@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Imports\PropertiesImport;
 use App\Imports\DevelopmentImport;
 use App\Imports\OperationImport;
+use App\Imports\LocationImport;
 use App\Imports\BudgetsImport;
 use App\Imports\ExpenditureImport;
 use App\Imports\LettingsImport;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Property;
+use App\Models\Location;
 use App\Models\Entity;
 use App\Models\EntityProperties;
 use App\Models\Acquisition;
@@ -29,6 +31,7 @@ use App\Models\Gallery;
 use App\Models\Tenant;
 use App\Models\Finance;
 use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Log;
 use DataTables;
 use Illuminate\Support\Facades\Response;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
@@ -40,14 +43,18 @@ class ImportController extends Controller
     {
         $referrer = $request->headers->get('referer');
         $path = parse_url($referrer, PHP_URL_PATH);
+        Log::info($referrer);
+        Log::info($path);
         $data = [
             'referrer' => $path
         ];
+        Log::info($data);
         return view("layouts.import.index", compact('data'));
     }
 
     public function uploadData(Request $request)
     {
+        Log::info($request);
         $entityArray = Entity::select('id', 'entity')->get()->toArray();
         switch ($request->type) {
             case 'Properties':
@@ -90,11 +97,17 @@ class ImportController extends Controller
                 $finance = Finance::import($financeArray, $entityArray);
                 return redirect()->route('finance.index')->with('success', 'Data Imported Successfully');
                 break;
+            case 'Locations':
+                $locationArray = Excel::toArray(new LocationImport, $request->file);
+                $location = Location::import($locationArray);
+                return redirect()->route('location.index')->with('success', 'Data Imported Successfully');
+                break;
         }
     }
 
     public function getSheetFormat($type)
     {
+        Log::info($type);
         switch ($type) {
             case 'property':
                 $file= public_path(). "/storage/files/Property Sample Format.xlsx";
@@ -115,6 +128,10 @@ class ImportController extends Controller
             case 'finance':
                 $file= public_path(). "/storage/files/Finance Sample Format.xlsx";
                 $filename = 'Finance Sample Format.xlsx';
+                break;
+            case 'Locations':
+                $file= public_path(). "/storage/files/Locations Sample Format.xlsx";
+                $filename = 'Locations Sample Format.xlsx';
                 break;
         }
 

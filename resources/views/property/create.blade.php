@@ -759,42 +759,47 @@
                             var house_no = $('#house_no').val();
                             var street = $('#street').val();
                             var postcode = $('#postcode').val();
+                            var status = $('#status').val();
                             if (property_phase != "" && entity != "" && city != "" && area != "" && house_no != "" &&
-                                street != "" && postcode != "") {
+                                street != "" && postcode != "" && status != "") {
                                 $('#property_phase, #entity, #city, #area, #house_no, #street, #postcode').removeClass(
                                     "is-invalid");
                                 if ($('#no_of_bric_beds').val()) {
                                     $('#dev_existing_beds').val($('#no_of_bric_beds').val());
                                 }
+
+                                $("#" + proceed).removeClass("disabled");
+                                $("#" + proceed).trigger("click");
+                                                
                                 // Check if postcode and house number have existing record
-                                jQuery.ajax({
-                                    url: "{{ route('property.isExisting') }}",
-                                    method: 'post',
-                                    data: {
-                                        postcode: postcode,
-                                        house_no: house_no,
-                                    },
-                                    success: function(response) {
-                                        if (response) {
-                                            if (response.recordExist) {
-                                                $('#house_no').addClass("is-invalid")
-                                                $('#postcode').addClass("is-invalid")
-                                                Swal.fire({
-                                                    title: 'Warning',
-                                                    text: "Property with Postcode or House No Already Exist!",
-                                                    icon: 'warning',
-                                                    showCancelButton: false,
-                                                    confirmButtonColor: '#3085d6',
-                                                    cancelButtonColor: '#d33',
-                                                    confirmButtonText: 'Continue'
-                                                }).then((result) => {});
-                                            } else {
-                                                $("#" + proceed).removeClass("disabled");
-                                                $("#" + proceed).trigger("click");
-                                            }
-                                        }
-                                    }
-                                });
+                                // jQuery.ajax({
+                                //     url: "{{ route('property.isExisting') }}",
+                                //     method: 'post',
+                                //     data: {
+                                //         postcode: postcode,
+                                //         house_no: house_no,
+                                //     },
+                                //     success: function(response) {
+                                //         if (response) {
+                                //             if (response.recordExist) {
+                                //                 $('#house_no').addClass("is-invalid")
+                                //                 $('#postcode').addClass("is-invalid")
+                                //                 Swal.fire({
+                                //                     title: 'Warning',
+                                //                     text: "Property with Postcode or House No Already Exist!",
+                                //                     icon: 'warning',
+                                //                     showCancelButton: false,
+                                //                     confirmButtonColor: '#3085d6',
+                                //                     cancelButtonColor: '#d33',
+                                //                     confirmButtonText: 'Continue'
+                                //                 }).then((result) => {});
+                                //             } else {
+                                //                 $("#" + proceed).removeClass("disabled");
+                                //                 $("#" + proceed).trigger("click");
+                                //             }
+                                //         }
+                                //     }
+                                // });
                             } else {
                                 if (property_phase == "") {
                                     $('#property_phase').addClass("is-invalid")
@@ -816,6 +821,9 @@
                                 }
                                 if (postcode == "") {
                                     $('#postcode').addClass("is-invalid")
+                                }
+                                if (status == "") {
+                                    $('#status').addClass("is-invalid")
                                 }
                                 Swal.fire({
                                     title: 'Please fill out all required fields',
@@ -983,6 +991,9 @@
                                 formData: formData,
                             },
                             success: function(result) {
+                                console.log('submitted')
+                                console.log(result)
+                                console.log(formData)
                                 if (result['data'] === 'Success') {
                                     Swal.fire({
                                         title: 'Success',

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddLocationIdToProperties extends Migration
+class RemovePostcodeCityAreaFromProperties extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,11 @@ class AddLocationIdToProperties extends Migration
     public function up()
     {
         Schema::table('properties', function (Blueprint $table) {
-            $table->unsignedBigInteger('location_id')->default(8);
-            $table->foreign('location_id')->references('id')->on('locations');
+            $table->dropColumn('postcode');
+            $table->dropColumn('city');
+            $table->dropColumn('area');
         });
+        
     }
 
     /**
@@ -27,11 +29,9 @@ class AddLocationIdToProperties extends Migration
     public function down()
     {
         Schema::table('properties', function (Blueprint $table) {
-            $table->dropForeign(['location_id']);
-            $table->dropColumn('location_id');
+            $table->string('city')->default('city');
+            $table->string('area')->default('area');
+            $table->string('postcode')->default('postcode');
         });
-
     }
 }
-
-

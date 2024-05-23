@@ -39,8 +39,10 @@ class Property extends Model
     public function filter(){
         $filters = [];
         $filterPropertyPhase = DB::table('properties')->select('property_phase')->distinct()->get();
-        $filterCity = DB::table('properties')->select('city')->distinct()->get();
-        $filterArea = DB::table('properties')->select('area')->distinct()->get();
+        // $filterCity = DB::table('properties')->select('city')->distinct()->get();
+        // $filterArea = DB::table('properties')->select('area')->distinct()->get();
+        $filterCity = DB::table('locations')->select('city')->distinct()->get();
+        $filterArea = DB::table('locations')->select('area')->distinct()->get();
         $filterEntity = DB::table('entities')->select('entity')->distinct()->orderBy('entity', 'asc')->get();
         $filterLettingStatus = DB::table('letting_statuses')->get();
 
@@ -60,15 +62,17 @@ class Property extends Model
         ->leftJoin('entity_properties', 'entity_properties.property_id', '=', 'properties.id')
         ->leftJoin('entities', 'entity_properties.entity_id', '=', 'entities.id')
         ->leftJoin('letting_statuses', 'properties.status', '=', 'letting_statuses.id')
+        ->leftJoin('locations', 'properties.location_id', '=', 'locations.id')
         ->select(
             'properties.id',
             'properties.ref_no',
             DB::raw("CASE property_phase WHEN 'Acquiring' THEN 1 WHEN 'In Development' THEN 2 WHEN 'Bric Property' THEN 3 WHEN 'External Property' THEN 4 END AS is_property_phase_order"),
             'properties.property_phase',
-            'properties.city',
-            'properties.area',
+
+            'locations.city',
+            'locations.area',
             DB::raw("CONCAT(properties.house_no_or_name,' ',properties.street) AS house_and_street"),
-            'properties.postcode',
+            'locations.postcode',
             'properties.no_bric_beds',
             'properties.no_bric_bathrooms',
             'properties.purchase_date',

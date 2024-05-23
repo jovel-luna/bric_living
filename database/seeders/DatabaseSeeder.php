@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Location;
+use App\Models\Property;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserAccess;
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
+        // Property::where('location_id', 0)->update(['location_id'=> 8]);
         // Role::create([
         //     'role' => 'Admin'
         //     ]);

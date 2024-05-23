@@ -23,8 +23,10 @@ use App\Models\Gallery;
 use App\Models\Tenant;
 use App\Models\Finance;
 use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Log;
 use DataTables;
 use Illuminate\Support\Facades\Response;
+
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Auth;
 
@@ -126,15 +128,16 @@ class PropertyController extends Controller
                 $properties->ref_no = $nextRefNo;
                 $properties->type = 'Internal';
                 $properties->property_phase = $request->formData['property_phase'];
-                $properties->city = $request->formData['city'];
-                $properties->area = $request->formData['area'];
+                // $properties->city = $request->formData['city'];
+                // $properties->area = $request->formData['area'];
                 $properties->house_no_or_name = $request->formData['house_no'];
                 $properties->street =  $request->formData['street'];
-                $properties->postcode =  $request->formData['postcode'];
+                $properties->location_id =  $request->formData['postcode'];
                 $properties->no_bric_beds =  $request->formData['no_of_bric_beds'];
                 $properties->no_bric_bathrooms =  $request->formData['no_of_bric_bathroom'];
                 $properties->status = $request->formData['status'];
                 $properties->purchase_date = $purchase_date;
+
                 $properties->save();
                 $propertyID = $properties->id;
 
@@ -212,7 +215,8 @@ class PropertyController extends Controller
                     "status" => 1,
                     "data" => 'Success'
                 ];
-            }else{
+            }
+            else{
                 $formData = $request->input('formData');
                 parse_str($formData, $unserializedData);
     
@@ -232,15 +236,16 @@ class PropertyController extends Controller
                 $properties->ref_no = $nextRefNo;
                 $properties->type = 'External';
                 $properties->property_phase = $formDataObject->property_phase;
-                $properties->city = $formDataObject->city;
-                $properties->area = $formDataObject->area;
+                // $properties->city = $formDataObject->city;
+                // $properties->area = $formDataObject->area;
                 $properties->house_no_or_name = $formDataObject->house_no;
                 $properties->street =  $formDataObject->street;
-                $properties->postcode =  $formDataObject->postcode;
+                $properties->location_id =  $formDataObject->postcode;
                 $properties->no_bric_beds =  $formDataObject->no_of_bric_beds;
                 $properties->no_bric_bathrooms =  $formDataObject->no_of_bric_bathroom;
                 $properties->status = $formDataObject->status;
                 $properties->purchase_date = '00/00/0000';
+
                 $properties->save();
                 $propertyID = $properties->id;
     
@@ -254,6 +259,7 @@ class PropertyController extends Controller
                 $activity->description = 'Created new external property';
                 $activity->location = 'Create New External Property Page';
                 $activity->save();
+
                 return [
                     "status" => 1,
                     "data" => 'Success'
