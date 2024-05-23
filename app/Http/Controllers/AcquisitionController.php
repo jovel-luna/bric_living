@@ -14,6 +14,7 @@ use App\Models\LettingStatus;
 use App\Models\Planning;
 use App\Models\Development;
 use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Log;
 use DataTables;
 use Illuminate\Support\Facades\Response;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
@@ -323,13 +324,30 @@ class AcquisitionController extends Controller
         $acquisition = Acquisition::leftJoin('properties', 'acquisitions.property_id', '=', 'properties.id')
         ->leftJoin('operation_insurances', 'operation_insurances.acquisition_id', '=', 'acquisitions.id')
         ->leftJoin('entity_properties', 'entity_properties.property_id', '=', 'properties.id')
+        ->leftJoin('locations', 'properties.location_Id', '=', 'locations.id')
         ->leftJoin('entities', 'entity_properties.entity_id', '=', 'entities.id')
         ->join('letting_statuses', 'properties.status', '=', 'letting_statuses.id')
-        ->selectRaw('letting_statuses.*, entities.*, entity_properties.*, operation_insurances.*, properties.*, acquisitions.*')
+        ->selectRaw('letting_statuses.*, entities.*, entity_properties.*, operation_insurances.*, properties.*, locations.*, acquisitions.*')
         ->where('acquisitions.id', '=', $id)
+        ->where('acquisitions.property_id', '=', 'properties.id')
         ->first();
 
+        $acquisitionSQL = Acquisition::leftJoin('properties', 'acquisitions.property_id', '=', 'properties.id')
+        ->leftJoin('operation_insurances', 'operation_insurances.acquisition_id', '=', 'acquisitions.id')
+        ->leftJoin('entity_properties', 'entity_properties.property_id', '=', 'properties.id')
+        ->leftJoin('locations', 'properties.location_Id', '=', 'locations.id')
+        ->leftJoin('entities', 'entity_properties.entity_id', '=', 'entities.id')
+        ->join('letting_statuses', 'properties.status', '=', 'letting_statuses.id')
+        ->selectRaw('letting_statuses.*, entities.*, entity_properties.*, operation_insurances.*, properties.*, locations.*, acquisitions.*')
+        ->where('acquisitions.id', '=', $id)
+        ->where('acquisitions.property_id', '=', 'properties.id')
+        ->toSql();
+
         $entities = DB::table('entities')->select('entity', 'id')->distinct()->orderBy('entity', 'asc')->get();
+
+        Log::info($acquisition);
+        Log::info($acquisitionSQL);
+
 
         return view('acquisition.view', [
             'acquisition' => $acquisition,

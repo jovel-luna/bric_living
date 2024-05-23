@@ -287,8 +287,10 @@ class PropertyController extends Controller
         $currentSlug = $firstSlug;
 
         $property = Property::join('letting_statuses', 'properties.status', '=', 'letting_statuses.id')
-        ->selectRaw('letting_statuses.*, properties.*')
+        ->join('locations', 'properties.location_id', '=', 'locations.id')
+        ->selectRaw('letting_statuses.*, properties.*, locations.*')
         ->where('properties.id', '=', $id)->first();
+        Log::info($property);
 
         if ($property->type === 'Internal') {
             $acquisition = Acquisition::where('acquisitions.property_id', '=', $id)->first();
