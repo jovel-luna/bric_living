@@ -45,6 +45,7 @@
                                     <th>Date Added</th>
                                     <th>Target Completion Date</th>
                                     <th>COL Status</th>
+                                    <th>Last COL Log</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -116,7 +117,7 @@
             }
 
             acquisition();
-            function acquisition(property_phase='',entity='',city='',area='', no_bric_beds='', status='', postcode='', address='', showlimit='',search=''){
+            function acquisition(property_phase='',entity='',city='',area='', no_bric_beds='', status='', postcode='', address='', showlimit='',search='', last_col_log=''){
                 $('#acquisitionTable').DataTable({
                     language: { 
                         search: "_INPUT_",
@@ -142,7 +143,8 @@
                             status:status,
                             postcode:postcode,
                             address:address,
-                            search:search
+                            search:search,
+                            last_col_log:last_col_log,
                         }
                     },
                     columnDefs : [
@@ -167,6 +169,7 @@
                         }},
                         {data: 'target_completion_date', name: 'target_completion_date', orderable: true},
                         {data: 'col_status', name: 'col_status', orderable: true},
+                        // {data: 'last_col_log', name: 'last_col_log', orderable: true},
                         {data: 'action', name: 'action', orderable: false, searchable: false, render:function(data, type, row){
                             return  '<div class="action-btn has-divider d-flex gap-1 justify-content-center">'+
                                         '<a href="#" id="view-txt-btn" class="view" title="Summary"><i class="info icon fa-regular fa-rectangle-list" style="color: #16a085;"></i></a>'+

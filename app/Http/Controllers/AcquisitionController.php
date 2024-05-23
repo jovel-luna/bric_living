@@ -12,6 +12,7 @@ use App\Models\OperationUtility;
 use App\Models\OperationInsurance;
 use App\Models\LettingStatus;
 use App\Models\Planning;
+use App\Models\Location;
 use App\Models\Development;
 use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Log;
@@ -77,8 +78,12 @@ class AcquisitionController extends Controller
 
         /* This is to get the distinct values from the database and pass it to the view. */
         $filterPropertyPhase = DB::table('properties')->select('property_phase')->distinct()->get();
-        $filterCity = DB::table('properties')->select('city')->distinct()->get();
-        $filterArea = DB::table('properties')->select('area')->distinct()->get();
+        // $filterCity = DB::table('properties')->select('city')->distinct()->get();
+        // $filterArea = DB::table('properties')->select('area')->distinct()->get();
+
+        $filterCity = DB::table('locations')->select('city')->distinct()->get();
+        $filterArea = DB::table('locations')->select('area')->distinct()->get();
+
         $filterEntity = DB::table('entities')->select('entity')->distinct()->orderBy('entity', 'asc')->get();
         $filterLettingStatus = DB::table('letting_statuses')->get();
         $filters = [
@@ -95,6 +100,7 @@ class AcquisitionController extends Controller
             $acquisitions = Acquisition::leftJoin('properties', 'acquisitions.property_id', '=', 'properties.id')
             ->leftJoin('entity_properties', 'entity_properties.property_id', '=', 'properties.id')
             ->leftJoin('entities', 'entity_properties.entity_id', '=', 'entities.id')
+            ->leftJoin('locations', 'properties.location_id', '=', 'locations.id')
             ->select(
                 'acquisitions.id as id',
                 'entities.entity',
@@ -103,9 +109,9 @@ class AcquisitionController extends Controller
                 'properties.house_no_or_name',
                 'properties.property_phase',
                 'properties.street',
-                'properties.area',
-                'properties.city',
-                'properties.postcode',
+                'locations.area',
+                'locations.city',
+                'locations.postcode',
                 'properties.status',
                 'properties.no_bric_beds',
                 'properties.no_bric_bathrooms',
@@ -226,6 +232,8 @@ class AcquisitionController extends Controller
                                 'agent' => $acquisitions->agent,
                                 'target_completion_date' => $acquisitions->target_completion_date,
                                 'col_status' => $acquisitions->col_status,
+                                // 'last_col_log' => $acquisitions->col_status,
+                                
                             ];
                             return json_encode($data);
                         },
