@@ -15,7 +15,8 @@ use App\Models\Planning;
 use App\Models\Location;
 use App\Models\Development;
 use App\Models\ActivityLog;
-use Illuminate\Support\Facades\Log;
+use App\Models\Log as LogModel;
+use Illuminate\Support\Facades\Log as LogFacade;
 use DataTables;
 use Illuminate\Support\Facades\Response;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
@@ -101,6 +102,7 @@ class AcquisitionController extends Controller
             ->leftJoin('entity_properties', 'entity_properties.property_id', '=', 'properties.id')
             ->leftJoin('entities', 'entity_properties.entity_id', '=', 'entities.id')
             ->leftJoin('locations', 'properties.location_id', '=', 'locations.id')
+            // ->leftJoin('logs', 'logs.property_id', '=', 'acquisitions.property_id')
             ->select(
                 'acquisitions.id as id',
                 'entities.entity',
@@ -125,6 +127,8 @@ class AcquisitionController extends Controller
                 'acquisitions.col_status',
                 'acquisitions.col_status_log',
                 'acquisitions.created_at',
+                DB::raw('(SELECT description from logs WHERE property_id = properties.id order by created_at desc LIMIT 1) as last_col_log')
+                
             )
             ->where('acquisitions.acquisition_status', '!=', 'Completed')
             ->where('properties.property_phase', '=', 'Acquiring');
@@ -148,14 +152,14 @@ class AcquisitionController extends Controller
             if ($request->city) {
                 $acquisitions = $acquisitions->where(function($c) use ($request) {
                     foreach ($request->city as $cKey => $cVal) {
-                        $c->orWhere('properties.city', '=', $cVal);
+                        $c->orWhere('locations.city', '=', $cVal);
                     }
                 });      
             }
             if ($request->area) {
                 $acquisitions = $acquisitions->where(function($a) use ($request) {
                     foreach ($request->area as $aKey => $aVal) {
-                        $a->orWhere('properties.area', '=', $aVal);
+                        $a->orWhere('locations.area', '=', $aVal);
                     }
                 });      
             }
@@ -176,7 +180,7 @@ class AcquisitionController extends Controller
             if ($request->postcode) {
                 $acquisitions = $acquisitions->where(function($pc) use ($request) {
                     foreach ($request->postcode as $pcKey => $pcVal) {
-                        $pc->orWhere('properties.postcode', '=', $pcVal);
+                        $pc->orWhere('locations.postcode', '=', $pcVal);
                     }
                 });      
             }
@@ -191,10 +195,10 @@ class AcquisitionController extends Controller
             if ($request->search) {         
                 $acquisitions = $acquisitions->where(function($q) use ($request) {
                     $q->orWhere('properties.property_phase', 'like', '%' . $request->search . '%');
-                    $q->orWhere('properties.city', 'like', '%' . $request->search . '%');
-                    $q->orWhere('properties.area', 'like', '%' . $request->search . '%');
+                    $q->orWhere('locations.city', 'like', '%' . $request->search . '%');
+                    $q->orWhere('locations.area', 'like', '%' . $request->search . '%');
                     $q->orWhere(DB::raw("CONCAT(properties.house_no_or_name,' ',properties.street)"), 'like', '%' . $request->search . '%');
-                    $q->orWhere('properties.postcode', 'like', '%' . $request->search . '%');
+                    $q->orWhere('locations.postcode', 'like', '%' . $request->search . '%');
                     $q->orWhere('properties.no_bric_beds', 'like', '%' . $request->search . '%');
                     $q->orWhere('properties.no_bric_bathrooms', 'like', '%' . $request->search . '%');
                     $q->orWhere('entities.entity', 'like', '%' . $request->search . '%');
@@ -204,6 +208,9 @@ class AcquisitionController extends Controller
                 });
             }
             $acquisitions = $acquisitions->get();
+            // $logs  = LogModel::where('property_id' , $acquisitions->property_id)->orderBy('created_at')->get();
+
+
             /* This is the code that is being used to return the data to the datatable. */
             return Datatables::of($acquisitions)
                     ->addIndexColumn()
@@ -218,6 +225,7 @@ class AcquisitionController extends Controller
                             return $acquisitions->property_id;
                         },
                         'data-current' => function($acquisitions) {
+                        
                             $data = [
                                 'id' => $acquisitions->id,
                                 'house_no_or_name' => $acquisitions->house_no_or_name,
@@ -232,7 +240,7 @@ class AcquisitionController extends Controller
                                 'agent' => $acquisitions->agent,
                                 'target_completion_date' => $acquisitions->target_completion_date,
                                 'col_status' => $acquisitions->col_status,
-                                // 'last_col_log' => $acquisitions->col_status,
+                                // 'last_col_log' => $log_description,
                                 
                             ];
                             return json_encode($data);
@@ -353,8 +361,8 @@ class AcquisitionController extends Controller
 
         $entities = DB::table('entities')->select('entity', 'id')->distinct()->orderBy('entity', 'asc')->get();
 
-        Log::info($acquisition);
-        Log::info($acquisitionSQL);
+        LogFacade::info($acquisition);
+        LogFacade::info($acquisitionSQL);
 
 
         return view('acquisition.view', [
@@ -496,15 +504,18 @@ class AcquisitionController extends Controller
                     $hasChanged = true;
                 }
 
+
+
+
                 $propertyUpdate = DB::table('properties')
                 ->where('properties.id', '=', $request->formData['property_id'])
                 ->update([
                     'properties.property_phase' => $request->formData['property_phase'],
-                    'properties.city' => $request->formData['city'],
-                    'properties.area' => $request->formData['area'],
+                    // 'locations.city' => $request->formData['city'],
+                    // 'locations.area' => $request->formData['area'],
                     'properties.house_no_or_name' => $request->formData['house_no'],
                     'properties.street' => $request->formData['street'],
-                    'properties.postcode' => $request->formData['postcode'],
+                    // 'locations.postcode' => $request->formData['postcode'],
                     'properties.no_bric_beds' => $request->formData['no_bric_beds'],
                     'properties.no_bric_bathrooms' => $request->formData['no_of_bric_bathroom'],
                     'properties.status' => $request->formData['status'],
@@ -674,14 +685,19 @@ class AcquisitionController extends Controller
                         $ebn = '';
                     }
                     
+                    $location = Location::updateOrCreate([
+                        'postcode' => $request->formData['postcode'],
+                        'city' => $request->formData['city'],
+                        'area' => $request->formData['area']
+                    ]);
     
                     $properties = DB::table('properties')
                     ->where('properties.id', '=', $request->formData['property_id'])
                     ->update([
                         'properties.house_no_or_name' => $request->formData['house_no_or_name'],
                         'properties.street' => $request->formData['street'],
-                        'properties.city' => $request->formData['city'],
-                        'properties.postcode' => $request->formData['postcode'],
+                        // 'properties.city' => $request->formData['city'],
+                        'properties.location_id' => $location->id,
                         'properties.status' => $request->formData['status'],
                         'properties.no_bric_beds' => $request->formData['no_bric_beds'],
                     ]);

@@ -142,6 +142,7 @@ Route::group(['middleware' => ['auth']], function() {
 
     // Links
 
+
     Route::post('links/add-link', [App\Http\Controllers\LinkController::class, 'storeLink'])->name('store.links');
     Route::post('links/remove-link', [App\Http\Controllers\LinkController::class, 'removeLink'])->name('remove.links');
 
@@ -155,7 +156,8 @@ Route::group(['middleware' => ['auth']], function() {
     // Contract info
     Route::get('lettings/history', [App\Http\Controllers\LettingController::class, 'lettingsHistory'])->name('lettings.history');
     Route::post('lettings/unarchive', [App\Http\Controllers\LettingController::class, 'unarchive'])->name('unarchive.lettings');
-
+    Route::get('lettings/contract-info', [App\Http\Controllers\LettingController::class, 'contractList'])->name('lettings.contract-list');
+    Route::get('lettings/contract/show/{id}', [App\Http\Controllers\LettingController::class, 'showContractInfo'])->name('lettings.contract-show');
     
     Route::get('external', [App\Http\Controllers\PropertyController::class, 'viewExternal'])->name('get.property-external');
     // Route::get('upload/entities', [App\Http\Controllers\EntityController::class, 'upload'])->name('entity.upload');

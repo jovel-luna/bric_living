@@ -81,6 +81,7 @@
 
             let postcode = [];
             let address = [];
+            // let last_col_log = [];
             $('#filter-view').on('click', function(){
                 
                 $('#filterModal').modal('hide');
@@ -107,6 +108,7 @@
             function getArrayData(){
                 postcode = [];
                 address = [];
+                // last_col_log = []
                 $( ".postcode-list .list-items" ).each(function( pc ) {
                     postcode.push($(this).find('span').text());
                 });
@@ -115,6 +117,8 @@
                     address.push($(this).find('span').text());
                 });
             }
+
+
 
             acquisition();
             function acquisition(property_phase='',entity='',city='',area='', no_bric_beds='', status='', postcode='', address='', showlimit='',search='', last_col_log=''){
@@ -144,7 +148,7 @@
                             postcode:postcode,
                             address:address,
                             search:search,
-                            last_col_log:last_col_log,
+                            last_col_log:last_col_log
                         }
                     },
                     columnDefs : [
@@ -169,7 +173,7 @@
                         }},
                         {data: 'target_completion_date', name: 'target_completion_date', orderable: true},
                         {data: 'col_status', name: 'col_status', orderable: true},
-                        // {data: 'last_col_log', name: 'last_col_log', orderable: true},
+                        {data: 'last_col_log', name: 'last_col_log', orderable: true},
                         {data: 'action', name: 'action', orderable: false, searchable: false, render:function(data, type, row){
                             return  '<div class="action-btn has-divider d-flex gap-1 justify-content-center">'+
                                         '<a href="#" id="view-txt-btn" class="view" title="Summary"><i class="info icon fa-regular fa-rectangle-list" style="color: #16a085;"></i></a>'+

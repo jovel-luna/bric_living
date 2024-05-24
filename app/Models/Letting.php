@@ -6,6 +6,7 @@ use App\Entity;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Tenant;
 
 use Illuminate\Support\Facades\Log;
 
@@ -51,6 +52,22 @@ class Letting extends Model
         // 'virtual_tour',
         // 'similar_properties'
     ];
+    public function getContracts($request){
+
+        $contracts = DB::table('tenants')
+        ->leftJoin('properties', 'tenants.property_id', '=', 'properties.id')
+        ->select(
+            'properties.ref_no',
+            'tenants.id',
+            'tenants.name',
+            'tenants.tenant_contract_status',
+            'tenants.deposits_paid',
+            'tenants.document_outstanding'
+        )->get();
+
+        return $contracts;
+    }
+
     public function getLettings($request){
 
         $lettings = DB::table('properties')
@@ -60,14 +77,15 @@ class Letting extends Model
         ->leftJoin('acquisitions', 'properties.id', '=', 'acquisitions.property_id')
         ->leftJoin('developments', 'properties.id', '=', 'developments.property_id')
         ->leftJoin('lettings', 'properties.id', '=', 'lettings.property_id')
+        ->leftJoin('locations', 'properties.location_id', '=', 'locations.id')
         ->select(
             'properties.id',
             DB::raw("CASE property_phase WHEN 'Bric Property' THEN 1 WHEN 'External Property' THEN 2 END AS is_property_phase_order"),
             'properties.property_phase',
-            'properties.city',
-            'properties.area',
+            'locations.city',
+            'locations.area',
             DB::raw("CONCAT(properties.house_no_or_name,' ',properties.street) AS house_and_street"),
-            'properties.postcode',
+            'locations.postcode',
             'properties.no_bric_beds',
             'properties.no_bric_bathrooms',
             'properties.purchase_date',
@@ -99,11 +117,11 @@ class Letting extends Model
         $filters = [
             'property_phase' => 'properties.property_phase',
             'entity' => 'entities.entity',
-            'city' => 'properties.city',
-            'area' => 'properties.area',
+            'city' => 'locations.city',
+            'area' => 'locations.area',
             'no_bric_beds' => 'properties.no_bric_beds',
             'status' => 'properties.status',
-            'postcode' => 'properties.postcode',
+            'postcode' => 'locations.postcode',
         ];
         
         foreach ($filters as $key => $column) {
@@ -128,10 +146,10 @@ class Letting extends Model
             $lettings = $lettings->where(function($query) use ($request) {
                 $search = $request->search;
                 $query->orWhere('properties.property_phase', 'like', '%' . $search . '%')
-                      ->orWhere('properties.city', 'like', '%' . $search . '%')
-                      ->orWhere('properties.area', 'like', '%' . $search . '%')
+                      ->orWhere('locations.city', 'like', '%' . $search . '%')
+                      ->orWhere('locations.area', 'like', '%' . $search . '%')
                       ->orWhere(DB::raw("CONCAT(house_no_or_name,' ',street)"), 'like', '%' . $search . '%')
-                      ->orWhere('properties.postcode', 'like', '%' . $search . '%')
+                      ->orWhere('locations.postcode', 'like', '%' . $search . '%')
                       ->orWhere('properties.no_bric_beds', 'like', '%' . $search . '%')
                       ->orWhere('properties.no_bric_bathrooms', 'like', '%' . $search . '%')
                       ->orWhere('entities.entity', 'like', '%' . $search . '%');

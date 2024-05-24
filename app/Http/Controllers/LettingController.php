@@ -13,6 +13,29 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class LettingController extends Controller
 {
+
+    public function contractList(Request $request) {
+
+        if ($request->ajax()) {
+
+            $contracts = Letting::getContracts($request);
+
+            /* This is the code that is being used to return the data to the datatable. */
+            return Datatables::of($contracts)
+                    ->addIndexColumn()
+        
+                    ->make(true);
+
+         }
+
+        return view('entity.contract_list.index');
+    }
+
+    public function showContractInfo($id) {
+        return view('entity.contract_list.show');
+    }
+
+
     /**
      * Display a listing of the resource.
      *

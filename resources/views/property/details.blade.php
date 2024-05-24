@@ -565,7 +565,17 @@
                 columns: [
                     {data: 'bric_planning_ref_no', name: 'bric_planning_ref_no', orderable: true},
                     {data: 'date_submitted', name: 'date_submitted', orderable: true},
-                    {data: 'approved', name: 'approved', orderable: true},
+                    {data: 'approved', name: 'approved', orderable: true , render:function(data, type, row){
+                        // console.log(data)
+                        // console.log(type)
+                        // console.log(row)
+                        if (data == 1) {
+                            return 'Yes';
+                        }
+                        else {
+                            return 'Yes';
+                        }
+                    }},
                     {data: 'application_desc', name: 'application_desc', orderable: true},
                     {data: 'action', name: 'action', orderable: false, searchable: false, render:function(data, type, row){
                         return  '<div class="action-btn planning-action d-flex justify-content-center">'+
