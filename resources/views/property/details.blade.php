@@ -573,7 +573,7 @@
                             return 'Yes';
                         }
                         else {
-                            return 'Yes';
+                            return 'No';
                         }
                     }},
                     {data: 'application_desc', name: 'application_desc', orderable: true},
