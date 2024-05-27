@@ -38,8 +38,8 @@ class OperationController extends Controller
 
         /* This is to get the distinct values from the database and pass it to the view. */
         $filterPropertyPhase = DB::table('properties')->select('property_phase')->distinct()->get();
-        $filterCity = DB::table('properties')->select('city')->distinct()->get();
-        $filterArea = DB::table('properties')->select('area')->distinct()->get();
+        $filterCity = DB::table('locations')->select('city')->distinct()->get();
+        $filterArea = DB::table('locations')->select('area')->distinct()->get();
         $filterEntity = DB::table('entities')->select('entity')->distinct()->orderBy('entity', 'asc')->get();
         $filterLettingStatus = DB::table('letting_statuses')->get();
         $filters = [
