@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Location;
+use App\Models\ActivityLog;
+use Illuminate\Support\Facades\DB;
 use DataTables;
 use Illuminate\Http\Request;
+use Auth;
 
 class LocationController extends Controller
 {
@@ -54,6 +57,20 @@ class LocationController extends Controller
             'city' => $request->city,
             'area' => $request->area
             
+        ]);
+
+        $activity = new ActivityLog();
+        $activity->user_id = Auth::user()->id;
+        $activity->description = 'Added a new Location';
+        $activity->location = 'Add new Location Page';
+        $activity->type = 'CREATE';
+        $activity->save();
+
+        DB::table('detailed_activity_logs')->insert([
+            [ 'log_id' => $activity->id, 'activity_field' => 'Postcode', 'details' => $request->postcode],
+            [ 'log_id' => $activity->id, 'activity_field' => 'City', 'details' => $request->city],
+            [ 'log_id' => $activity->id, 'activity_field' => 'Area', 'details' => $request->area],
+        
         ]);
 
         return view('property_locations.index');

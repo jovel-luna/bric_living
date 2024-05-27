@@ -20,6 +20,7 @@
                     <th>Description</th>
                     <th>Location</th>
                     <th>Date and Time</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>

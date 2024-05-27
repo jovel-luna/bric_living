@@ -113,6 +113,7 @@ Route::group(['middleware' => ['auth']], function() {
     
     // Activity Log
     Route::get('/getActivityLogs', [App\Http\Controllers\ActivityLogController::class, 'getAllActivity'])->name('get.activity');
+    Route::get('/getActivityLogs/details/{id}', [App\Http\Controllers\ActivityLogController::class, 'viewActivityDetails'])->name('get.activity-details');
     
     // System Settings
     Route::post('/updateSystemLogo', [App\Http\Controllers\SystemSettingController::class, 'updateSystemLogo'])->name('update.system-logo');
@@ -122,7 +123,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('notes/view-notes', [App\Http\Controllers\NoteController::class, 'getNotes'])->name('get.notes');
     Route::get('notes/delete/{id}', [App\Http\Controllers\NoteController::class, 'removeNotes'])->name('remove.notes');
     Route::post('notes/update/{id}', [App\Http\Controllers\NoteController::class, 'updateNotes'])->name('update.notes');
-    Route::get('notes/get-single-notes/{id}', [App\Http\Controllers\NoteController::class, 'getSingleNotes'])->name('get.single-notes');
+    Route::get('notes/get-single-notes/{id}/{username}', [App\Http\Controllers\NoteController::class, 'getSingleNotes'])->name('get.single-notes');
 
     // Logs
     Route::post('logs/add-logs', [App\Http\Controllers\LogController::class, 'createLogs'])->name('create.logs');

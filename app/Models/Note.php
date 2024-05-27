@@ -29,8 +29,14 @@ class Note extends Model
         $notes->save();
 
         // save activity log here
-        insertActivityLog($userID, 'Added note on Lettings page', 'Lettings List Page');
-        
+        $id = insertActivityLog($userID, 'Added note on Lettings page', 'Lettings List Page', 'CREATE');
+
+        DB::table('detailed_activity_logs')->insert([
+            [ 'log_id' => $id , 'activity_field' => 'Property', 'details' => $request['formData']['nid'] ],
+            [ 'log_id' => $id , 'activity_field' => 'Note Type', 'details' => $request['formData']['type'] ],
+            [ 'log_id' => $id , 'activity_field' => 'Note Description', 'details' => $request['formData']['note_details'] ],
+        ]);
+
         return $notes;
     }
     public function getNotes($request){

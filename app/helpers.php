@@ -61,12 +61,15 @@ if (!function_exists('getSettings')) {
 }
 
 if (!function_exists('insertActivityLog')) {
-    function insertActivityLog($id, $description, $location){
+    function insertActivityLog($id, $description, $location, $type="Not Specified"){
         $log = new ActivityLog();
         $log->user_id = $id;
         $log->description = $description;
         $log->location = $location;
+        $log->type = $type;
         $log->save();
+
+        return $log->id; 
     }
 }
 if (!function_exists('format_date')) {

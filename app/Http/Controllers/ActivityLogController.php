@@ -21,4 +21,19 @@ class ActivityLogController extends Controller
                 ->make(true);
         
     }
+    public function viewActivityDetails($id){
+
+        $details = DB::table('detailed_activity_logs')->where('log_id' , $id)->get();
+        $user_id = DB::table('activity_logs')->select('user_id')->where('id', $id)->first();
+        $user = DB::table('users')->select("first_name", "middle_name", "last_name")->where('id', $user_id->user_id)->first();
+        $log_summary = DB::table('activity_logs')->select('description', 'location', 'type')->where('id', $id)->first();
+
+        if($log_summary->type == 'CREATE') {
+            return view('setting\activity-details', ['details' => $details, 'username' => $user, 'summary' => $log_summary]);
+        }
+        if($log_summary->type == 'UPDATE'){
+            return view('setting\activity-details-update', ['details' => $details, 'username' => $user, 'summary' => $log_summary]);
+        }
+
+    }
 }
