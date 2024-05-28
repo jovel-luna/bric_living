@@ -209,6 +209,7 @@ class PropertyController extends Controller
                 $activity->user_id = Auth::user()->id;
                 $activity->description = 'Created new internal property';
                 $activity->location = 'Create New Internal Property Page';
+                $activity->type = 'CREATE';
                 $activity->save();
 
                 $location = Location::where('id', $request->formData['postcode'] )->first();
@@ -479,7 +480,14 @@ class PropertyController extends Controller
      */
     public function edit($id)
     {
-        //
+        $property = Property::where('id', $id)->first();
+        $location  = Location::where('id', $property->location_id)->first();
+        $all_locations = Location::all();
+        $all_entities = Entity::all();
+        $all_letting_status = LettingStatus::all();
+        $property_entity_id = EntityProperties::where('property_id' , $id )->first();
+
+        return view('property.edit', compact('property', 'location', 'all_locations', 'all_entities', 'all_letting_status', 'property_entity_id' ));
     }
 
     public function editBudget($id)

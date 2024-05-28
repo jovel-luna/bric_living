@@ -35,18 +35,20 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if ($details)
+                                        @if ($details->isEmpty())
+                                        <tr>
+                                            <td colspan="2">No Data Available</td>
+                                        </tr>
+                                            
+                                        @else
                                             @foreach ($details as $item)
                                             <tr>                       
                                                 <td>{{ $item->activity_field }} </td>
                                                 <td> {{ $item->details }} </td>
                                             </tr>    
                                             @endforeach
-                                        @else
-                                            No Data Available
                                         @endif
                                     </tbody>
-
                                 </table>
                             </div>
                         </div>

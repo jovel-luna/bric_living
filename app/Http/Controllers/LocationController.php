@@ -144,6 +144,14 @@ class LocationController extends Controller
     public function update(Request $request, $id)
     {
         $location = Location::find($id);
+        $activity = insertActivityLog(Auth::user()->id, 'Updated a location', 'Update location page' , 'UPDATE');
+
+        DB::table('detailed_activity_logs')->insert([
+            [ 'log_id' => $activity, 'activity_field' => 'Postcode', 'details' => $request->postcode, 'details_old' => $location->postcode],
+            [ 'log_id' => $activity, 'activity_field' => 'City', 'details' => $request->city, 'details_old' => $location->city ],
+            [ 'log_id' => $activity, 'activity_field' => 'Area', 'details' => $request->area, 'details_old' => $location->area ],
+        
+        ]);
 
         if (isset($request->city)) {
             $location->city = $request->city;
@@ -158,6 +166,7 @@ class LocationController extends Controller
         }
 
         $location->save();
+
         return view('property_locations.index');
     }
 

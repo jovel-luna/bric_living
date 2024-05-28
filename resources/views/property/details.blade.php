@@ -47,15 +47,16 @@
                             }
                         }
                     ?>
-                    <div class="edit-btn-cont {{ $editURL == '#' ? 'd-none' : '' }}">
-                        <a id="details-edit" href="{{ $editURL; }}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm edit-btn" data-id="#">
-                            <i class="fas fa-edit fa-sm text-white-50"></i>
-                            EDIT
-                        </a>
-                    </div>
+                <div class="edit-btn-cont" >
+                    <a  href="{{ route('property.edit', $pid); }}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm edit-btn" data-id="#">
+                        <i class="fas fa-edit fa-sm text-white-50"></i>
+                        EDIT PROPERTY DETAILS
+                    </a>
+                </div>
                     <a href="{{ URL::previous() }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                             class="fas fa-arrow-left fa-sm text-white-50"></i> Back</a>
                 </div>
+                
                 <div class="card card-secondary shadow mb-4">
                     <div class="card-header py-2">
                         <h6 class="m-0 font-weight-bold">Property Details</h6>
@@ -153,7 +154,15 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="edit-btn-cont {{ $editURL == '#' ? 'd-none' : '' }}" style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem !important ">
+                    <a id="details-edit" href="{{ $editURL; }}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm edit-btn" data-id="#">
+                        <i class="fas fa-edit fa-sm text-white-50"></i>
+                        EDIT
+                    </a>
+                </div>
                 <div class="card card-secondary shadow card-outline card-outline-tabs">
+                    
                     <div class="card-header p-0 border-bottom-0">
                         <ul class="nav nav-tabs" id="custom-tabs" role="tablist">
                             <li class="nav-item">
@@ -188,7 +197,9 @@
                             </li> --}}
                         </ul>
                     </div>
+                    
                     <div class="card-body">
+                        
                         <div class="tab-content" id="custom-tab-content">
                             <div class="tab-pane fade <?= $data['referrer'] === 'acquisition' ? 'show active' : '' ; ?>" id="acquisition" role="tabpanel"
                                 aria-labelledby="acquisition-tab">
@@ -215,6 +226,7 @@
                                 @include('layouts.tabs.documents')
                             </div> --}}
                         </div>
+                        
                     </div>
                 </div>
             </div>

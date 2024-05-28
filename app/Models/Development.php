@@ -5,6 +5,8 @@ use App\Entity;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Auth;
+use App\Models\ActivityLog;
 
 class Development extends Model
 {
@@ -156,6 +158,8 @@ class Development extends Model
     }
     public function updateDevelopment($request, $id){
         try {
+            Log::info($request);
+
             $development = Development::where('developments.id', '=', $id)
             ->update([
                 'developments.existing_stories' => $request->formData['existing_stories'],
@@ -174,6 +178,13 @@ class Development extends Model
                 'developments.overall_budget' => $request->formData['overall_budget'],
                 'developments.actual_spend' => $request->formData['actual_spend'],
             ]);
+
+            // $activity = insertActivityLog(Auth::user()->id, 'Updated property development details' , 'Development tab in property details page' , 'UPDATE');
+            // DB::table('detailed_activity_logs')->insert([
+            //     [ 'log_id' => $activity, 'activity_field' =>  $request['field'], 'details' => $request['value'], 'details_old' => $old_value[0]],
+            
+            // ])
+
 
             $propertyID = Development::where('developments.id', '=', $id)
             ->selectRaw('developments.property_id')

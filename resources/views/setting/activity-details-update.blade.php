@@ -31,19 +31,24 @@
                                     <thead>
                                         <tr>
                                             <th>Field</th>
-                                            <th>Data</th>
+                                            <th>Old Data</th>
+                                            <th>New Data</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if ($details)
+                                        @if ($details->isEmpty())
+                                        <tr>
+                                            <td colspan="3">No Data Available</td>
+                                        </tr>
+                                            
+                                        @else
                                             @foreach ($details as $item)
                                             <tr>                       
                                                 <td>{{ $item->activity_field }} </td>
+                                                <td> {{ $item->details_old }} </td>
                                                 <td> {{ $item->details }} </td>
                                             </tr>    
                                             @endforeach
-                                        @else
-                                            No Data Available
                                         @endif
                                     </tbody>
 

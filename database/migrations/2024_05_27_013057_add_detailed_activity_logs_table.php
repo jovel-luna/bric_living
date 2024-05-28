@@ -18,6 +18,7 @@ class AddDetailedActivityLogsTable extends Migration
             $table->foreignId('log_id')->constrained('activity_logs');
             $table->string('activity_field');
             $table->string('details')->default('NA');
+            $table->string('details_old')->default('NA');
             $table->timestamps();
            
         });
