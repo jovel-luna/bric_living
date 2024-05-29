@@ -1,8 +1,7 @@
 <?php
 
 ?>
-<div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalTitle"
-    aria-hidden="true">
+<div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -37,7 +36,18 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="status" class="col-form-label">Contract Status</label>
-                                <input type="text" class="form-control" id="status" autocomplete="off">
+                                <!-- <input type="text" class="form-control" id="status" autocomplete="off"> -->
+                                <select class="form-control selectpicker" name="status" id="status">
+                                    <option value=""></option>
+                                    <option value="App Sent">
+                                        App Sent</option>
+                                    <option value="Contract Sent">
+                                        Contract Sent</option>
+                                    <option value="Contract Signed">
+                                        Contract Signed</option>
+                                    <option value="Pending Info">
+                                        Pending Info</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6">
