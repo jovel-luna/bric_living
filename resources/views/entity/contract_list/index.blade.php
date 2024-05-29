@@ -28,28 +28,42 @@
                         </div>
                     </div>
                 @endif
+                {{-- @include('layouts.templates.filter.filter-contracts') --}}
                 <table id="contractInfoTable" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Property Ref Number</th>
-                            <th>Tenant Name</th>
+                            <th>City</th>
+                            <th>Area</th>
+                            <th>House No./Street</th>
                             <th>Contract Status</th>
                             <th>Paid Deposits?</th>
-                            <th>Has Outstanding Documents?</th>
+                            <th>Complete Documents?</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>City</th>
+                            <th>Area</th>
+                            <th>House No./Street</th>
+                            <th>Contract Status</th>
+                            <th>Paid Deposits?</th>
+                            <th>Complete Documents?</th>
+                            <th>Action</th>
+                        </tr>
+                    </tfoot>
 
                 </table>
             </div>
         </div>
     </section>
 @endsection
+@include('layouts.templates.popups.filter-popup-contracts')
 @push('scripts')
     <script>
-        function locations(ref_no = '', id = '', name = '', tenant_contract_status = '', deposits_paid = '',
+        function locations(city = '', area = '', name_street = '', tenant_contract_status = '', deposits_paid = '',
             document_outstanding =
             '') {
 
@@ -72,12 +86,13 @@
                         $('.loading-container').show();
                     },
                     data: {
-                        ref_no: ref_no,
-                        name: name,
-                        id: id,
+                        city: city,
+                        area: area,
+                        name_street: name_street,
                         tenant_contract_status: tenant_contract_status,
                         deposits_paid: deposits_paid,
                         document_outstanding: document_outstanding,
+
                     },
                     dataSrc: function(json) {
                         console.log('Received data:', json); // Debug received data
@@ -88,13 +103,18 @@
                     }
                 },
                 columns: [{
-                        data: 'ref_no',
-                        name: 'ref_no',
+                        data: 'city',
+                        name: 'city',
+                        orderable: true,
+                    },
+                    {
+                        data: 'area',
+                        name: 'area',
                         orderable: true
                     },
                     {
-                        data: 'name',
-                        name: 'name',
+                        data: 'name_street',
+                        name: 'name_street',
                         orderable: true
                     },
                     {
@@ -108,8 +128,10 @@
                         orderable: true,
                         render: function(data, type, row) {
                             if (data == 1) {
+                                data = "Yes"
                                 return "Yes"
                             } else {
+                                data = "No"
                                 return "No"
                             }
                         }
@@ -120,8 +142,10 @@
                         orderable: true,
                         render: function(data, type, row) {
                             if (data == 1) {
+                                data = "Yes"
                                 return "Yes"
                             } else {
+                                data = "No"
                                 return "No"
                             }
                         }
@@ -131,12 +155,77 @@
                         orderable: false, // <i class="fa-solid fa-trash-can"></i>
                         render: function(data, type, row) {
                             return '<div class="action-btn d-flex gap-1 justify-content-center"><a href="' +
-                                baseUrl + '/' + 'lettings/contract/show/' + row.id +
-                                '" id="view-txt-btn" class="view" title="View"><i class="view icon fa-regular fa-eye" style="color: #005eff;"></i></a></div>'; // Adjust this as needed
+                                baseUrl + '/' + 'property/details/' + row.id +
+                                '?tenant_id=' + row.tenant_id +
+                                '&contract_details=yes#letting-tab" id="view-txt-btn" class="view" title="View"><i class="view icon fa-regular fa-eye" style="color: #005eff;"></i></a></div>'; // Adjust this as needed
                         }
                     }
-                ]
+                ],
+                initComplete: function() {
+
+                    let AddressCol = this.api().column(2)
+                    let AddressInput = document.querySelector("#address")
+                    let areaCol = this.api().column(1)
+                    let areaInput = document.querySelector("#area")
+                    let cityCol = this.api().column()
+                    let cityInput = document.querySelector("#city")
+
+                    let statusCol = this.api().column(3)
+                    let statusInput = document.querySelector("#status")
+                    let depositsCol = this.api().column(4)
+                    let depositsInput = document.querySelector("#deposits")
+                    let docsCol = this.api().column(5)
+                    let docsInput = document.querySelector("#docs")
+
+
+                    let filterSubmit = document.querySelector("#filter-view")
+                    let clearFilter = document.querySelector("#clear-filter")
+
+
+                    filterSubmit.addEventListener('click', () => {
+                        AddressCol.search(AddressInput.value).draw();
+                        cityCol.search(cityInput.value).draw();
+                        areaCol.search(areaInput.value).draw();
+
+                        statusCol.search(statusInput.value).draw();
+                        depositsCol.search(depositsInput.value).draw();
+                        docsCol.search(docsInput.value).draw();
+            
+                    })
+
+                    clearFilter.addEventListener('click', () => {
+                        $('#close-modal').click()
+
+                        AddressCol.search("").draw();
+                        cityCol.search("").draw();
+                        areaCol.search("").draw();
+
+                        statusCol.search("").draw();
+                        depositsCol.search("").draw();
+                        docsCol.search("").draw();
+            
+                    })
+
+                }
             });
+
+            var element = `
+                        <div class="col-md-2">
+                            <button class="filter-btn d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#filterModal">
+                                <i class="fa fa-filter"></i>
+                                Filter
+                            </button>
+                        </div>`;
+
+
+            $(element).insertBefore('#contractInfoTable_filter ')
+
+            var parentElement = $('#contractInfoTable_filter').parent()
+            parentElement.css({
+                'display': 'flex',
+                'justify-content': 'flex-end'
+            })
+
         }
 
         // Initialize the DataTable

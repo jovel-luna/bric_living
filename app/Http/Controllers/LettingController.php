@@ -23,7 +23,9 @@ class LettingController extends Controller
             /* This is the code that is being used to return the data to the datatable. */
             return Datatables::of($contracts)
                     ->addIndexColumn()
-        
+                    ->setRowId(function ($contracts) {
+                        return $contracts->id;
+                    })
                     ->make(true);
 
          }

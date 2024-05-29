@@ -56,15 +56,18 @@ class Letting extends Model
 
         $contracts = DB::table('tenants')
         ->leftJoin('properties', 'tenants.property_id', '=', 'properties.id')
+        ->leftJoin('locations', 'properties.location_id', '=', 'locations.id')
         ->select(
-            'properties.ref_no',
-            'tenants.id',
-            'tenants.name',
+            'properties.id',
+            'tenants.id as tenant_id',
+            'locations.city',
+            'locations.area',
+            DB::raw("CONCAT(properties.house_no_or_name,' ',properties.street) as name_street"),
             'tenants.tenant_contract_status',
             'tenants.deposits_paid',
             'tenants.document_outstanding'
         )->get();
-
+        // Log::info($contracts);
         return $contracts;
     }
 

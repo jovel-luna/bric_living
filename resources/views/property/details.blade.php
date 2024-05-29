@@ -213,7 +213,13 @@
                                 aria-labelledby="operation-tab">
                                 @include('layouts.tabs.operations')
                             </div>
+                            {{-- Lettings Page --}}
                             <div class="tab-pane fade <?= $data['referrer'] === 'lettings' ? 'show active' : '' ; ?>" id="letting" role="tabpanel"
+                                aria-labelledby="letting-tab">
+                                @include('layouts.tabs.lettings')
+                            </div>
+                            {{-- Lettings Contract Info Page --}}
+                            <div class="tab-pane fade <?= $data['referrer'] === 'lettings/contract-info' ? 'show active' : '' ; ?>" id="letting" role="tabpanel"
                                 aria-labelledby="letting-tab">
                                 @include('layouts.tabs.lettings')
                             </div>
