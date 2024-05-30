@@ -480,6 +480,7 @@ class AcquisitionController extends Controller
     {
         if ($request->ajax()) {
             try {
+            
                 switch ($request->formData['property_phase']) {
                     case 'In Development':
                         if ($request->formData['completion_date']) {
@@ -583,6 +584,10 @@ class AcquisitionController extends Controller
                     'acquisitions.tennure' => $request->formData['tennure'],
                     'acquisitions.ground_rent' => $request->formData['ground_rent'],
                     'acquisitions.ground_rent_due' => $request->formData['ground_rent_due'],
+
+                    // 'acquisitions.bridge_loan_status' => $request->formData['bridge_loan_status'],
+                    // 'acquisitions.equity' => $request->formData['equity_required'],
+
                 ]);
 
                 // operations insurance
@@ -641,6 +646,7 @@ class AcquisitionController extends Controller
     public function updateAcquisition(Request $request){
         if ($request->ajax()) {
             try {
+            
                 if ($request->saveID == 1) {
                     $data = DB::table('acquisitions')
                     ->where('acquisitions.id', '=', $request->formData['id'])

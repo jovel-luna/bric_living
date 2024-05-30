@@ -17,7 +17,7 @@
                 </div>
             </div>
 
-            <form method="POST" autocomplete="off" enctype="multipart/form-data">
+            <form method="POST" action="{{route('property.update' , $id)}}"  autocomplete="off" enctype="multipart/form-data">
                 @method('PATCH')
                 @csrf
 
@@ -38,11 +38,34 @@
                                                         class="isRequired"> * </span></label>
 
                                                 <div class="">
-
+                                                    <?php
+                                                    $propertyPhase = [
+                                                        'Acquiring' => 'Acquiring',
+                                                        'In Development' => 'In Development',
+                                                        'Bric Property' => 'Bric Property',
+                                                        'Inherited Tenant' => 'Inherited Tenant',
+                                                    ];
+                                                    ?>
                                                     <select name="property_phase" id="property_phase"
                                                         class="form-control form-control-alternative{{ $errors->has('property_phase') ? ' is-invalid' : '' }}">
                                                         <option value="">Please Select</option>
-
+                                                        @if (old('property_phase'))
+                                                            @foreach ($propertyPhase as $pPhase_key => $pPhase)
+                                                                <option value="{{ $pPhase_key }}"
+                                                                    {{ $pPhase_key === old('property_phase') ? 'selected' : '' }}>
+                                                                    {{ $pPhase }}</option>
+                                                            @endforeach
+                                                        @else
+                                                            @foreach ($propertyPhase as $pPhase_key => $pPhase)
+                                                                @if ($pPhase_key == $property->property_phase)
+                                                                    <option value="{{ $pPhase_key }}" selected>
+                                                                        {{ $pPhase }}</option>
+                                                                @else
+                                                                    <option value="{{ $pPhase_key }}">
+                                                                        {{ $pPhase }}</option>
+                                                                @endif
+                                                            @endforeach
+                                                        @endif
                                                     </select>
                                                     @error('property_phase')
                                                         <span class="invalid-feedback" role="alert">
@@ -57,19 +80,18 @@
                                                         class="isRequired"> * </span></label>
 
                                                 <div class="">
-                                    
+
                                                     <select name="entity" id="entity"
                                                         class="form-control form-control-alternative">
                                                         <option value="">Please Select</option>
                                                         @foreach ($all_entities as $lsKey => $lsVal)
-                                                        @if($property_entity_id->entity_id == $lsVal->id)
-                                                        <option value="{{ $lsVal->id }}" selected>
-                                                            {{ $lsVal->entity }}</option>
-                                                        @else
-                                                        <option value="{{ $lsVal->id }}">
-                                                            {{ $lsVal->entity }}</option>
-                                                        @endif
-                                                            
+                                                            @if ($property_entity_id->entity_id == $lsVal->id)
+                                                                <option value="{{ $lsVal->id }}" selected>
+                                                                    {{ $lsVal->entity }}</option>
+                                                            @else
+                                                                <option value="{{ $lsVal->id }}">
+                                                                    {{ $lsVal->entity }}</option>
+                                                            @endif
                                                         @endforeach
                                                     </select>
 
@@ -230,19 +252,19 @@
 
                                                 <div class="">
                                                     <select name="status" id="status"
-                                                    class="form-control form-control-alternative">
-                                                    <option value="">Please Select</option>
-                                                    <option value="0">Add new letting status</option>
-                                                    @foreach ($all_letting_status as $lsKey => $lsVal)
-                                                    @if($property->status == $lsVal->id )
-                                                        <option value="{{ $lsVal->id }}" selected>
-                                                            {{ $lsVal->letting_status_name }}</option>
-                                                    @else
-                                                    <option value="{{ $lsVal->id }}">
-                                                        {{ $lsVal->letting_status_name }}</option>
-                                                    @endif
-                                                    @endforeach
-                                                </select>
+                                                        class="form-control form-control-alternative">
+                                                        <option value="">Please Select</option>
+                                                        <option value="0">Add new letting status</option>
+                                                        @foreach ($all_letting_status as $lsKey => $lsVal)
+                                                            @if ($property->status == $lsVal->id)
+                                                                <option value="{{ $lsVal->id }}" selected>
+                                                                    {{ $lsVal->letting_status_name }}</option>
+                                                            @else
+                                                                <option value="{{ $lsVal->id }}">
+                                                                    {{ $lsVal->letting_status_name }}</option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
 
                                                     @error('status')
                                                         <span class="invalid-feedback" role="alert">
@@ -260,6 +282,10 @@
 
                     </div>
                 </div>
+                <div class="row mb-3 d-flex justify-content-center gap-2"><a
+                        href="{{route('get.property-details' , $id)}}" class="btn btn-danger shadow-sm"
+                        style="width: 10%;">Cancel</a> <button type="submit" class="btn btn-success shadow-sm"
+                        style="width: 10%;" data-form-type="action">Update</button></div>
 
             </form>
         </div>

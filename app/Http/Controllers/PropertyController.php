@@ -432,9 +432,16 @@ class PropertyController extends Controller
                         break;
                 }
             }
+
+            $entity = DB::table('entities')
+                ->join('entity_properties', 'entities.id', '=', 'entity_properties.entity_id')
+                ->join('properties', 'entity_properties.property_id', '=', 'properties.id')
+                ->where('properties.id', $id)
+                ->first();
             $data = [
                 'id' => $id,
                 'property' => $property,
+                'entity' => $entity,
                 'acquisition' => $acquisition,
                 'operation_utility' => $operation_utility,
                 'operation_budget' => $operation_budget,
@@ -450,7 +457,7 @@ class PropertyController extends Controller
                 'currentSlug' => $currentSlug,
             ];
             $pid = $id;
-            return view('property.details', compact('data', 'pid'));
+            return view('property.details', compact('data', 'pid', 'entity'));
         }else{
             $data = [
                 'id' => $id,
@@ -487,12 +494,12 @@ class PropertyController extends Controller
         $all_letting_status = LettingStatus::all();
         $property_entity_id = EntityProperties::where('property_id' , $id )->first();
 
-        return view('property.edit', compact('property', 'location', 'all_locations', 'all_entities', 'all_letting_status', 'property_entity_id' ));
+        return view('property.edit', compact('id' ,'property', 'location', 'all_locations', 'all_entities', 'all_letting_status', 'property_entity_id' ));
     }
 
     public function editBudget($id)
     {
-        //
+        
     }
 
     public function editExpenditure($id)
@@ -509,7 +516,60 @@ class PropertyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // Log::info($request);
+        // Log::info($id);
+
+        $property = Property::find($id);
+        $entity_property = EntityProperties::where('property_id',$id)->first();
+        Log::info($entity_property);
+        
+        if($request->property_phase != $property->property_phase){
+            $property->property_phase = $request->property_phase;
+            Log::info($request->property_phase);
+        }
+
+        if($request->entity != $entity_property->entity_id){
+            $property->entity = $request->entity;
+            Log::info($request->entity);
+        }
+
+        if($request->postcode != $property->location_id){
+            $property->location_id = $request->postcode;
+            Log::info($request->postcode);
+        }
+
+        if($request->house_no != $property->house_no_or_name){
+            $property->house_no_or_name = $request->house_no;
+            Log::info($request->house_no);
+        }
+
+        if($request->street != $property->street){
+            $property->street = $request->street;
+            Log::info($request->street);
+        }
+
+        if($request->no_bric_beds != $property->no_bric_beds){
+            $property->no_bric_beds = $request->no_bric_beds;
+            Log::info($request->no_bric_beds);
+        }
+
+        if($request->no_of_bric_bathroom != $property->no_bric_bathrooms){
+            $property->no_bric_bathrooms = $request->no_of_bric_bathroom;
+            Log::info($request->no_of_bric_bathroom);
+        }
+
+        if($request->status != $property->status){
+            $property->status = $request->status;
+            Log::info($request->status);
+        }
+
+
+        $property->save();
+        $entity_property->save();
+
+        return redirect()->route('get.property-details' , $id);
+        
+
     }
     public function updateBudget(Request $request,$id)
     {

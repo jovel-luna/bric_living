@@ -258,6 +258,14 @@
                                 {{ $data['acquisition']['acquisition_cost'] ? $data['acquisition']['acquisition_cost'] : 'N/A' }}
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Equity Required:</strong></p>
+                            </div>
+                            <div class="col-md-6">
+                                {{ $data['acquisition']['equity'] ? $data['acquisition']['equity'] : 'N/A' }}
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-4">
                         <div class="row">
@@ -270,6 +278,14 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
+                                <p><strong>Bridge Loan Status:</strong></p>
+                            </div>
+                            <div class="col-md-6">
+                                {{ $data['acquisition']['bridge_loan_status'] ? $data['acquisition']['bridge_loan_status'] . '%' : 'N/A' }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
                                 <p><strong>Estimated bridge loan period (months):</strong></p>
                             </div>
                             <div class="col-md-6">
@@ -278,7 +294,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <p><strong>Loan %:</strong></p>
+                                <p><strong>Loan Interest Rate:</strong></p>
                             </div>
                             <div class="col-md-6">
                                 {{ $data['acquisition']['loan_percentage'] ? $data['acquisition']['loan_percentage'] . '%' : 'N/A' }}

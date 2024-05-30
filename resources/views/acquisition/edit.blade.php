@@ -28,7 +28,7 @@
                         <h6 class="m-0 font-weight-bold">Edit Acquisition</h6>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('property.update', $data) }}" autocomplete="off" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('get.update-acquisition', $data) }}" autocomplete="off" enctype="multipart/form-data">
                             @method('PATCH')
                             @csrf
                             <!-- <h6 class="mb-3">Acquisition Info</h6> -->
@@ -883,14 +883,7 @@
 
             function validateFields(){
                 var fieldsData = {
-                    property_phase : {value: $('#property_phase').val(), id: 'property_phase'},
-                    entity : {value: $('#entity').val(), id: 'entity'},
-                    city : {value: $('#city').val(), id: 'city'},
-                    area : {value: $('#area').val(), id: 'area'},
-                    postcode : {value: $('#postcode').val(), id: 'postcode'},
-                    house_no : {value: $('#house_no').val(), id: 'house_no'},
-                    street : {value: $('#street').val(), id: 'street'},
-                    status : {value: $('#status').val(), id: 'status'},
+
                     acquisition_status : {value: $('#acquisition_status').val(), id: 'acquisition_status'},
                     single_asset_portfolio : {value: $('#single_asset_portfolio').val(), id: 'single_asset_portfolio'},
                     existing_bedroom_no : {value: $('#existing_bedroom_no').val(), id: 'existing_bedroom_no'},
@@ -899,45 +892,15 @@
                     estimated_period : {value: $('#estimated_period').val(), id: 'estimated_period'},
                     capex : {value: $('#capex_budget').val(), id: 'capex_budget'},
                     tennure : {value: $('#tennure').val(), id: 'tennure'},
-                    // insurance_value : {value: $('#insurance_value').val(), id: 'insurance_value'},
-                    // insurance_in_cost : {value: $('#insurance_in_cost').val(), id: 'insurance_in_cost'},
-                    // insurance_renewal_date : {value: $("#insurance_renewal_date").datepicker('getDate'), id: 'insurance_renewal_date'},
-                    // project_start_date : {value: $("#project_start_date").datepicker('getDate'), id: 'project_start_date'},
-                    // projected_completion_date : {value: $("#projected_completion_date").datepicker('getDate'), id: 'projected_completion_date'},
-                    // development_status : {value: $("#development_status").val(), id: 'development_status'},
+                    
                 };
-
-                // fieldsData['insurance_value'] = {
-                //     value: $('#insurance_value').val(), id: 'insurance_value',
-                // }                
-                // var property_phase = $('#property_phase').val();
-                // var entity = $('#entity').val();
-                // var city = $('#city').val();
-                // var area = $('#area').val();
-                // var house_no = $('#house_no').val();
-                // var street = $('#street').val();
-                // var postcode = $('#postcode').val();
-                // var status = $('#status').val();
-                // var acquisition_status = $('#acquisition_status').val();
-                // var single_asset_portfolio = $('#single_asset_portfolio').val();
-                // var existing_bedroom_no = $('#existing_bedroom_no').val();
-                // var asking_price = $('#asking_price').val();
-                // var agent = $('#agent').val();
-                // var estimated_period = $('#estimated_period').val();
-                // var tennure = $('#tennure').val();
-                // var capex = $('#capex_budget').val();
-                // var insurance_value = $('#insurance_value').val();
-                // var insurance_in_cost = $('#insurance_in_cost').val();
-                // var insurance_renewal_date = $("#insurance_renewal_date").datepicker('getDate');
-                // var project_start_date = $("#project_start_date").datepicker('getDate');
-                // var projected_completion_date = $("#projected_completion_date").datepicker('getDate');
-                // var development_status = $("#development_status").val();
 
                 var reqFieldsStatus = false;
                 var completionDateStatus = false;
                 var insuranceStatus = false;
                 var developmentInfoStatus = false;
                 switch ($('#property_phase').val()) {
+
                     case 'Acquiring':
                         reqFieldsStatus = checkRequiredFields(fieldsData);
                         completionDateStatus = true;
@@ -945,9 +908,10 @@
                         developmentInfoStatus = true;
                         break;
                     default:
-                        fieldsData['project_start_date'] = { value: $("#project_start_date").datepicker('getDate'), id: 'project_start_date' };
-                        fieldsData['projected_completion_date'] = { value: $("#projected_completion_date").datepicker('getDate'), id: 'projected_completion_date' };
-                        fieldsData['development_status'] = { value: $("#development_status").val(), id: 'development_status' };
+                        console.log('switch default')
+                        // fieldsData['project_start_date'] = { value: $("#project_start_date").datepicker('getDate'), id: 'project_start_date' };
+                        // fieldsData['projected_completion_date'] = { value: $("#projected_completion_date").datepicker('getDate'), id: 'projected_completion_date' };
+                        // fieldsData['development_status'] = { value: $("#development_status").val(), id: 'development_status' };
                         if (fieldsData['acquisition_status']['value'] === 'Completed' && $("#completion_date").datepicker('getDate') != null) {
                             fieldsData['insurance_value'] = { value: $('#insurance_value').val(), id: 'insurance_value', };
                             fieldsData['insurance_in_cost'] = { value: $('#insurance_in_cost').val(), id: 'insurance_in_cost', };
@@ -960,84 +924,29 @@
                             $('#insurance_renewal_date').removeClass("is-invalid");
                         }
                         reqFieldsStatus = checkRequiredFields(fieldsData);
-                        completionDateStatus = checkCompletionDate(fieldsData['acquisition_status']['value']);
-                        developmentInfoStatus = checkDevelopmentInfo(fieldsData['property_phase']['value'], fieldsData['project_start_date']['value'], fieldsData['projected_completion_date']['value'], fieldsData['development_status']['value']);
+                        console.log('reqFieldsStatus')
+                        console.log(reqFieldsStatus)
+                        return reqFieldsStatus;
+                        // return true;
+                        // completionDateStatus = checkCompletionDate(fieldsData['acquisition_status']['value']);
+                        // developmentInfoStatus = checkDevelopmentInfo(fieldsData['property_phase']['value'], fieldsData['project_start_date']['value'], fieldsData['projected_completion_date']['value'], fieldsData['development_status']['value']);
                         break;
                 }
                 console.log("🚀 ~ file: edit.blade.php:1229 ~ validateFields ~ developmentInfoStatus:", developmentInfoStatus)
                 console.log("🚀 ~ file: edit.blade.php:1229 ~ validateFields ~ insuranceStatus:", insuranceStatus)
                 console.log("🚀 ~ file: edit.blade.php:1229 ~ validateFields ~ completionDateStatus:", completionDateStatus)
                 console.log("🚀 ~ file: edit.blade.php:1229 ~ validateFields ~ reqFieldsStatus:", reqFieldsStatus)
-                if (reqFieldsStatus && completionDateStatus && insuranceStatus && developmentInfoStatus) {
-                    $.each(fieldsData, function (x, xVal) { 
-                         $('#'+xVal['id']).removeClass("is-invalid");
-                    });
-                    if ($('#no_of_bric_beds').val()) {
-                        $('#dev_existing_beds').val($('#no_of_bric_beds').val());
-                    }
-                    if($('#capex_budget').val()){
-                        $('#dev_capex_budget').val($('#capex_budget').val());
-                    }
-                    if ($('#property_phase').val() != 'Acquiring') {
-                        if ($('#acquisition_status').val() != 'Completed') {
-                            Swal.fire({
-                                title: 'Warning',
-                                text: 'Please change the Acquisition Status to "Completed" before proceeding',
-                                confirmButtonText: 'Continue',
-                                icon: 'warning',
-                            });
-                            return false;
-                        }else{
-                            return true;
-                        }
-                    }else{
-                        return true;
-                    }
-                }else{
-                    $.each(fieldsData, function (x, xVal) {
-                        if (xVal['value'] == "" || xVal['value'] == null) {
-                            $('#'+xVal['id']).addClass("is-invalid");
-                        }
-                    });
-                    switch ($('#property_phase').val()) {
-                        case 'Acquiring':
-                            var errorAlert = 1;
-                            break;
-                        default:
-                            if (reqFieldsStatus == false) { 
-                                var errorAlert = 1;
-                            }else{
-                                var errorAlert = 2;
-                            }
-                            break;
-                    }
-
-                    if (errorAlert == 1) {
-                        Swal.fire({
-                            title: 'Please fill out all required fields',
-                            confirmButtonText: 'Continue',
-                            icon: 'warning',
-                        });
-                    }else{
-                        Swal.fire({
-                            title: 'Warning',
-                            text: 'Please change the Acquisition Status to "Completed" before proceeding',
-                            confirmButtonText: 'Continue',
-                            icon: 'warning',
-                        });
-                    }
-
-                    return false;
-                }
-                // if (property_phase != "" && entity != "" && city != "" && area != "" && house_no != "" && street != "" && postcode != "" && status != "" && acquisition_status != "" && single_asset_portfolio != "" && existing_bedroom_no != "" && asking_price != "" && agent != "" && estimated_period !="" && tennure != "" && capex!= "" && hasInsurance == true && cdIsRequired == false && developmentInfo == true) {
-                //     $('#property_phase, #entity, #city, #area, #house_no, #street, #postcode').removeClass("is-invalid");
+                // if (reqFieldsStatus && completionDateStatus && insuranceStatus && developmentInfoStatus) {
+                //     $.each(fieldsData, function (x, xVal) { 
+                //          $('#'+xVal['id']).removeClass("is-invalid");
+                //     });
                 //     if ($('#no_of_bric_beds').val()) {
                 //         $('#dev_existing_beds').val($('#no_of_bric_beds').val());
                 //     }
                 //     if($('#capex_budget').val()){
                 //         $('#dev_capex_budget').val($('#capex_budget').val());
                 //     }
-                //     if ($('#property_phase').val() != 'Acquisition') {
+                //     if ($('#property_phase').val() != 'Acquiring') {
                 //         if ($('#acquisition_status').val() != 'Completed') {
                 //             Swal.fire({
                 //                 title: 'Warning',
@@ -1052,60 +961,37 @@
                 //     }else{
                 //         return true;
                 //     }
+                    
                 // }else{
-                //     if (property_phase == "") { $('#property_phase').addClass("is-invalid") }
-                //     if (entity == "") { $('#entity').addClass("is-invalid") }
-                //     if (city == "") { $('#city').addClass("is-invalid") }
-                //     if (area == "") { $('#area').addClass("is-invalid") }
-                //     if (house_no == "") { $('#house_no').addClass("is-invalid") }
-                //     if (street == "") { $('#street').addClass("is-invalid") }
-                //     if (postcode == "") { $('#postcode').addClass("is-invalid") }
-                //     if (status == "") { $('#status').addClass("is-invalid") }
-
-                //     if (acquisition_status == "") { $('#acquisition_status').addClass("is-invalid") }
-                //     if (single_asset_portfolio == "") { $('#single_asset_portfolio').addClass("is-invalid") }
-                //     if (existing_bedroom_no == "") { $('#existing_bedroom_no').addClass("is-invalid") }
-                //     if (asking_price == "") { $('#asking_price').addClass("is-invalid") }
-                //     if (agent == "") { $('#agent').addClass("is-invalid") }
-                //     if (estimated_period == "") { $('#estimated_period').addClass("is-invalid") }
-                //     if (tennure == "") { $('#tennure').addClass("is-invalid") }
-                //     if (capex == "") { $('#capex_budget').addClass("is-invalid") }
-                //     if (property_phase != 'Acquisition') {
-                //         if ($("#completion_date").datepicker('getDate') === null) {
-                //             if (insurance_value == "") { $('#insurance_value').addClass("is-invalid") }
-                //             if (insurance_in_cost == "") { $('#insurance_in_cost').addClass("is-invalid") }
-                //             if (insurance_renewal_date == null) { $('#insurance_renewal_date').addClass("is-invalid") }
+                //     $.each(fieldsData, function (x, xVal) {
+                //         if (xVal['value'] == "" || xVal['value'] == null) {
+                //             $('#'+xVal['id']).addClass("is-invalid");
                 //         }
-                //         if ($('#acquisition_status').val() != "") {
-                //             if ($('#acquisition_status').val() === "Completed") {
-                //                 if ($('#completion_date').val() == "") {
-                //                     $('#completion_date').addClass("is-invalid");
-                //                 }
+                //     });
+                //     switch ($('#property_phase').val()) {
+                //         case 'Acquiring':
+                //             var errorAlert = 1;
+                //             break;
+                //         default:
+                //             if (reqFieldsStatus == false) { 
+                //                 var errorAlert = 1;
+                //             }else{
+                //                 var errorAlert = 2;
                 //             }
-                //         }
-                //         if (project_start_date == null) { $('#project_start_date').addClass("is-invalid") }
-                //         if (projected_completion_date == null) { $('#projected_completion_date').addClass("is-invalid") }
-                //         if (development_status == "") { $('#development_status').addClass("is-invalid") }
+                //             break;
                 //     }
-                //     if ($('#property_phase').val() != 'Acquisition') {
-                //         if ($('#acquisition_status').val() != 'Completed') {
-                //             Swal.fire({
-                //                 title: 'Warning',
-                //                 text: 'Please change the Acquisition Status to "Completed" before proceeding',
-                //                 confirmButtonText: 'Continue',
-                //                 icon: 'warning',
-                //             });
-                //         }
-                //     }else{
+
+                //     if (errorAlert == 1) {
                 //         Swal.fire({
                 //             title: 'Please fill out all required fields',
                 //             confirmButtonText: 'Continue',
                 //             icon: 'warning',
                 //         });
                 //     }
-                    
+
                 //     return false;
                 // }
+
             }
 
             function checkRequiredFields(data){
@@ -1158,9 +1044,12 @@
             }
 
             $("form").submit(function(e){
+                console.log('form submit')
                 e.preventDefault();
                 var validateStatus = validateFields();
+                console.log(validateStatus)
                 if(validateStatus){
+                    console.log('form validateStatus')
                     const fData = new FormData(e.target);
                     let formData = {};
 
@@ -1179,12 +1068,14 @@
                     formData['insurance_in_place'] = $('#insurance_in_place').is(":checked") ? 1 : 0;
 
                     jQuery.ajax({
-                        url: "{{ route('acquisition.update', $data->id) }}",
-                        method: 'put',
+                        url: "{{ route('get.update-acquisition', $data) }}",
+                        method: 'post',
                         data: {
                             formData: formData,
                         },
                         success: function(response){
+                            console.log(response)
+                            console.log('success')
                             if (response['data'] === 'Success') {
                                 Swal.fire({
                                 title: 'Success',

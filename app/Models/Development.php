@@ -158,7 +158,7 @@ class Development extends Model
     }
     public function updateDevelopment($request, $id){
         try {
-            Log::info($request);
+            // Log::info($request);
 
             $development = Development::where('developments.id', '=', $id)
             ->update([

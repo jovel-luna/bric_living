@@ -74,10 +74,52 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4">
+                                        <p><strong>Letting Status</strong></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ $data['property']['letting_status_name'] }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
                                         <p><strong>Entity</strong></p>
                                     </div>
                                     <div class="col-md-6">
-                                        {{ $data['property']['entity'] ? $data['property']['entity'] : 'N/A' }}
+                                        {{ $entity->entity ? $entity->entity : 'N/A' }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p><strong>Bric Beds</strong></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ $data['property']['no_bric_beds'] ? $data['property']['no_bric_beds'] : 'N/A' }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p><strong>Bric Bathrooms</strong></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ $data['property']['no_bric_bathrooms'] ? $data['property']['no_bric_bathrooms'] : 'N/A' }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p><strong>Purchase Date:</strong></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ $data['property']['purchase_date'] != '00/00/0000' ? $data['property']['purchase_date'] : 'TBC'; }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p><strong>Postcode</strong></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ $data['property']['postcode'] ? $data['property']['postcode'] : 'N/A' }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -106,48 +148,6 @@
                                         @else
                                             <span>N/A</span>
                                         @endif
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <p><strong>Postcode</strong></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ $data['property']['postcode'] ? $data['property']['postcode'] : 'N/A' }}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <p><strong>Bric Beds</strong></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ $data['property']['no_bric_beds'] ? $data['property']['no_bric_beds'] : 'N/A' }}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <p><strong>Bric Bathrooms</strong></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ $data['property']['no_bric_bathrooms'] ? $data['property']['no_bric_bathrooms'] : 'N/A' }}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <p><strong>Letting Status</strong></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ $data['property']['letting_status_name'] }}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <p><strong>Purchase Date:</strong></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ $data['property']['purchase_date'] != '00/00/0000' ? $data['property']['purchase_date'] : 'TBC'; }}
                                     </div>
                                 </div>
                             </div>

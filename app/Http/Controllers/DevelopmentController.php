@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use DataTables;
 use Illuminate\Support\Facades\Response;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Illuminate\Support\Facades\Log;
 
 class DevelopmentController extends Controller
 {
@@ -86,12 +87,14 @@ class DevelopmentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $propertyID = Development::select('property_id')->where('developments.id', $id)->first();
+        // Log::info($propertyID->property_id);
         if ($request->ajax()) {
             $development =  Development::updateDevelopment($request, $id);
             return [
                 "status" => 1,
                 "data" => 'Success',
-                "id" => $development->property_id,
+                "id" => $propertyID->property_id,
             ];
         }
     }
