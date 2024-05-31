@@ -272,7 +272,8 @@
                         {
                             data: 'location',
                             name: 'location',
-                            orderable: false
+                            orderable: false,
+                           
                         },
                         {
                             data: 'date_and_time',

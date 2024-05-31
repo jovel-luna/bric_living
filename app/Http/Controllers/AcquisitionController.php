@@ -646,201 +646,173 @@ class AcquisitionController extends Controller
     public function updateAcquisition(Request $request){
         if ($request->ajax()) {
             try {
-            
-                if ($request->saveID == 1) {
-                    $data = DB::table('acquisitions')
-                    ->where('acquisitions.id', '=', $request->formData['id'])
-                    ->first();
-    
-                    $properties = DB::table('properties')
-                    ->where('properties.id', '=', $request->formData['property_id'])
-                    ->first();
-                    if ($data->asking_price != '' && $request->formData['agreed_purchase_price'] != '') {
-                        $difference = $data->asking_price - $request->formData['agreed_purchase_price'];
-                    }else{
-                        $difference = '';
-                    }
-                    if ($request->formData['agreed_purchase_price'] != '' && $data->agent_fee_percentage != '') {
-                        $agentFee = intval(round(($request->formData['agreed_purchase_price'] * ($data->agent_fee_percentage / 100)) * 1.2));
-                    }else{
-                        $agentFee = '';
-                    }
-                    if ($request->formData['agreed_purchase_price'] != '' && $data->loan_percentage != '' && $data->bridge_loan != '' && $data->estimated_period != '') {
-                        $estimatedInterest = intval(round(($request->formData['agreed_purchase_price'] * ($data->loan_percentage / 100)) * ($data->bridge_loan / 100) * $data->estimated_period));
-                    }else{
-                        $estimatedInterest = '';
-                    }
-                    if ($request->formData['agreed_purchase_price'] != '' && $data->stamp_duty != '' && $data->acquisition_cost != '' && $agentFee != '' && $data->capex_budget != '' && $estimatedInterest != '' ) {
-                        $estimatedTpc = intval(round($request->formData['agreed_purchase_price'] + $data->stamp_duty + $data->acquisition_cost + $agentFee + $data->capex_budget + $estimatedInterest));
-                    }else{
-                        $estimatedTpc = '';
-                    }
-                    if ($data->bric_y1_proposed_rent_pppw != '' && $data->tenancy_length_weeks != '' && $properties->no_bric_beds != '' && $estimatedTpc != '') {
-                        $bricPurchaseYield = round((($data->bric_y1_proposed_rent_pppw * $data->tenancy_length_weeks * $properties->no_bric_beds) / $estimatedTpc) * 100 , 3);
-                    }else{
-                        $bricPurchaseYield = '';
-                    }
-                    if ($estimatedTpc != '' && $properties->no_bric_beds != '') {
-                        $tpcBedSpace = intval(round($estimatedTpc / $properties->no_bric_beds));
-                    } else {
-                        $tpcBedSpace = '';
-                    }
-                    if ($request->formData['agreed_purchase_price'] != '' && $data->existing_bedroom_no != '') {
-                        $ebn = intval(round($request->formData['agreed_purchase_price'] / $data->existing_bedroom_no));
-                    } else {
-                        $ebn = '';
+
+                $req = $request->input('formData');
+
+                $acquisition = Acquisition::find($request->id);
+                
+                $acquisition->fill($req);
+
+                $acquisition->save();
+
+                $userID = Auth::user()->id;
+                $activity = insertActivityLog($userID, 'Updated Acquisition Details' , 'Update Acquisition Page', 'UPDATE');
+
+                $detailsArr = array();
+
+                foreach($req as $key => $value){
+                    // LogFacade::info($key);
+                    if(!empty($value)) {
+                        // LogFacade::info($key);
+                        // LogFacade::info($value);
+                        switch ($key) {
+                            case '_method':
+                                break;
+                            case '_token':
+                                break;
+                            case 'acquisition_status':
+                                $key = $value;
+                                break;
+                            case 'single_asset_portfolio':
+                                $key = "Single Asset / Portfolio";
+                                break;
+                            case 'portfolio':
+                                $key = "Portfolio";
+                                break;
+                            case 'existing_bedroom_no':
+                                $key = "Existing Bedroom No";
+                                break;
+                            case 'stamp_duty':
+                                $key = "Stamp Duty";
+                                break;
+                            case 'agent':
+                                $key = "Agent";
+                                break;
+                            case 'agent_fee_percentage':
+                                $key = "Ägent Fee Percentage";
+                                break;
+                            case 'agent_fee':
+                                $key = "Agent Fee";
+                                break;
+                            case 'estimated_tpc':
+                                $key = "Estimated TPC";
+                                break;
+                            case 'offer_date':
+                                $key = "Offer Date";
+                                break;
+                            case 'target_completion_date':
+                                $key = "Target Completion Date";
+                                break;
+                            case 'completion_date':
+                                $key = "Completion Date";
+                                break;
+                            case 'col_status':
+                                $key = "COL Status";
+                                break;
+                            case 'financing_status':
+                                $key = "Financing Status";
+                                break;
+                            case 'asking_price':
+                                $key = "Asking Price";
+                                break;
+                            case 'offer_price':
+                                $key = "Offer Price";
+                                break;
+                            case 'agreed_purchase_price':
+                                $key = "Agreed Purchase Price";
+                                break;
+                            case 'difference':
+                                $key = "Difference";
+                                break;
+                            case 'acquisition_cost':
+                                $key = "Acquisition Cost";
+                                break;
+                            case 'bridge_loan':
+                                $key = "Bridge Loan";
+                                break;
+                            case 'estimated_period':
+                                $key = "Estimated Period";
+                                break;
+                            case 'loan_percentage':
+                                $key = "Loan %";
+                                break;
+                            case 'estimated_interest':
+                                $key = "Estimated Interest";
+                                break;
+                            case 'capex_budget':
+                                $key = "Capex Budget";
+                                break;
+                            case 'bric_purchase_yield_percentage':
+                                $key = "Bric Purchase Yield Percentage";
+                                break;
+                            case 'tpc_bedspace':
+                                $key = "TPC Bedspace";
+                                break;
+                            case 'purchase_price_bedspace':
+                                $key= "Purchase Price Bedspace";
+                                break;
+                            case 'bric_y1_proposed_rent_pppw':
+                                $key = "Bric Y1 Proposed Rent PPPW";
+                                break;
+                            case 'tenancy_length_weeks':
+                                $key = "Tenancy Lenght Weeks";
+                                break;
+                            case 'tennure':
+                                $key = "Tennure";
+                                break;
+                            case 'ground_rent':
+                                $key = "Ground Rent";
+                                break;
+                            case 'ground_rent_due':
+                                $key = "Ground Rent Due";
+                                break;
+                            case 'insurance_value':
+                                $key= "Insurance Value";
+                                break;
+                            case 'insurance_in_cost':
+                                $key = "Insurance In Cost";
+                                break;
+                            case 'insurance_renewal_date':
+                                $key = "Insurance Renewal Date";
+                                break;
+                            case 'id':
+                                break;
+                            case 'property_id':
+                                break;
+                            case 'entity_id':
+                                break;
+                            case 'insurance_in_place':
+                                $key = $value;
+                            default:
+                                break;
+                        }
+
+                        if ($key == '_method') {
+                            continue;
+                        }
+                        if ($key == '_token') {
+                            continue;
+                        }
+
+                        if ($key == 'id') {
+                            continue;
+                        }
+                        if ($key == 'property_id') {
+                            continue;
+                        }
+                        if ($key == 'entity_id') {
+                            continue;
+                        }
+                      
+                        $detailsArr[] = ['log_id' => $activity,  'activity_field' => $key , 'details' => $value];
                     }
                     
-                    $location = Location::updateOrCreate([
-                        'postcode' => $request->formData['postcode'],
-                        'city' => $request->formData['city'],
-                        'area' => $request->formData['area']
-                    ]);
-    
-                    $properties = DB::table('properties')
-                    ->where('properties.id', '=', $request->formData['property_id'])
-                    ->update([
-                        'properties.house_no_or_name' => $request->formData['house_no_or_name'],
-                        'properties.street' => $request->formData['street'],
-                        // 'properties.city' => $request->formData['city'],
-                        'properties.location_id' => $location->id,
-                        'properties.status' => $request->formData['status'],
-                        'properties.no_bric_beds' => $request->formData['no_bric_beds'],
-                    ]);
-    
-                    $entity_properties = DB::table('entity_properties')
-                    ->where('entity_properties.id', '=', $request->formData['entity_property_id'])
-                    ->update([
-                        'entity_properties.entity_id' => $request->formData['entity'],
-                    ]);
-    
-                    $acquisitions = DB::table('acquisitions')
-                    ->where('acquisitions.id', '=', $request->formData['id'])
-                    ->update([
-                        'acquisitions.agreed_purchase_price' => $request->formData['agreed_purchase_price'],
-                        'acquisitions.agent' => $request->formData['agent'],
-                        'acquisitions.target_completion_date' => $request->formData['target_completion_date'],
-                        'acquisitions.col_status' => $request->formData['col_status'],
-                        'acquisitions.difference' => $difference,
-                        'acquisitions.agent_fee' => $agentFee,
-                        'acquisitions.estimated_interest' => $estimatedInterest,
-                        'acquisitions.estimated_tpc' => $estimatedTpc,
-                        'acquisitions.bric_purchase_yield_percentage' => $bricPurchaseYield,
-                        'acquisitions.tpc_bedspace' => $tpcBedSpace,
-                        'acquisitions.purchase_price_bedspace' => $ebn,
-                    ]);
-    
-                    $dataValues = [
-                        'id' => $request->formData['id'],
-                        'entity_property_id' => $request->formData['entity_property_id'],
-                        'property_id' => $request->formData['property_id'],
-                        'entity' => $request->formData['entity'],
-                        'house_no_or_name' => $request->formData['house_no_or_name'],
-                        'street' => $request->formData['street'],
-                        'city' => $request->formData['city'],
-                        'area' => $request->formData['area'],
-                        'postcode' => $request->formData['postcode'],
-                        'status' => $request->formData['status'],
-                        'no_bric_beds' => $request->formData['no_bric_beds'],
-                        'agreed_purchase_price' => $request->formData['agreed_purchase_price'],
-                        'agent' => $request->formData['agent'],
-                        'target_completion_date' => $request->formData['target_completion_date'],
-                        'col_status' => $request->formData['col_status']
-                    ];
-
-                    $activity = new ActivityLog();
-                    $activity->user_id = Auth::user()->id;
-                    $activity->description = 'Updated Acquisituion Details';
-                    $activity->location = 'Acquisition List Page';
-                    $activity->save();
-                    return [
-                        "status" => 1,
-                        "data" => $dataValues,
-                    ];
-                }elseif($request->saveID == 2){
-                    $propertyID = DB::table('acquisitions')
-                    ->where('acquisitions.id', '=', $request->formData['id'])
-                    ->select('property_id')
-                    ->first();
-                    if ($request->formData['completion_date'] == null) {
-                        $completionDate = null;
-                    }else{
-                        $completionDate = $request->formData['completion_date'];
-                    }
-
-                    $acquisitions = DB::table('acquisitions')
-                    ->where('acquisitions.id', '=', $request->formData['id'])
-                    ->update([
-                        'acquisitions.col_status_log' => $request->formData['col_status_log'],
-                        'acquisitions.col_status' => $request->formData['col_status'],
-                        'acquisitions.acquisition_status' => $request->formData['acquisition_status'],
-                        'acquisitions.single_asset_portfolio' => $request->formData['single_asset_portfolio'],
-                        'acquisitions.existing_bedroom_no' => $request->formData['existing_bedroom_no'],
-                        'acquisitions.asking_price' => $request->formData['asking_price'],
-                        'acquisitions.offer_price' => $request->formData['offer_price'],
-                        'acquisitions.agreed_purchase_price' => $request->formData['agreed_purchase_price'],
-                        'acquisitions.difference' => $request->formData['difference'],
-                        'acquisitions.stamp_duty' => $request->formData['stamp_duty'],
-                        'acquisitions.acquisition_cost' => $request->formData['acquisition_cost'],
-                        'acquisitions.agent' => $request->formData['agent'],
-                        'acquisitions.agent_fee_percentage' => $request->formData['agent_fee_percentage'],
-                        'acquisitions.agent_fee' => $request->formData['agent_fee'],
-                        'acquisitions.bridge_loan' => $request->formData['bridge_loan'],
-                        'acquisitions.estimated_period' => $request->formData['estimated_period'],
-                        'acquisitions.loan_percentage' => $request->formData['loan_percentage'],
-                        'acquisitions.estimated_interest' => $request->formData['estimated_interest'],
-                        'acquisitions.estimated_tpc' => $request->formData['estimated_tpc'],
-                        'acquisitions.offer_date' => $request->formData['offer_date'],
-                        'acquisitions.target_completion_date' => $request->formData['target_completion_date'],
-                        'acquisitions.completion_date' => $completionDate,
-                        'acquisitions.financing_status' => $request->formData['financing_status'],
-                        'acquisitions.bric_purchase_yield_percentage' => $request->formData['bric_purchase_yield_percentage'],
-                        'acquisitions.tpc_bedspace' => $request->formData['tpc_bedspace'],
-                        'acquisitions.purchase_price_bedspace' => $request->formData['purchase_price_bedspace'],
-                    ]);
-
-                    $properties = DB::table('properties')
-                    ->where('properties.id', '=', $propertyID->property_id)
-                    ->update([
-                        'properties.house_no_or_name' => $request->formData['house_no_or_name'],
-                        'properties.street' => $request->formData['street'],
-                        'properties.area' => $request->formData['area'],
-                        'properties.no_bric_beds' => $request->formData['no_of_bric_beds'],
-                        'properties.postcode' => $request->formData['postcode'],
-                    ]);
-
-                    $entity_property_id = DB::table('entity_properties')
-                    ->where('entity_properties.property_id', '=', $propertyID->property_id)
-                    ->selectRaw('entity_properties.id as id')
-                    ->first();
-
-                    $entity_properties = DB::table('entity_properties')
-                    ->where('entity_properties.id', '=', $entity_property_id->id)
-                    ->update([
-                        'entity_properties.entity_id' => $request->formData['entity'],
-                    ]);
-
-                    $dataValues = [
-                        'id' => $request->formData['id'],
-                        'agreed_purchase_price' => $request->formData['agreed_purchase_price'],
-                        'agent' => $request->formData['agent'],
-                        'target_completion_date' => $request->formData['target_completion_date'],
-                        'col_status' => $request->formData['col_status']
-                    ];
-
-                    $checkCompleted = $request->formData['acquisition_status'] == 'Completed' ? 1 : 0;
-
-                    $activity = new ActivityLog();
-                    $activity->user_id = Auth::user()->id;
-                    $activity->description = 'Updated Acquisituion Details';
-                    $activity->location = 'Acquisition List Page';
-                    $activity->save();
-                    return [
-                        "status" => 1,
-                        "completed" => $checkCompleted,
-                        "data" => $dataValues,
-                    ];
                 }
+
+                DB::table('detailed_activity_logs')->insert($detailsArr);
+
+
+
             } catch (\Throwable $th) { 
                 return response()->json([
                     'status' => false,

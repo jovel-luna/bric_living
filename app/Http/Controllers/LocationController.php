@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\DB;
 use DataTables;
 use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Support\Facades\Log;
+use Spatie\Activitylog\Models\Activity; 
+// use Spatie\Activitylog\Contracts\Activity;
 
 class LocationController extends Controller
 {
@@ -72,6 +75,13 @@ class LocationController extends Controller
             [ 'log_id' => $activity->id, 'activity_field' => 'Area', 'details' => $request->area],
         
         ]);
+
+
+        $acts = Activity::all()->last();
+
+        $acts->description; //returns 'This model has been created'
+
+        Log::info($acts->description);
 
         return view('property_locations.index');
     }
@@ -166,6 +176,13 @@ class LocationController extends Controller
         }
 
         $location->save();
+
+
+        $acts = Activity::all()->last();
+
+        $acts->description; //returns 'This model has been created'
+        Log::info($acts->description);
+        Log::info($acts->changes);
 
         return view('property_locations.index');
     }

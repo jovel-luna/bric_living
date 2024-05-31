@@ -14,7 +14,19 @@ class ActivityLogController extends Controller
 {
     public function getAllActivity()
     {
-        $activity = ActivityLog::getAllActivity();
+        // $activity = ActivityLog::getAllActivity();
+
+        $activity = DB::table('spatie_activity_log')
+        ->leftJoin('users', 'spatie_activity_log.causer_id', '=', 'users.id')
+        ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+        ->select(
+            'spatie_activity_log.id AS id',
+            'roles.role',
+            DB::raw("CONCAT_WS(' ', users.first_name, users.middle_name, users.last_name) AS user_name"),
+            'spatie_activity_log.description',
+            'spatie_activity_log.location',
+            'spatie_activity_log.created_at',
+        )->orderBy('created_at','desc')->get();
 
         /* This is the code that is being used to return the data to the datatable. */
         return Datatables::of($activity)
@@ -30,13 +42,8 @@ class ActivityLogController extends Controller
         $log_summary = DB::table('activity_logs')->select('description', 'location', 'type')->where('id', $id)->first();
 
         Log::info($details);
-
-        if($log_summary->type == 'CREATE') {
-            return view('setting\activity-details', ['details' => $details, 'username' => $user, 'summary' => $log_summary]);
-        }
-        if($log_summary->type == 'UPDATE'){
-            return view('setting\activity-details-update', ['details' => $details, 'username' => $user, 'summary' => $log_summary]);
-        }
+        return view('setting\activity-details', ['details' => $details, 'username' => $user, 'summary' => $log_summary]);
+ 
 
     }
 }
