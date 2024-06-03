@@ -7,9 +7,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
+
 class Finance extends Model
 {
     use HasFactory;
+    use LogsActivity;
 
     protected $fillable = [
         'cm_mortgage_status',
@@ -39,6 +44,29 @@ class Finance extends Model
         'm_monthly_repayment',
         'm_monthly_payment_date'
     ];
+    protected static $logName = 'Finance';
+    protected static $logFillable = true;
+
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "Finance has been {$eventName} ";
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if($eventName == 'updated'){
+            $activity->location = "Finance Edit Page";
+        }
+        if($eventName == 'created'){ 
+            $activity->location = "Create Finance Page";
+        }
+        if($eventName == 'deleted') {
+            $activity->location = "Finance Edit Page";
+        }
+
+    }
+
     public function getFinance($request){
 
         $finances = DB::table('properties')

@@ -7,9 +7,15 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
+
+
 class Gallery extends Model
 {
     use HasFactory;
+    use LogsActivity;
 
     protected $fillable = [
         'propert_id',
@@ -17,6 +23,30 @@ class Gallery extends Model
         'type',
         'attachment_type',
     ];
+
+    protected static $logName = 'Gallery';
+    protected static $logFillable = true;
+
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "Gallery has been {$eventName} ";
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if($eventName == 'updated'){
+            $activity->location = "Gallery Edit Page";
+        }
+        if($eventName == 'created'){ 
+            $activity->location = "Create Gallery Page";
+        }
+        if($eventName == 'deleted') {
+            $activity->location = "Gallery Edit Page";
+        }
+
+    }
+
 
     public function uploadPropertyFloorplan($request){
         $uploadedFiles = [];

@@ -7,15 +7,48 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Auth;
 
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
+
 class TenantNote extends Model
 {
     use HasFactory;
+
+    use LogsActivity;
+
+
     public $timestamps = true;
     protected $fillable = [
         'tenant_id',
         'user_id',
         'description',
     ];
+
+    protected static $logName = 'Tenant Note';
+    protected static $logFillable = true;
+
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "Tenant Note has been {$eventName} ";
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if($eventName == 'updated'){
+            $activity->location = "Tenant Note Edit Page";
+        }
+        if($eventName == 'created'){ 
+            $activity->location = "Create Tenant Note Page";
+        }
+        if($eventName == 'deleted') {
+            $activity->location = "Tenant Note Edit Page";
+        }
+
+    }
+
+
     public function saveTenantNotes($request){
         $userID = Auth::user()->id;
 

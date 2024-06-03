@@ -15,9 +15,14 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use DateTime;
 
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
+
 class Property extends Model
 {
     use HasFactory;
+    use LogsActivity;
 
     protected $fillable = [
         'property_phase',
@@ -32,6 +37,29 @@ class Property extends Model
         'purchase_date',
         'status',
     ];
+
+    protected static $logName = 'Property';
+    protected static $logFillable = true;
+
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "Property has been {$eventName} ";
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if($eventName == 'updated'){
+            $activity->location = "Property Edit Page";
+        }
+        if($eventName == 'created'){ 
+            $activity->location = "Create Property Page";
+        }
+        if($eventName == 'deleted') {
+            $activity->location = "Property Edit Page";
+        }
+
+    }
 
     public function entities(){
         return $this->belongsToMany(Entity::class);

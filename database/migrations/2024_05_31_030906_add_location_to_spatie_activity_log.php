@@ -14,7 +14,7 @@ class AddLocationToSpatieActivityLog extends Migration
     public function up()
     {
         Schema::table('spatie_activity_log', function (Blueprint $table) {
-            //
+            $table->string('location')->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ class AddLocationToSpatieActivityLog extends Migration
     public function down()
     {
         Schema::table('spatie_activity_log', function (Blueprint $table) {
-            //
+            $table->dropColumn(['location']);
         });
     }
 }

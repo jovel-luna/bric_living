@@ -8,9 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Auth;
 
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
+
 class Log extends Model
 {
     use HasFactory;
+    use LogsActivity;
     public $timestamps = true;
     protected $fillable = [
         'property_id',
@@ -18,6 +23,29 @@ class Log extends Model
         'type',
         'description',
     ];
+
+    protected static $logName = 'Logs';
+    protected static $logFillable = true;
+
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "Logs has been {$eventName} ";
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if($eventName == 'updated'){
+            $activity->location = "Logs Edit Page";
+        }
+        if($eventName == 'created'){ 
+            $activity->location = "Create Logs Page";
+        }
+        if($eventName == 'deleted') {
+            $activity->location = "Logs Edit Page";
+        }
+
+    }
 
     public function saveLogs($request){
         $userID = Auth::user()->id;

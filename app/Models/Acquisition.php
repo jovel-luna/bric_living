@@ -6,9 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
+
 class Acquisition extends Model
 {
     use HasFactory;
+    use LogsActivity;
 
     protected $fillable = [
         'property_id',
@@ -45,6 +50,29 @@ class Acquisition extends Model
         'ground_rent',
         'ground_rent_due',
     ];
+
+    protected static $logName = 'Acquisition';
+    protected static $logFillable = true;
+
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "Acquisition has been {$eventName} ";
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if($eventName == 'updated'){
+            $activity->location = "Acquisition Edit Page";
+        }
+        if($eventName == 'created'){ 
+            $activity->location = "Create Acquisition Page";
+        }
+        if($eventName == 'deleted') {
+            $activity->location = "Acquisition Edit Page";
+        }
+
+    }
 }
 
 ?>

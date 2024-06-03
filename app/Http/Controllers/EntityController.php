@@ -214,16 +214,18 @@ class EntityController extends Controller
             if ($validator->fails()){
                 return response()->json(['errors'=>$validator->errors()]);
             }else{
-                $entities = DB::table('entities')
-                ->where('entities.id', '=', $request->id)
-                ->update([
-                    'entities.company_registration_number' => $request->company_registration_number,
-                    'entities.entity' => $request->entity,
-                    'entities.registered_address' => $request->registered_address,
-                    'entities.statement_due_date' => $request->statement_due_date,
-                    'entities.financial_year_start_date' => $request->financial_year_start_date,
-                    'entities.financial_year_end_date' => $request->financial_year_end_date,
-                ]);
+
+                $entity = Entity::find($request->id);
+ 
+                $entity->company_registration_number = $request->company_registration_number;
+                $entity->entity = $request->entity;
+
+                $entity->registered_address = $request->registered_address;
+                $entity->statement_due_date = $request->statement_due_date;
+                $entity->financial_year_start_date = $request->financial_year_start_date;
+                $entity->financial_year_end_date = $request->financial_year_end_date;
+
+                $entity->save();
 
                 return response()->json([
                     "status" => 1,

@@ -5,10 +5,39 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
+
 
 class OperationBudget extends Model
 {
     use HasFactory;
+    use LogsActivity;
+
+    protected static $logName = 'Operation Budget';
+    protected static $logFillable = true;
+
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "Operation Budget has been {$eventName} ";
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if($eventName == 'updated'){
+            $activity->location = "Operation Budget Edit Page";
+        }
+        if($eventName == 'created'){ 
+            $activity->location = "Create Operation Budget Page";
+        }
+        if($eventName == 'deleted') {
+            $activity->location = "Operation Budget Edit Page";
+        }
+
+    }
+
 
     public function import($data, $entitiy){
         foreach ($data[0] as $pck => $pcVal) {            

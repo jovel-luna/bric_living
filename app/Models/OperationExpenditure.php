@@ -6,9 +6,36 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
+
 class OperationExpenditure extends Model
 {
     use HasFactory;
+    use LogsActivity;
+
+    protected static $logName = 'Operation Expenditure';
+    protected static $logFillable = true;
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "Operation Expenditure has been {$eventName} ";
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if($eventName == 'updated'){
+            $activity->location = "Operation Expenditure Edit Page";
+        }
+        if($eventName == 'created'){ 
+            $activity->location = "Create Operation Expenditure Page";
+        }
+        if($eventName == 'deleted') {
+            $activity->location = "Operation Expenditure Edit Page";
+        }
+
+    }
 
     public function import($data, $entitiy){
         foreach ($data[0] as $pck => $pcVal) {            

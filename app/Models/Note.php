@@ -8,8 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Auth;
 
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
+
 class Note extends Model
 {
+    use LogsActivity;
     use HasFactory;
     public $timestamps = true;
     protected $fillable = [
@@ -18,6 +23,31 @@ class Note extends Model
         'type',
         'description',
     ];
+
+    protected static $logName = 'Notes';
+    protected static $logFillable = true;
+
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "Notes has been {$eventName} ";
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if($eventName == 'updated'){
+            $activity->location = "Notes Edit Page";
+        }
+        if($eventName == 'created'){ 
+            $activity->location = "Create Notes Page";
+        }
+        if($eventName == 'deleted') {
+            $activity->location = "Notes Edit Page";
+        }
+
+    }
+
+
     public function saveNotes($request){
         $userID = Auth::user()->id;
 

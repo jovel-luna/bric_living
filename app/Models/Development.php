@@ -8,9 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 use Auth;
 use App\Models\ActivityLog;
 
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
+
 class Development extends Model
 {
     use HasFactory;
+    use LogsActivity;
 
     protected $fillable = [
         'existing_beds',
@@ -33,6 +38,32 @@ class Development extends Model
         'overall_budget',
         'actual_spend',
     ];
+
+    protected static $logName = 'Development';
+    protected static $logFillable = true;
+
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "Development has been {$eventName} ";
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if($eventName == 'updated'){
+            $activity->location = "Development Edit Page";
+        }
+        if($eventName == 'created'){ 
+            $activity->location = "Create Development Page";
+        }
+        if($eventName == 'deleted') {
+            $activity->location = "Development Edit Page";
+        }
+
+    }
+
+
+
     public function getDevelopment($request){
 
         $developments = DB::table('properties')

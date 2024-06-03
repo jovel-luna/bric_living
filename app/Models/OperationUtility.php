@@ -8,9 +8,37 @@ use Illuminate\Support\Facades\DB;
 use App\Models\OperationBudget;
 use App\Models\OperationExpenditure;
 
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
+
 class OperationUtility extends Model
 {
+    use LogsActivity;
     use HasFactory;
+
+    protected static $logName = 'Operation Utility';
+    protected static $logFillable = true;
+
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "Operation Utility has been {$eventName} ";
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if($eventName == 'updated'){
+            $activity->location = "Operation Utility Edit Page";
+        }
+        if($eventName == 'created'){ 
+            $activity->location = "Create Operation Utility Page";
+        }
+        if($eventName == 'deleted') {
+            $activity->location = "Operation Utility Edit Page";
+        }
+
+    }
 
     public function import($data, $entitiy){
         $ref_no = '';

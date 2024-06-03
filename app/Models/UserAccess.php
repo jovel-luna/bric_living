@@ -7,14 +7,45 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
+
 class UserAccess extends Model
 {
     use HasFactory;
+
+    use LogsActivity;
+
+
     protected $fillable = [
         'user_id',
         'can_import',
         'lettings_table_edit',
     ];
+
+    protected static $logName = 'User Access';
+    protected static $logFillable = true;
+
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "A User Access has been {$eventName} ";
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if($eventName == 'updated'){
+            $activity->location = "User Access Edit Page";
+        }
+        if($eventName == 'created'){ 
+            $activity->location = "Create User Access Page";
+        }
+        if($eventName == 'deleted') {
+            $activity->location = "User Access Edit Page";
+        }
+
+    }
 
     public function checkAccess($type)
     {

@@ -9,9 +9,7 @@
                         <div class="row mb-2">
                             <div class="col-sm-6">
                                 <h1>Activity Details</h1>
-                                User: {{ $username->first_name }} {{ $username->middle_name }} {{ $username->last_name }} <br>
-                                Action: {{$summary->description }} <br>
-                                Location: {{$summary->location}}
+                        
                             </div>
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
@@ -35,19 +33,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if ($details->isEmpty())
-                                        <tr>
-                                            <td colspan="2">No Data Available</td>
-                                        </tr>
-                                            
-                                        @else
-                                            @foreach ($details as $item)
-                                            <tr>                       
-                                                <td>{{ $item->activity_field }} </td>
-                                                <td> {{ $item->details }} </td>
-                                            </tr>    
-                                            @endforeach
-                                        @endif
+                                       
+                                     
                                     </tbody>
                                 </table>
                             </div>

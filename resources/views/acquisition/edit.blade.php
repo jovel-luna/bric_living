@@ -1076,7 +1076,7 @@
                         success: function(response){
                             console.log(response)
                             console.log('success')
-                            if (response['data'] === 'Success') {
+                            if (response['status'] == 1) {
                                 Swal.fire({
                                 title: 'Success',
                                 text: "Acquisition Successfully Updated!",

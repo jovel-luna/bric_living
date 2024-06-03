@@ -7,12 +7,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Tenant;
-
 use Illuminate\Support\Facades\Log;
+
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
 
 class Letting extends Model
 {
     use HasFactory;
+    use LogsActivity;
 
     protected $fillable = [
         'version',
@@ -52,6 +56,29 @@ class Letting extends Model
         // 'virtual_tour',
         // 'similar_properties'
     ];
+    protected static $logName = 'Letting';
+    protected static $logFillable = true;
+
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "Letting has been {$eventName} ";
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if($eventName == 'updated'){
+            $activity->location = "Letting Edit Page";
+        }
+        if($eventName == 'created'){ 
+            $activity->location = "Create Letting Page";
+        }
+        if($eventName == 'deleted') {
+            $activity->location = "Letting Edit Page";
+        }
+
+    }
+
     public function getContracts($request){
 
         $contracts = DB::table('tenants')
