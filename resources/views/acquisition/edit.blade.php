@@ -635,49 +635,9 @@
         </div>
     </div>
 </div>
-<!-- Modal -->
-<div class="modal fade" id="lettingStatusModal" tabindex="-1" role="dialog" aria-labelledby="lettingStatusModalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="lettingStatusModalTitle">Add New Letting Status</h5>
-            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <form method="POST" id="lettingStatusForm" action="{{ route('letting-status.store') }}">
-            @csrf
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="mb-3">
-                            <div class="row">
-                                <!-- Letting Status -->
-                                <div class="mb-3">
-                                    <label for="letting_status_name" class="col-form-label">{{ __('Letting Status Name') }}<span class="isRequired"> * </span></label>
-                                    <input id="letting_status_name" type="text" class="form-control @error('letting_status_name') is-invalid @enderror" name="letting_status_name" value="{{ old('letting_status_name') }}" autocomplete="letting_status_name" required>
 
-                                    @error('letting_status_name')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
-        </form>
-        </div>
-    </div>
-</div>
 @push('scripts')
-    <script>
+    <!-- <script>
         $(document).ready( function () {
             $( ".has-datepicker" ).datepicker({
                 dateFormat: "dd-mm-yy",
@@ -1314,6 +1274,59 @@
             numberValue = numberValue.split(',').join('');
             return numberValue;
         }
+    </script> -->
+    
+    <script>
+        $(document).ready( function () {
+
+
+            function checkASCompleted(){
+                if ($("#acquisition_status").val() === "Completed" && $("#completion_date").datepicker('getDate') != null) {
+                    $("#insurance_in_place").parent().find('.insurance-label > span.isRequired').remove();
+                    $("#insurance_value").parent().find('.insurance-label > span.isRequired').remove();
+                    $("#insurance_in_cost").parent().find('.insurance-label > span.isRequired').remove();
+                    $("#insurance_renewal_date").parent().find('.insurance-label > span.isRequired').remove();
+                    $("#insurance_in_place").parent().find('.insurance-label').append('<span class="isRequired"> * </span>');
+                    $("#insurance_value").parent().find('.insurance-label').append('<span class="isRequired"> * </span>');
+                    $("#insurance_in_cost").parent().find('.insurance-label').append('<span class="isRequired"> * </span>');
+                    $("#insurance_renewal_date").parent().find('.insurance-label').append('<span class="isRequired"> * </span>');
+                }else{
+                    $("#insurance_in_place").parent().find('.insurance-label > span.isRequired').remove();
+                    $("#insurance_value").parent().find('.insurance-label > span.isRequired').remove();
+                    $("#insurance_in_cost").parent().find('.insurance-label > span.isRequired').remove();
+                    $("#insurance_renewal_date").parent().find('.insurance-label > span.isRequired').remove();
+                }
+            }
+
+            $( ".has-datepicker" ).datepicker({
+                dateFormat: "dd-mm-yy",
+                onSelect: function(date) {
+                    $('#ui-datepicker-div').css('position', 'relative');
+                    switch ($(this).attr('name')) {
+                        case 'completion_date':
+                            $('#completion_date').removeClass("is-invalid");
+                            checkASCompleted();
+                            break;
+                        case 'insurance_renewal_date':
+                            $('#insurance_renewal_date').removeClass("is-invalid");
+                            break;
+                        case 'project_start_date':
+                            $('#project_start_date').removeClass("is-invalid");
+                            break;
+                        case 'projected_completion_date':
+                            $('#projected_completion_date').removeClass("is-invalid");
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+            });
+
+
+
+        })
+
+    
     </script>
 @endpush
 @endsection

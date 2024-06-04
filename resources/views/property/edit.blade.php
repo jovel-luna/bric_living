@@ -290,6 +290,49 @@
             </form>
         </div>
     </div>
+
+<!-- Modal -->
+<div class="modal fade" id="lettingStatusModal" tabindex="-1" role="dialog" aria-labelledby="lettingStatusModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="lettingStatusModalTitle">Add New Letting Status</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form method="POST" id="lettingStatusForm" action="{{ route('letting-status.store') }}">
+            @csrf
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <div class="row">
+                                <!-- Letting Status -->
+                                <div class="mb-3">
+                                    <label for="letting_status_name" class="col-form-label">{{ __('Letting Status Name') }}<span class="isRequired"> * </span></label>
+                                    <input id="letting_status_name" type="text" class="form-control @error('letting_status_name') is-invalid @enderror" name="letting_status_name" value="{{ old('letting_status_name') }}" autocomplete="letting_status_name" required>
+
+                                    @error('letting_status_name')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 
@@ -323,6 +366,25 @@
                     console.log(error)
                 })
             })
+
+            $(document).on('change', '#status', function(e){
+                if (e.target.value != "") {
+                    $(this).removeClass("is-invalid");
+                }else{
+                    // $(this).addClass("is-invalid");
+                }
+                switch (e.target.name) {
+                    
+                    case 'status':
+                        if ($(this).val() == '0') {
+                            $('#lettingStatusModal').modal('show');
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+            });
         })
     </script>
 @endpush

@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Response;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Auth;
 
+use Illuminate\Support\Facades\Validator;
+
 class AcquisitionController extends Controller
 {
     /**
@@ -480,22 +482,7 @@ class AcquisitionController extends Controller
     {
         if ($request->ajax()) {
             try {
-            
-                switch ($request->formData['property_phase']) {
-                    case 'In Development':
-                        if ($request->formData['completion_date']) {
-                            $purchase_date = date('Y-m-d', strtotime($request->formData['completion_date']));
-                        }else{
-                            $purchase_date = '00/00/0000';
-                        }
-                        break;
-                    case 'Acquiring':
-                        $purchase_date = '00/00/0000';
-                        break;
-                    default:
-                        $purchase_date = ($request->formData['completion_date']);
-                        break;
-                }
+
                 $getOldRecord = Property::findOrFail($request->formData['property_id']);
 
                 //check if property phase has changed
@@ -642,28 +629,31 @@ class AcquisitionController extends Controller
     }
     public function updateAcquisition(Request $request){
         if ($request->ajax()) {
-            try {
 
-                $req = $request->input('formData');
+            // $validator = Validator::make($request->all(), [
+            //     'title' => 'required|unique:posts|max:255',
+            //     'body' => 'required',
+            // ]);
 
-                $acquisition = Acquisition::find($request->id);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'fail',
+                    'id' => $request->id
+                ], 500);
+
+            }
                 
+            else {
+                $req = $request->input('formData');
+                $acquisition = Acquisition::find($request->id);
                 $acquisition->fill($req);
-
                 $acquisition->save();
 
                 return response()->json([
                     'status' => 1,
                     'message' => 'success',
                     'id' => $request->id
-                ], 200);
-
-
-
-            } catch (\Throwable $th) { 
-                return response()->json([
-                    'status' => false,
-                    'message' => $th->getMessage()
                 ], 200);
             }
         }

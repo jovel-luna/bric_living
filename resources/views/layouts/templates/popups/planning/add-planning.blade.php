@@ -19,7 +19,8 @@
                                         <!-- Bric Planning Ref # -->
                                         <div class="form-group">
                                             <label for="bric_planning_ref_no" class="col-form-label">{{ __('Bric Planning Ref #') }}<span class="isRequired"> * </span></label>
-                                            <input id="bric_planning_ref_no" type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control @error('bric_planning_ref_no') is-invalid @enderror" name="bric_planning_ref_no" value="{{ old('bric_planning_ref_no') }}" autocomplete="bric_planning_ref_no">
+                                            <!-- <input id="bric_planning_ref_no" type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control @error('bric_planning_ref_no') is-invalid @enderror" name="bric_planning_ref_no" value="{{ old('bric_planning_ref_no') }}" autocomplete="bric_planning_ref_no"> -->
+                                            <input id="bric_planning_ref_no" type="text" class="form-control @error('bric_planning_ref_no') is-invalid @enderror" name="bric_planning_ref_no" value="{{ old('bric_planning_ref_no') }}" autocomplete="bric_planning_ref_no">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
