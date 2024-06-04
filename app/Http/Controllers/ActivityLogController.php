@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\ActivityLog;
+use \Spatie\Activitylog\Models\Activity;
 use DataTables;
 
 class ActivityLogController extends Controller
@@ -37,19 +38,9 @@ class ActivityLogController extends Controller
     }
     public function viewActivityDetails($id){
 
-        $activity = DB::table('spatie_activity_log')
-        ->leftJoin('users', 'spatie_activity_log.causer_id', '=', 'users.id')
-        ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
-        ->select(
-            'spatie_activity_log.id AS id',
-            'roles.role',
-            DB::raw("CONCAT_WS(' ', users.first_name, users.middle_name, users.last_name) AS user_name"),
-            'spatie_activity_log.description',
-            'spatie_activity_log.location',
-            'spatie_activity_log.created_at',
-            'spatie_activity_log.properties',
-        )->orderBy('created_at','desc')->where('spatie_activity_log.id', $id)->get();
-        return view('setting\activity-details', ['details' => $activity]);
+        $activity = Activity::where('id', $id)->first();
+
+        return view('setting\activity-details', ['details' => $activity ]);
  
 
     }
