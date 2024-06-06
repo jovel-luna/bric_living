@@ -48,10 +48,13 @@ class PropertyController extends Controller
         $jsonData = json_decode($jsonString);
         $letting_statuses = LettingStatus::all();
         $entities = DB::table('entities')->select('entity', 'id')->distinct()->orderBy('entity', 'asc')->get();
+        $postcodes = DB::table('locations')->select('postcode', 'id')->distinct()->orderBy('postcode', 'asc')->get();
         $data = [
             'entities' => $entities,
             'letting_statuses' => $letting_statuses,
-            'locations' => $jsonData
+            'locations' => $jsonData,
+            'postcode' => $postcodes
+
         ];
         return view('property.external', compact('data'));
     }
@@ -214,56 +217,6 @@ class PropertyController extends Controller
 
                 $location = Location::where('id', $request->formData['postcode'] )->first();
 
-                DB::table('detailed_activity_logs')->insert([
-
-                    // Property Info
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Property Reference Number', 'details' => $nextRefNo ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Property Type', 'details' => 'Internal' ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Property Phase', 'details' => $request->formData['property_phase'] ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'House Number', 'details' => $request->formData['house_no'] ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Street', 'details' => $request->formData['street'] ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Postcode', 'details' => $location->postcode ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'City', 'details' => $location->city ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Area', 'details' => $location->area ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'No. of Bric Beds', 'details' => $request->formData['no_of_bric_beds'] ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'No. of Bric Bathrooms', 'details' => $request->formData['no_of_bric_bathroom'] ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Status', 'details' => $request->formData['status'] ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Purchase Date', 'details' => $purchase_date ],
-
-                    // Acquisition
-                    ['log_id' => $activity->id, 'activity_field' => 'Acquisition Status', 'details' => $request->formData['acquisition_status'] ?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Single Asset Portfolio', 'details' => $request->ormData['single_asset_portfolio'] ?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Portfolio', 'details' => $request->ormData['portfolio']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Existing Bedroom No', 'details' => $request->formData['existing_bedroom_no']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Asking Price', 'details' => $request->formData['asking_price']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Offer Price', 'details' => $request->formData['offer_price']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Agreed Purchase Price', 'details' => $request->formData['agreed_purchase_price']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Difference', 'details' => $request->formData['difference']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Stamp Duty', 'details' => $request->formData['stamp_duty']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Acquisition Cost', 'details' =>$request->formData['acquisition_cost']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Agent', 'details' => $request->formData['agent']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Agent Fee Percentage', 'details' => $request->formData['agent_fee_percentage']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Agent Fee', 'details' => $request->formData['agent_fee']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Bridge Loan', 'details' => $request->formData['bridge_loan']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Estimated Period', 'details' =>$request->formData['estimated_period']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Loan Percentage', 'details' => $request->formData['loan_percentage']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Estimated Interest', 'details' => $request->formData['estimated_interest']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Estimated TPC', 'details' => $request->formData['estimated_tpc']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Offer Date', 'details' => $request->formData['offer_date']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Target Completion Date', 'details' => $request->formData['target_completion_date']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Completion Date', 'details' =>$request->formData['completion_date']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'COL Status', 'details' => $request->formData['col_status']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Financing Status', 'details' => $request->formData['financing_status']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Capex Budget', 'details' => $request->formData['capex_budget']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'BRIC Purchase Yield Percentage', 'details' => $request->formData['bric_purchase_yield_percentage']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'TPC Bedspace', 'details' => $request->formData['tpc_bedspace']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Purchase Price Bedspace', 'details' => $request->formData['purchase_price_bedspace']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'BRIC Y1 Proposed Rent PPPW', 'details' => $request->formData['bric_y1_proposed_rent_pppw']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Tenancy Length Weeks', 'details' =>$request->formData['tenancy_length_weeks']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Tenure', 'details' =>$request->formData['tennure']]?? null,
-                    ['log_id' => $activity->id, 'activity_field' => 'Ground Rent', 'details' =>$request->formData['ground_rent']?? null],
-                    ['log_id' => $activity->id, 'activity_field' => 'Ground Rent Due', 'details' =>$request->formData['ground_rent_due']?? null],                
-                ]);
 
                 return [
                     "status" => 1,
@@ -316,23 +269,6 @@ class PropertyController extends Controller
                 $activity->save();
 
                 $location = Location::where('id', $request->formData['postcode'] )->first();
-
-                DB::table('detailed_activity_logs')->insert([
-                    // Property Info
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Property Reference Number', 'details' => $nextRefNo ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Property Type', 'details' => 'External' ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Property Phase', 'details' => $request->formData['property_phase'] ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'House Number', 'details' => $request->formData['house_no'] ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Street', 'details' => $request->formData['street'] ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Postcode', 'details' => $location->postcode ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'City', 'details' => $location->city ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Area', 'details' => $location->area ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'No. of Bric Beds', 'details' => $request->formData['no_of_bric_beds'] ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'No. of Bric Bathrooms', 'details' => $request->formData['no_of_bric_bathroom'] ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Status', 'details' => $request->formData['status'] ],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Purchase Date', 'details' => $purchase_date ],            
-                ]);
-
 
                 return [
                     "status" => 1,

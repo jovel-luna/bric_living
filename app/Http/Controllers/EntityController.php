@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Entity;
 use App\Models\Property;
 use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Log;
 use DataTables;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -43,16 +44,26 @@ class EntityController extends Controller
                 $noOfBeds = $allProperties->sum('no_bric_beds');
                 $entityData[$eK]['no_bric_beds'] = $noOfBeds;
 
-                $allPipeline = Property::leftJoin('entity_properties', 'properties.id', '=', 'entity_properties.property_id')
+                $developmentPipeline = Property::leftJoin('entity_properties', 'properties.id', '=', 'entity_properties.property_id')
                 ->leftJoin('entities', 'entities.id', '=', 'entity_properties.entity_id')
                 ->where('entities.entity', '=', $eVal['entity'])
-                ->where(function($p) {
-                    $p->where('property_phase', 'Acquiring')
-                        ->orWhere('property_phase', 'In Development');
-                });
+                ->where('property_phase', '=', 'In Development');
 
-                $noBedsPipeline = $allPipeline->sum('no_bric_beds');
-                $entityData[$eK]['pipeline'] = $noBedsPipeline;
+                $acquisitionPipeline = Property::leftJoin('entity_properties', 'properties.id', '=', 'entity_properties.property_id')
+                ->leftJoin('entities', 'entities.id', '=', 'entity_properties.entity_id')
+                ->where('entities.entity', '=', $eVal['entity'])
+                ->where('property_phase', '=', 'Acquiring');
+
+                Log::info($developmentPipeline->toSql());
+                Log::info($developmentPipeline->getBindings());
+
+                Log::info($acquisitionPipeline->toSql());
+                Log::info($acquisitionPipeline->getBindings());
+
+                $dev = $developmentPipeline->sum('no_bric_beds');
+                $acqui = $acquisitionPipeline->sum('no_bric_beds');
+                $entityData[$eK]['dev_pipeline'] = $dev;
+                $entityData[$eK]['acquisition_pipeline'] = $acqui;
                 $entityData[$eK]['current_rent_role'] = '';
             }
             
@@ -147,23 +158,6 @@ class EntityController extends Controller
                 $entity->financial_year_end_date = date('Y-m-d', strtotime($data['financial_year_end_date']));
 
 				$entity->save();
-
-                $activity = new ActivityLog();
-                $activity->user_id = Auth::user()->id;
-                $activity->description = 'Created new Entity';
-                $activity->location = 'Create New Entity Page';
-                $activity->save();
-
-                DB::table('detailed_activity_logs')->insert([
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Company Registration Number', 'details' => $data['company_registration_number']],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Entity', 'details' => $data['entity']],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Registered Address', 'details' => $data['registered_address']],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Entity Date Created', 'details' => $data['entity_date_created']],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Statement Due Date', 'details' => $data['statement_due_date']],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Financial Year Start Date', 'details' => $data['financial_year_start_date']],
-                    [ 'log_id' => $activity->id, 'activity_field' => 'Financial Year End Date', 'details' => $data['financial_year_end_date']],
-                
-                ]);
 
                 return redirect()->route('entity.index')->with('success', 'Entity Added Successfully');
 			}

@@ -110,7 +110,7 @@
                                                 <div class="col-md-3">
                                                     <!-- Development Status -->
                                                     <div class="mb-3 form-group">
-                                                        <label for="development_status" class="col-form-label">{{ __('Development Status') }}<span class="isRequired"> * </span></label>
+                                                        <label for="development_status" class="col-form-label">{{ __('Development Status') }}</label>
                                                         <select name="development_status" id="development_status" class="form-control form-control-alternative{{ $errors->has('development_status') ? ' is-invalid' : '' }}">
                                                             <option value="">Please Select</option>
                                                             <option value="Pre-start (occupied)" {{ $data->development_status == 'Pre-start (occupied)' ? 'selected' : '' }}>Pre-start (occupied)</option>
@@ -358,9 +358,7 @@
                     projected_completion_date: {
                         required: true,
                     },
-                    development_status: {
-                        required: true
-                    },
+          
                     pc_email: {
                         email: true,
                     },

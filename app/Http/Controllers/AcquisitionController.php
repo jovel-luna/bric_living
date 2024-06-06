@@ -98,104 +98,104 @@ class AcquisitionController extends Controller
         ];
 
         if ($request->ajax()) {
-            
+
             /* This is the query that is being used to get the data from the database. */
             $acquisitions = Acquisition::leftJoin('properties', 'acquisitions.property_id', '=', 'properties.id')
-            ->leftJoin('entity_properties', 'entity_properties.property_id', '=', 'properties.id')
-            ->leftJoin('entities', 'entity_properties.entity_id', '=', 'entities.id')
-            ->leftJoin('locations', 'properties.location_id', '=', 'locations.id')
-            // ->leftJoin('logs', 'logs.property_id', '=', 'acquisitions.property_id')
-            ->select(
-                'acquisitions.id as id',
-                'entities.entity',
-                DB::raw("CONCAT(properties.house_no_or_name,' ',properties.street) AS address"),
-                'properties.id as property_id',
-                'properties.house_no_or_name',
-                'properties.property_phase',
-                'properties.street',
-                'locations.area',
-                'locations.city',
-                'locations.postcode',
-                'properties.status',
-                'properties.no_bric_beds',
-                'properties.no_bric_bathrooms',
-                'entity_properties.id as entity_property_id',
-                'acquisitions.acquisition_status',
-                'acquisitions.asking_price',
-                'acquisitions.agreed_purchase_price',
-                'acquisitions.agent',
-                'acquisitions.portfolio',
-                'acquisitions.target_completion_date',
-                'acquisitions.col_status',
-                'acquisitions.col_status_log',
-                'acquisitions.created_at',
-                DB::raw('(SELECT description from logs WHERE property_id = properties.id order by created_at desc LIMIT 1) as last_col_log')
-                
-            )
-            ->where('acquisitions.acquisition_status', '!=', 'Completed')
-            ->where('properties.property_phase', '=', 'Acquiring');
-            
+                ->leftJoin('entity_properties', 'entity_properties.property_id', '=', 'properties.id')
+                ->leftJoin('entities', 'entity_properties.entity_id', '=', 'entities.id')
+                ->leftJoin('locations', 'properties.location_id', '=', 'locations.id')
+                // ->leftJoin('logs', 'logs.property_id', '=', 'acquisitions.property_id')
+                ->select(
+                    'acquisitions.id as id',
+                    'entities.entity',
+                    DB::raw("CONCAT(properties.house_no_or_name,' ',properties.street) AS address"),
+                    'properties.id as property_id',
+                    'properties.house_no_or_name',
+                    'properties.property_phase',
+                    'properties.street',
+                    'locations.area',
+                    'locations.city',
+                    'locations.postcode',
+                    'properties.status',
+                    'properties.no_bric_beds',
+                    'properties.no_bric_bathrooms',
+                    'entity_properties.id as entity_property_id',
+                    'acquisitions.acquisition_status',
+                    'acquisitions.asking_price',
+                    'acquisitions.agreed_purchase_price',
+                    'acquisitions.agent',
+                    'acquisitions.portfolio',
+                    'acquisitions.target_completion_date',
+                    'acquisitions.col_status',
+                    'acquisitions.col_status_log',
+                    'acquisitions.created_at',
+                    DB::raw('(SELECT description from logs WHERE property_id = properties.id order by created_at desc LIMIT 1) as last_col_log')
+
+                )
+                ->where('acquisitions.acquisition_status', '!=', 'Completed')
+                ->where('properties.property_phase', '=', 'Acquiring');
+
             if ($request->property_phase) {
-                $acquisitions = $acquisitions->where(function($pp) use ($request) {
+                $acquisitions = $acquisitions->where(function ($pp) use ($request) {
                     foreach ($request->property_phase as $ppKey => $ppVal) {
                         $pp->orWhere('properties.property_phase', '=', $ppVal);
                     }
-                });      
+                });
             }
 
             if ($request->entity) {
-                $acquisitions = $acquisitions->where(function($e) use ($request) {
+                $acquisitions = $acquisitions->where(function ($e) use ($request) {
                     foreach ($request->entity as $eKey => $eVal) {
                         $e->orWhere('entities.entity', '=', $eVal);
                     }
-                });      
+                });
             }
-            
+
             if ($request->city) {
-                $acquisitions = $acquisitions->where(function($c) use ($request) {
+                $acquisitions = $acquisitions->where(function ($c) use ($request) {
                     foreach ($request->city as $cKey => $cVal) {
                         $c->orWhere('locations.city', '=', $cVal);
                     }
-                });      
+                });
             }
             if ($request->area) {
-                $acquisitions = $acquisitions->where(function($a) use ($request) {
+                $acquisitions = $acquisitions->where(function ($a) use ($request) {
                     foreach ($request->area as $aKey => $aVal) {
                         $a->orWhere('locations.area', '=', $aVal);
                     }
-                });      
+                });
             }
             if ($request->no_bric_beds) {
-                $acquisitions = $acquisitions->where(function($nbb) use ($request) {
+                $acquisitions = $acquisitions->where(function ($nbb) use ($request) {
                     foreach ($request->no_bric_beds as $nbbKey => $nbbVal) {
                         $nbb->orWhere('properties.no_bric_beds', '=', $nbbVal);
                     }
-                });      
+                });
             }
             if ($request->status) {
-                $acquisitions = $acquisitions->where(function($s) use ($request) {
+                $acquisitions = $acquisitions->where(function ($s) use ($request) {
                     foreach ($request->status as $sKey => $sVal) {
                         $s->orWhere('properties.status', '=', $sVal);
                     }
-                });      
+                });
             }
             if ($request->postcode) {
-                $acquisitions = $acquisitions->where(function($pc) use ($request) {
+                $acquisitions = $acquisitions->where(function ($pc) use ($request) {
                     foreach ($request->postcode as $pcKey => $pcVal) {
                         $pc->orWhere('locations.postcode', '=', $pcVal);
                     }
-                });      
+                });
             }
             if ($request->address) {
-                $acquisitions = $acquisitions->where(function($add) use ($request) {
+                $acquisitions = $acquisitions->where(function ($add) use ($request) {
                     foreach ($request->address as $addKey => $addVal) {
                         $add->orWhere(DB::raw("CONCAT(properties.house_no_or_name,' ',properties.street)"), 'like', '%' . $addVal . '%');
                     }
-                });      
+                });
             }
 
-            if ($request->search) {         
-                $acquisitions = $acquisitions->where(function($q) use ($request) {
+            if ($request->search) {
+                $acquisitions = $acquisitions->where(function ($q) use ($request) {
                     $q->orWhere('properties.property_phase', 'like', '%' . $request->search . '%');
                     $q->orWhere('locations.city', 'like', '%' . $request->search . '%');
                     $q->orWhere('locations.area', 'like', '%' . $request->search . '%');
@@ -215,74 +215,77 @@ class AcquisitionController extends Controller
 
             /* This is the code that is being used to return the data to the datatable. */
             return Datatables::of($acquisitions)
-                    ->addIndexColumn()
-                    ->setRowAttr([
-                        'data-id' => function($acquisitions) {
-                            return $acquisitions->id;
-                        },
-                        'data-entity-property' => function($acquisitions) {
-                            return $acquisitions->entity_property_id;
-                        },
-                        'data-property' => function($acquisitions) {
-                            return $acquisitions->property_id;
-                        },
-                        'data-current' => function($acquisitions) {
-                        
-                            $data = [
-                                'id' => $acquisitions->id,
-                                'house_no_or_name' => $acquisitions->house_no_or_name,
-                                'street' => $acquisitions->street,
-                                'city' => $acquisitions->city,
-                                'area' => $acquisitions->area,
-                                'postcode' => $acquisitions->postcode,
-                                'no_bric_beds' => $acquisitions->no_bric_beds,
-                                'status' => $acquisitions->status,
-                                'entity' => $acquisitions->entity,
-                                'agreed_purchase_price' => $acquisitions->agreed_purchase_price,
-                                'agent' => $acquisitions->agent,
-                                'target_completion_date' => $acquisitions->target_completion_date,
-                                'col_status' => $acquisitions->col_status,
-                                // 'last_col_log' => $log_description,
-                                
-                            ];
-                            return json_encode($data);
-                        },
-                    ])
-                    ->make(true);
+                ->addIndexColumn()
+                ->setRowAttr([
+                    'data-id' => function ($acquisitions) {
+                        return $acquisitions->id;
+                    },
+                    'data-entity-property' => function ($acquisitions) {
+                        return $acquisitions->entity_property_id;
+                    },
+                    'data-property' => function ($acquisitions) {
+                        return $acquisitions->property_id;
+                    },
+                    'data-current' => function ($acquisitions) {
+
+                        $data = [
+                            'id' => $acquisitions->id,
+                            'house_no_or_name' => $acquisitions->house_no_or_name,
+                            'street' => $acquisitions->street,
+                            'city' => $acquisitions->city,
+                            'area' => $acquisitions->area,
+                            'postcode' => $acquisitions->postcode,
+                            'no_bric_beds' => $acquisitions->no_bric_beds,
+                            'status' => $acquisitions->status,
+                            'entity' => $acquisitions->entity,
+                            'agreed_purchase_price' => $acquisitions->agreed_purchase_price,
+                            'agent' => $acquisitions->agent,
+                            'target_completion_date' => $acquisitions->target_completion_date,
+                            'col_status' => $acquisitions->col_status,
+                            // 'last_col_log' => $log_description,
+
+                        ];
+                        return json_encode($data);
+                    },
+                ])
+                ->make(true);
         }
         return view('acquisition.index', compact('data', 'filters'));
     }
 
-    public function getAcquisitionById(Request $request){
+    public function getAcquisitionById(Request $request)
+    {
         if ($request->ajax()) {
             $acquisition = Acquisition::leftJoin('properties', 'acquisitions.property_id', '=', 'properties.id')
-            ->leftJoin('entity_properties', 'entity_properties.property_id', '=', 'properties.id')
-            ->leftJoin('entities', 'entity_properties.entity_id', '=', 'entities.id')
-            ->selectRaw('entities.*, entity_properties.*, properties.*, acquisitions.*')
-            ->where('acquisitions.id', '=', $request->id)
-            ->first();
+                ->leftJoin('entity_properties', 'entity_properties.property_id', '=', 'properties.id')
+                ->leftJoin('entities', 'entity_properties.entity_id', '=', 'entities.id')
+                ->selectRaw('entities.*, entity_properties.*, properties.*, acquisitions.*')
+                ->where('acquisitions.id', '=', $request->id)
+                ->first();
             return response()->json([
                 'data' => $acquisition,
-            ]); 
+            ]);
         }
     }
 
-    public function getPlanning(Request $request, $id){
+    public function getPlanning(Request $request, $id)
+    {
         if ($request->ajax()) {
             $plannings = Planning::getPlanning($id);
             /* This is the code that is being used to return the data to the datatable. */
             return Datatables::of($plannings)
-                    ->addIndexColumn()
-                    ->make(true);
+                ->addIndexColumn()
+                ->make(true);
         }
     }
-    public function getSpecificPlanning(Request $request, $id){
+    public function getSpecificPlanning(Request $request, $id)
+    {
         if ($request->ajax()) {
             $planning = Planning::getSinglePlanning($id);
 
             return response()->json([
                 'data' => $planning,
-            ]); 
+            ]);
         }
     }
 
@@ -297,12 +300,12 @@ class AcquisitionController extends Controller
                 $plannings->approved = $request['formData']['approved'];
                 $plannings->application_desc = $request['formData']['application_desc'];
                 $plannings->save();
-    
+
                 return [
                     "status" => 1,
                     "data" => 'Success',
                 ];
-            }  catch (\Throwable $th) { 
+            } catch (\Throwable $th) {
                 return response()->json([
                     'status' => false,
                     'message' => $th->getMessage()
@@ -340,26 +343,26 @@ class AcquisitionController extends Controller
     public function show($id)
     {
         $acquisition = Acquisition::leftJoin('properties', 'acquisitions.property_id', '=', 'properties.id')
-        ->leftJoin('operation_insurances', 'operation_insurances.acquisition_id', '=', 'acquisitions.id')
-        ->leftJoin('entity_properties', 'entity_properties.property_id', '=', 'properties.id')
-        ->leftJoin('locations', 'properties.location_Id', '=', 'locations.id')
-        ->leftJoin('entities', 'entity_properties.entity_id', '=', 'entities.id')
-        ->join('letting_statuses', 'properties.status', '=', 'letting_statuses.id')
-        ->selectRaw('letting_statuses.*, entities.*, entity_properties.*, operation_insurances.*, properties.*, locations.*, acquisitions.*')
-        ->where('acquisitions.id', '=', $id)
-        ->where('acquisitions.property_id', '=', 'properties.id')
-        ->first();
+            ->leftJoin('operation_insurances', 'operation_insurances.acquisition_id', '=', 'acquisitions.id')
+            ->leftJoin('entity_properties', 'entity_properties.property_id', '=', 'properties.id')
+            ->leftJoin('locations', 'properties.location_Id', '=', 'locations.id')
+            ->leftJoin('entities', 'entity_properties.entity_id', '=', 'entities.id')
+            ->join('letting_statuses', 'properties.status', '=', 'letting_statuses.id')
+            ->selectRaw('letting_statuses.*, entities.*, entity_properties.*, operation_insurances.*, properties.*, locations.*, acquisitions.*')
+            ->where('acquisitions.id', '=', $id)
+            ->where('acquisitions.property_id', '=', 'properties.id')
+            ->first();
 
         $acquisitionSQL = Acquisition::leftJoin('properties', 'acquisitions.property_id', '=', 'properties.id')
-        ->leftJoin('operation_insurances', 'operation_insurances.acquisition_id', '=', 'acquisitions.id')
-        ->leftJoin('entity_properties', 'entity_properties.property_id', '=', 'properties.id')
-        ->leftJoin('locations', 'properties.location_Id', '=', 'locations.id')
-        ->leftJoin('entities', 'entity_properties.entity_id', '=', 'entities.id')
-        ->join('letting_statuses', 'properties.status', '=', 'letting_statuses.id')
-        ->selectRaw('letting_statuses.*, entities.*, entity_properties.*, operation_insurances.*, properties.*, locations.*, acquisitions.*')
-        ->where('acquisitions.id', '=', $id)
-        ->where('acquisitions.property_id', '=', 'properties.id')
-        ->toSql();
+            ->leftJoin('operation_insurances', 'operation_insurances.acquisition_id', '=', 'acquisitions.id')
+            ->leftJoin('entity_properties', 'entity_properties.property_id', '=', 'properties.id')
+            ->leftJoin('locations', 'properties.location_Id', '=', 'locations.id')
+            ->leftJoin('entities', 'entity_properties.entity_id', '=', 'entities.id')
+            ->join('letting_statuses', 'properties.status', '=', 'letting_statuses.id')
+            ->selectRaw('letting_statuses.*, entities.*, entity_properties.*, operation_insurances.*, properties.*, locations.*, acquisitions.*')
+            ->where('acquisitions.id', '=', $id)
+            ->where('acquisitions.property_id', '=', 'properties.id')
+            ->toSql();
 
         $entities = DB::table('entities')->select('entity', 'id')->distinct()->orderBy('entity', 'asc')->get();
 
@@ -493,102 +496,102 @@ class AcquisitionController extends Controller
                 }
 
                 $propertyUpdate = DB::table('properties')
-                ->where('properties.id', '=', $request->formData['property_id'])
-                ->update([
-                    'properties.property_phase' => $request->formData['property_phase'],
-                    // 'locations.city' => $request->formData['city'],
-                    // 'locations.area' => $request->formData['area'],
-                    'properties.house_no_or_name' => $request->formData['house_no'],
-                    'properties.street' => $request->formData['street'],
-                    // 'locations.postcode' => $request->formData['postcode'],
-                    'properties.no_bric_beds' => $request->formData['no_bric_beds'],
-                    'properties.no_bric_bathrooms' => $request->formData['no_of_bric_bathroom'],
-                    'properties.status' => $request->formData['status'],
-                    'properties.purchase_date' => $purchase_date,
-                ]);
+                    ->where('properties.id', '=', $request->formData['property_id'])
+                    ->update([
+                        'properties.property_phase' => $request->formData['property_phase'],
+                        // 'locations.city' => $request->formData['city'],
+                        // 'locations.area' => $request->formData['area'],
+                        'properties.house_no_or_name' => $request->formData['house_no'],
+                        'properties.street' => $request->formData['street'],
+                        // 'locations.postcode' => $request->formData['postcode'],
+                        'properties.no_bric_beds' => $request->formData['no_bric_beds'],
+                        'properties.no_bric_bathrooms' => $request->formData['no_of_bric_bathroom'],
+                        'properties.status' => $request->formData['status'],
+                        'properties.purchase_date' => $purchase_date,
+                    ]);
 
                 if ($hasChanged) {
                     $propertyUpdate = DB::table('properties')
-                    ->where('properties.id', '=', $request->formData['property_id'])
-                    ->update([
-                        'properties.updated_at' => date("Y-m-d h:i:s")
-                    ]);
+                        ->where('properties.id', '=', $request->formData['property_id'])
+                        ->update([
+                            'properties.updated_at' => date("Y-m-d h:i:s")
+                        ]);
                 }
 
 
                 $entityProperties = DB::table('entity_properties')
-                ->where('entity_properties.property_id', '=', $request->formData['property_id'])
-                ->first();
+                    ->where('entity_properties.property_id', '=', $request->formData['property_id'])
+                    ->first();
 
                 $entityPropertiesUpdate = DB::table('entity_properties')
-                ->where('entity_properties.id', '=', $entityProperties->id)
-                ->update([
-                    'entity_properties.entity_id' => $request->formData['entity'],
-                ]);
-    
+                    ->where('entity_properties.id', '=', $entityProperties->id)
+                    ->update([
+                        'entity_properties.entity_id' => $request->formData['entity'],
+                    ]);
+
                 $acquisitionData = DB::table('acquisitions')
-                ->where('acquisitions.id', '=', $request->formData['id'])
-                ->first();
+                    ->where('acquisitions.id', '=', $request->formData['id'])
+                    ->first();
 
                 $datenow = date('d/m/Y');
 
                 $acquisitionUpdate = DB::table('acquisitions')
-                ->where('acquisitions.id', '=', $request->formData['id'])
-                ->update([
-                    'acquisitions.acquisition_status' => $request->formData['acquisition_status'],
-                    'acquisitions.single_asset_portfolio' => $request->formData['single_asset_portfolio'],
-                    'acquisitions.portfolio' => $request->formData['portfolio'],
-                    'acquisitions.existing_bedroom_no' => $request->formData['existing_bedroom_no'],
-                    'acquisitions.asking_price' => $request->formData['asking_price'],
-                    'acquisitions.offer_price' => $request->formData['offer_price'],
-                    'acquisitions.agreed_purchase_price' => $request->formData['agreed_purchase_price'],
-                    'acquisitions.difference' => $request->formData['difference'],
-                    'acquisitions.stamp_duty' => $request->formData['stamp_duty'],
-                    'acquisitions.acquisition_cost' => $request->formData['acquisition_cost'],
-                    'acquisitions.agent' => $request->formData['agent'],
-                    'acquisitions.agent_fee_percentage' => $request->formData['agent_fee_percentage'],
-                    'acquisitions.agent_fee' => $request->formData['agent_fee'],
-                    'acquisitions.bridge_loan' => $request->formData['bridge_loan'],
-                    'acquisitions.estimated_period' => $request->formData['estimated_period'],
-                    'acquisitions.loan_percentage' => $request->formData['loan_percentage'],
-                    'acquisitions.estimated_interest' => $request->formData['estimated_interest'],
-                    'acquisitions.estimated_tpc' => $request->formData['estimated_tpc'],
-                    'acquisitions.offer_date' => $request->formData['offer_date'],
-                    'acquisitions.target_completion_date' => $request->formData['target_completion_date'],
-                    'acquisitions.completion_date' => $request->formData['completion_date'],
-                    'acquisitions.col_status' => $request->formData['col_status'],
-                    // 'acquisitions.col_status_log' => $request->formData['col_status_log'],
-                    'acquisitions.financing_status' => $request->formData['financing_status'],
-                    'acquisitions.capex_budget' => $request->formData['capex_budget'],
-                    'acquisitions.bric_purchase_yield_percentage' => $request->formData['bric_purchase_yield_percentage'],
-                    'acquisitions.tpc_bedspace' => $request->formData['tpc_bedspace'],
-                    'acquisitions.purchase_price_bedspace' => $request->formData['purchase_price_bedspace'],
-                    'acquisitions.bric_y1_proposed_rent_pppw' => $request->formData['bric_y1_proposed_rent_pppw'],
-                    'acquisitions.tenancy_length_weeks' => $request->formData['tenancy_length_weeks'],
-                    'acquisitions.tennure' => $request->formData['tennure'],
-                    'acquisitions.ground_rent' => $request->formData['ground_rent'],
-                    'acquisitions.ground_rent_due' => $request->formData['ground_rent_due'],
+                    ->where('acquisitions.id', '=', $request->formData['id'])
+                    ->update([
+                        'acquisitions.acquisition_status' => $request->formData['acquisition_status'],
+                        'acquisitions.single_asset_portfolio' => $request->formData['single_asset_portfolio'],
+                        'acquisitions.portfolio' => $request->formData['portfolio'],
+                        'acquisitions.existing_bedroom_no' => $request->formData['existing_bedroom_no'],
+                        'acquisitions.asking_price' => $request->formData['asking_price'],
+                        'acquisitions.offer_price' => $request->formData['offer_price'],
+                        'acquisitions.agreed_purchase_price' => $request->formData['agreed_purchase_price'],
+                        'acquisitions.difference' => $request->formData['difference'],
+                        'acquisitions.stamp_duty' => $request->formData['stamp_duty'],
+                        'acquisitions.acquisition_cost' => $request->formData['acquisition_cost'],
+                        'acquisitions.agent' => $request->formData['agent'],
+                        'acquisitions.agent_fee_percentage' => $request->formData['agent_fee_percentage'],
+                        'acquisitions.agent_fee' => $request->formData['agent_fee'],
+                        'acquisitions.bridge_loan' => $request->formData['bridge_loan'],
+                        'acquisitions.estimated_period' => $request->formData['estimated_period'],
+                        'acquisitions.loan_percentage' => $request->formData['loan_percentage'],
+                        'acquisitions.estimated_interest' => $request->formData['estimated_interest'],
+                        'acquisitions.estimated_tpc' => $request->formData['estimated_tpc'],
+                        'acquisitions.offer_date' => $request->formData['offer_date'],
+                        'acquisitions.target_completion_date' => $request->formData['target_completion_date'],
+                        'acquisitions.completion_date' => $request->formData['completion_date'],
+                        'acquisitions.col_status' => $request->formData['col_status'],
+                        // 'acquisitions.col_status_log' => $request->formData['col_status_log'],
+                        'acquisitions.financing_status' => $request->formData['financing_status'],
+                        'acquisitions.capex_budget' => $request->formData['capex_budget'],
+                        'acquisitions.bric_purchase_yield_percentage' => $request->formData['bric_purchase_yield_percentage'],
+                        'acquisitions.tpc_bedspace' => $request->formData['tpc_bedspace'],
+                        'acquisitions.purchase_price_bedspace' => $request->formData['purchase_price_bedspace'],
+                        'acquisitions.bric_y1_proposed_rent_pppw' => $request->formData['bric_y1_proposed_rent_pppw'],
+                        'acquisitions.tenancy_length_weeks' => $request->formData['tenancy_length_weeks'],
+                        'acquisitions.tennure' => $request->formData['tennure'],
+                        'acquisitions.ground_rent' => $request->formData['ground_rent'],
+                        'acquisitions.ground_rent_due' => $request->formData['ground_rent_due'],
 
-                    // 'acquisitions.bridge_loan_status' => $request->formData['bridge_loan_status'],
-                    // 'acquisitions.equity' => $request->formData['equity_required'],
+                        // 'acquisitions.bridge_loan_status' => $request->formData['bridge_loan_status'],
+                        // 'acquisitions.equity' => $request->formData['equity_required'],
 
-                ]);
+                    ]);
 
                 // operations insurance
                 if ($request->formData['acquisition_status'] === 'Completed' && $request->formData['completion_date'] != null) {
                     $operation_utility_data = DB::table('operation_utilities')
-                    ->where('operation_utilities.property_id', '=', $request->formData['property_id'])
-                    ->first();
+                        ->where('operation_utilities.property_id', '=', $request->formData['property_id'])
+                        ->first();
                     if ($operation_utility_data != null) {
                         $operationsInsurancesUpdate = DB::table('operation_utilities')
-                        ->where('operation_utilities.id', '=', $operation_utility_data->id)
-                        ->update([
-                            'operation_utilities.insurance_in_place' => $request->formData['insurance_in_place'],
-                            'operation_utilities.insurance_value' => $request->formData['insurance_value'],
-                            'operation_utilities.insurance_annual_cost' => $request->formData['insurance_in_cost'],
-                            'operation_utilities.insurance_renewal_date' => $request->formData['insurance_renewal_date'],
-                        ]);
-                    }else{
+                            ->where('operation_utilities.id', '=', $operation_utility_data->id)
+                            ->update([
+                                'operation_utilities.insurance_in_place' => $request->formData['insurance_in_place'],
+                                'operation_utilities.insurance_value' => $request->formData['insurance_value'],
+                                'operation_utilities.insurance_annual_cost' => $request->formData['insurance_in_cost'],
+                                'operation_utilities.insurance_renewal_date' => $request->formData['insurance_renewal_date'],
+                            ]);
+                    } else {
                         $operation_utility = new OperationUtility();
                         $operation_utility->property_id = $request->formData['property_id'];
                         $operation_utility->insurance_in_place = $request->formData['insurance_in_place'];
@@ -602,24 +605,24 @@ class AcquisitionController extends Controller
                 // Development
                 if ($request->formData['property_phase'] == "In Development") {
                     $developmentID = DB::table('developments')
-                                        ->where('developments.property_id', '=', $request->formData['property_id'])
-                                        ->select('developments.id as id')
-                                        ->first();
+                        ->where('developments.property_id', '=', $request->formData['property_id'])
+                        ->select('developments.id as id')
+                        ->first();
                     $developments = DB::table('developments')
-                    ->where('developments.id', '=', $developmentID->id)
-                    ->update([
-                        'developments.project_start_date' => $request->formData['project_start_date'],
-                        'developments.projected_completion_date' => $request->formData['projected_completion_date'],
-                        'developments.development_status' => $request->formData['development_status'],
-                    ]);
+                        ->where('developments.id', '=', $developmentID->id)
+                        ->update([
+                            'developments.project_start_date' => $request->formData['project_start_date'],
+                            'developments.projected_completion_date' => $request->formData['projected_completion_date'],
+                            'developments.development_status' => $request->formData['development_status'],
+                        ]);
                 }
-    
+
                 return [
                     "status" => 1,
                     "data" => 'Success',
                     "id" => $request->formData['property_id']
                 ];
-            }  catch (\Throwable $th) { 
+            } catch (\Throwable $th) {
                 return response()->json([
                     'status' => false,
                     'message' => $th->getMessage()
@@ -627,45 +630,32 @@ class AcquisitionController extends Controller
             }
         }
     }
-    public function updateAcquisition(Request $request){
-        if ($request->ajax()) {
+    public function updateAcquisition(Request $request)
+    {
 
-            // $validator = Validator::make($request->all(), [
-            //     'title' => 'required|unique:posts|max:255',
-            //     'body' => 'required',
-            // ]);
+        LogFacade::info($request);
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => 0,
-                    'message' => 'fail',
-                    'id' => $request->id
-                ], 500);
+        $validated = $request->validate([]);
 
-            }
-                
-            else {
-                $req = $request->input('formData');
-                $acquisition = Acquisition::find($request->id);
-                $acquisition->fill($req);
-                $acquisition->save();
+        $acquisition = Acquisition::find($request->id);
+        $acquisition->fill($validated);
+        $acquisition->save();
 
-                return response()->json([
-                    'status' => 1,
-                    'message' => 'success',
-                    'id' => $request->id
-                ], 200);
-            }
-        }
+        return response()->json([
+            'status' => 1,
+            'message' => 'success',
+            'id' => $request->id
+        ], 200);
     }
 
-    public function updatePlanning(Request $request, $id){
+    public function updatePlanning(Request $request, $id)
+    {
         if ($request->ajax()) {
             $planning = Planning::updatePlanning($request, $id);
             return response()->json([
                 'status' => 1,
                 'data' => 'Success',
-            ]); 
+            ]);
         }
     }
 

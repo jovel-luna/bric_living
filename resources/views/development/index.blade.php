@@ -27,7 +27,7 @@
                     </div>
                 @endif
                 <div id="development" class="col-md-12">
-                    @include('layouts.templates.filter.filter')
+                    @include('layouts.templates.filter.development-filter')
                     <table id="operation-table" class="table table-bordered operation-table property-list-table m-0" style="width:100%;" autoCompletet>
                         <thead>
                             <tr>
@@ -56,9 +56,14 @@
 </div>
 <!-- Modal -->
 @include('layouts.templates.popups.filter-popup')
+@include('layouts.templates.popups.developments-filter-popup')
 @push('scripts')
     <script>
-        $(document).ready( function () {
+        $(document).ready( function () {    
+            $( ".has-datepicker" ).datepicker({
+                dateFormat: "dd-mm-yy",
+            });
+
             $('#clear-filter').on('click', function(){
                 $('select#property_phase, select#entity, select#city, select#area, select#no_bric_beds, select#status').val('').selectpicker('refresh');
                 $('.lists').empty();
@@ -69,17 +74,21 @@
             $('#filter-view').on('click', function(){
                 
                 $('#filterModal').modal('hide');
-                var property_phase = $('select#property_phase').val();
+                var development_status = $('select#development_status').val();
                 var entity = $('select#entity').val();
                 var city = $('select#city').val();
                 var area = $('select#area').val();
                 var no_bric_beds = $('select#no_bric_beds').val();
                 var status = $('select#status').val();
+
+                var overruning_days = $('input#overruning_days').val();
+                var project_start_date = $('input#project_start_date').val();
+                var est_completion_date = $('input#est_completion_date').val();
                 
                 getArrayData();
 
                 $('#operation-table').DataTable().destroy();
-                property(property_phase, entity, city, area, no_bric_beds, status, postcode, address, $('#show_limit').val(), $('#searching').val());
+                property(development_status, entity, city, area, no_bric_beds, status, postcode, address, overruning_days , project_start_date, est_completion_date , $('#show_limit').val(), $('#searching').val());
             });
             $("#show_limit").on("change", function() {
                 var limit = $(this).val();
@@ -91,7 +100,7 @@
                 var search = $(this).val();
                 getArrayData();
                 $('#operation-table').DataTable().destroy();
-                property($('select#property_phase').val(), $('select#entity').val(), $('select#city').val(), $('select#area').val(), $('select#no_bric_beds').val(), $('select#status').val(), postcode, address, $('#show_limit').val(), search);
+                property($('select#development_status').val(), $('select#entity').val(), $('select#city').val(), $('select#area').val(), $('select#no_bric_beds').val(), $('select#status').val(), postcode, address, overruning_days , project_start_date, est_completion_date,  $('#show_limit').val(), search);
             });
 
             function getArrayData(){
@@ -107,7 +116,7 @@
             }
 
             property();
-            function property(property_phase='',entity='',city='',area='', no_bric_beds='', status='', postcode='', address='', showlimit='',search=''){
+            function property(development_status='',entity='',city='',area='', no_bric_beds='', status='', postcode='', address='', overruning_days , project_start_date, est_completion_date , showlimit='',search=''){
 
                 var paginateStat = true;
                 if (showlimit == '') {
@@ -140,7 +149,7 @@
                             $('.loading-container').show();
                         },
                         data: {
-                            property_phase:property_phase,
+                            development_status:development_status,
                             entity:entity,
                             city:city,
                             area:area,
@@ -148,6 +157,9 @@
                             status:status,
                             postcode:postcode,
                             address:address,
+                            overruning_days:overruning_days , 
+                            project_start_date:project_start_date, 
+                            est_completion_date:est_completion_date, 
                             search:search
                         }
                     },

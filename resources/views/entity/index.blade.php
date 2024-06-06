@@ -42,7 +42,8 @@
                                 <th>Registered Address</th>
                                 <th>No. Properties</th>
                                 <th>No. Beds</th>
-                                <th>Pipeline</th>
+                                <th>Development Pipeline</th>
+                                <th>Acquisition Pipeline</th>
                                 <th>Rent Role</th>
                                 <th>Action</th>
                             </tr>
@@ -112,12 +113,22 @@
                             }
                         },
                         {
-                            data: 'pipeline',
-                            name: 'pipeline',
+                            data: 'dev_pipeline',
+                            name: 'dev_pipeline',
                             orderable: false,
                             searchable: false,
                             render: function(data, type, row) {
-                                return row.pipeline ? row.pipeline : 'N/A';
+                                return row.dev_pipeline ? row.dev_pipeline : 'N/A';
+                            }
+                        },
+                        
+                        {
+                            data: 'acquisition_pipeline',
+                            name: 'acquisition_pipeline',
+                            orderable: false,
+                            searchable: false,
+                            render: function(data, type, row) {
+                                return row.acquisition_pipeline ? row.acquisition_pipeline : 'N/A';
                             }
                         },
                         {
@@ -132,6 +143,7 @@
                         {
                             data: 'action',
                             name: 'action',
+                            width: 0,
                             orderable: false,
                             searchable: false,
                             render: function(data, type, row) {

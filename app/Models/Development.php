@@ -108,6 +108,38 @@ class Development extends Model
             });      
         }
 
+        if ($request->development_status) {
+            $developments = $developments->where(function($pp) use ($request) {
+                foreach ($request->property_phase as $ppKey => $ppVal) {
+                    $pp->orWhere('developments.development_status', '=', $ppVal);
+                }
+            });      
+        }
+
+        if ($request->overruning_days) {
+            $developments = $developments->where(function($pp) use ($request) {
+                foreach ($request->property_phase as $ppKey => $ppVal) {
+                    $pp->orWhere('developments.overruning', '=', $ppVal);
+                }
+            });      
+        }
+
+        if ($request->project_start_date) {
+            $developments = $developments->where(function($pp) use ($request) {
+                foreach ($request->property_phase as $ppKey => $ppVal) {
+                    $pp->orWhere('developments.project_start_date', '=', $ppVal);
+                }
+            });      
+        }
+
+        if ($request->est_completion_date) {
+            $developments = $developments->where(function($pp) use ($request) {
+                foreach ($request->property_phase as $ppKey => $ppVal) {
+                    $pp->orWhere('developments.projected_completion_date', '=', $ppVal);
+                }
+            });      
+        }
+
         if ($request->entity) {
             $developments = $developments->where(function($e) use ($request) {
                 foreach ($request->entity as $eKey => $eVal) {
