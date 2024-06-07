@@ -40,8 +40,8 @@
                                 <th>Development Status</th>
                                 <th>Letting Status</th>
                                 <th>Budget</th>
-                                <th>Project Start Date</th>
-                                <th>Est Completion Date</th>
+                                <th>Project Start Date (DD/MM/YY)</th>
+                                <th>Est Completion Date (DD/MM/YY)</th>
                                 <th>Over running (days)</th>
                                 <th>Action</th>
                             </tr>
@@ -64,48 +64,61 @@
                 dateFormat: "dd-mm-yy",
             });
 
-            $('#clear-filter').on('click', function(){
-                $('select#property_phase, select#entity, select#city, select#area, select#no_bric_beds, select#status').val('').selectpicker('refresh');
+            $('#clear-filterDevelopment').on('click', function(){
+                $('select#development_status, select#entity, select#city, select#area, select#no_bric_bedsDevelopment, select#statusDevelopment, input#project_start_date, input#est_completion_date').val('').selectpicker('refresh');
                 $('.lists').empty();
             });
 
             let postcode = [];
             let address = [];
-            $('#filter-view').on('click', function(){
+            let areaArray = [];
+            let cityArray = [];
+
+            $('#filter-viewDevelopment').on('click', function(){
+                console.log('filter view')
                 
                 $('#filterModal').modal('hide');
                 var development_status = $('select#development_status').val();
                 var entity = $('select#entity').val();
                 var city = $('select#city').val();
                 var area = $('select#area').val();
-                var no_bric_beds = $('select#no_bric_beds').val();
-                var status = $('select#status').val();
+                var no_bric_beds = $('#no_bric_bedsDevelopment').find(":selected").val();
+
+                var status = $('#statusDevelopment').find(":selected").val();
 
                 var overruning_days = $('input#overruning_days').val();
                 var project_start_date = $('input#project_start_date').val();
                 var est_completion_date = $('input#est_completion_date').val();
                 
+                console.log('no bric beds')
+                console.log(no_bric_beds)
+                console.log('status')
+                console.log(status)
+
+
                 getArrayData();
 
                 $('#operation-table').DataTable().destroy();
-                property(development_status, entity, city, area, no_bric_beds, status, postcode, address, overruning_days , project_start_date, est_completion_date , $('#show_limit').val(), $('#searching').val());
+                property(development_status, entity, cityArray, areaArray, no_bric_beds, status, postcode, address, overruning_days , project_start_date, est_completion_date , $('#show_limit').val(), $('#searching').val());
             });
             $("#show_limit").on("change", function() {
                 var limit = $(this).val();
                 getArrayData();
                 $('#operation-table').DataTable().destroy();
-                property($('select#property_phase').val(), $('select#entity').val(), $('select#city').val(), $('select#area').val(), $('select#no_bric_beds').val(), $('select#status').val(), postcode, address, limit, $('#searching').val());
+                property($('select#property_phase').val(), $('select#entity').val(), cityArray, areaArray, $('select#no_bric_beds').val(), $('select#status').val(), postcode, address, overruning_days, limit, $('#searching').val());
             });
             $('#searching').keyup(function(){
                 var search = $(this).val();
                 getArrayData();
                 $('#operation-table').DataTable().destroy();
-                property($('select#development_status').val(), $('select#entity').val(), $('select#city').val(), $('select#area').val(), $('select#no_bric_beds').val(), $('select#status').val(), postcode, address, overruning_days , project_start_date, est_completion_date,  $('#show_limit').val(), search);
+                property($('select#development_status').val(), $('select#entity').val(), cityArray, areaArray, $('select#no_bric_beds').val(), $('select#status').val(), postcode, address, overruning_days , project_start_date, est_completion_date,  $('#show_limit').val(), search);
             });
 
             function getArrayData(){
                 postcode = [];
                 address = [];
+                areaArray = [];
+                cityArray = [];
                 $( ".postcode-list .list-items" ).each(function( pc ) {
                     postcode.push($(this).find('span').text());
                 });
@@ -113,10 +126,18 @@
                 $( ".address-list .list-items" ).each(function( add ) {
                     address.push($(this).find('span').text());
                 });
+
+                $( ".area-list .list-items" ).each(function( add ) {
+                    areaArray.push($(this).find('span').text());
+                });
+
+                $( ".city-list .list-items" ).each(function( add ) {
+                    cityArray.push($(this).find('span').text());
+                });
             }
 
             property();
-            function property(development_status='',entity='',city='',area='', no_bric_beds='', status='', postcode='', address='', overruning_days , project_start_date, est_completion_date , showlimit='',search=''){
+            function property(development_status='',entity='',cityArray='',areaArray='', no_bric_beds='', status='', postcode='', address='', overruning_days , project_start_date, est_completion_date , showlimit='',search=''){
 
                 var paginateStat = true;
                 if (showlimit == '') {
@@ -151,8 +172,8 @@
                         data: {
                             development_status:development_status,
                             entity:entity,
-                            city:city,
-                            area:area,
+                            city:cityArray,
+                            area:areaArray,
                             no_bric_beds:no_bric_beds,
                             status:status,
                             postcode:postcode,

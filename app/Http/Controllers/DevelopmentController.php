@@ -21,9 +21,10 @@ class DevelopmentController extends Controller
     public function index(Request $request)
     {
         $filters = Property::filter();
+        Log::info('index');
 
         if ($request->ajax()) {
-
+            Log::info('request ajax');
             $developments = Development::getDevelopment($request);
 
             /* This is the code that is being used to return the data to the datatable. */

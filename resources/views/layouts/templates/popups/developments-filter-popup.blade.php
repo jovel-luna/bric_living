@@ -29,50 +29,51 @@
 
                             <div class="mb-3">
                                 <label for="city" class="col-form-label">{{ __('City') }}</label>
-                                <select class="form-control selectpicker" multiple data-live-search="true" id="city" data-actions-box="true">
-                                    @foreach($filters['city'] as $c)
-                                    <option value="{{$c->city}}">{{$c->city}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="no_bric_beds" class="col-form-label">{{ __('No. Bric Beds') }}</label>
-                                        <select class="form-control selectpicker" multiple data-live-search="true" id="no_bric_beds" data-actions-box="true">
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                            <option value="11">11</option>
-                                            <option value="12">12</option>
-                                            <option value="13">13</option>
-                                            <option value="14">14</option>
-                                            <option value="15">15</option>
-                                        </select>
+                                <div class="row mb-1">
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" id="city" autocomplete="off">
+                                    </div>
+                                    <div class="col-md-3 align-items-center d-flex justify-content-end">
+                                        <button type="button" class="btn btn-sm btn-success" id="addbtn"><i class="fas fa-plus fa-sm"></i> ADD</button>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="status" class="col-form-label">{{ __('Letting Status') }}</label>
-                                        <select class="form-control selectpicker" multiple data-live-search="true" id="status" data-actions-box="true">
-                                            @foreach($filters['letting_status'] as $ls)
-                                            <option value="{{$ls->id}}">{{$ls->letting_status_name}}</option>
-                                            @endforeach
-                                        </select>
+                                <div class="row">
+                                    <div class="col-md-12 city-list lists d-flex">
                                     </div>
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <label for="no_bric_bedsDevelopment" class="col-form-label">{{ __('No. Bric Beds') }}</label>
+                                <select class="form-control selectpicker" id="no_bric_bedsDevelopment" name="no_bric_beds">
+                                    <option value="">Please Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                </select>
+
+                            </div>
+
                             <div class="mb-3">
-                                <label for="overruning_days" class="col-form-label">{{ __('Over running (days)') }}</label>
-                                <input type="number" class="form-control" id="overruning_days" autocomplete="off">
+                                <label for="statusDevelopment" class="col-form-label">{{ __('Letting Status') }}</label>
+                                <select class="form-control selectpicker" id="statusDevelopment" name="status">
+                                    <option value="">Please Select</option>
+                                    @foreach($filters['letting_status'] as $ls)
+                                    <option value="{{$ls->id}}">{{$ls->letting_status_name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="mb-3">
@@ -100,22 +101,30 @@
                                     @endforeach
                                 </select>
                             </div>
+
                             <div class="mb-3">
                                 <label for="area" class="col-form-label">{{ __('Area') }}</label>
-                                <select class="form-control selectpicker" multiple data-live-search="true" id="area" data-actions-box="true">
-                                    @foreach($filters['area'] as $a)
-                                    <option value="{{$a->area}}">{{$a->area}}</option>
-                                    @endforeach
-                                </select>
+                                <div class="row mb-1">
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" id="area" autocomplete="off">
+                                    </div>
+                                    <div class="col-md-3 align-items-center d-flex justify-content-end">
+                                        <button type="button" class="btn btn-sm btn-success" id="addbtn"><i class="fas fa-plus fa-sm"></i> ADD</button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 area-list lists d-flex">
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="mb-3">
-                                <label for="project_start_date" class="col-form-label">{{ __('Project Start Date') }}</label>
+                                <label for="project_start_date" class="col-form-label">{{ __('Project Start Date (DD/MM/YY)') }}</label>
                                 <input id="project_start_date" type="text" class="form-control has-datepicker" name="project_start_date">
                             </div>
 
                             <div class="mb-3">
-                                <label for="est_completion_date" class="col-form-label">{{ __('Est Completion Date') }}</label>
+                                <label for="est_completion_date" class="col-form-label">{{ __('Est Completion Date (DD/MM/YY)') }}</label>
                                 <input id="est_completion_date" type="text" class="form-control has-datepicker" name="est_completion_date">
                             </div>
 
@@ -158,8 +167,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="clear-filter" type="button" class="btn btn-warning">Clear</button>
-                <button id="filter-view" type="button" class="btn btn-primary" data-dismiss="modal">View</button>
+                <button id="clear-filterDevelopment" type="button" class="btn btn-warning">Clear</button>
+                <button id="filter-viewDevelopment" type="button" class="btn btn-primary" data-dismiss="modal">View</button>
             </div>
         </div>
     </div>

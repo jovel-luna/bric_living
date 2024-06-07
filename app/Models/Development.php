@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Log;
 
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Contracts\Activity;
@@ -110,33 +111,28 @@ class Development extends Model
 
         if ($request->development_status) {
             $developments = $developments->where(function($pp) use ($request) {
-                foreach ($request->property_phase as $ppKey => $ppVal) {
-                    $pp->orWhere('developments.development_status', '=', $ppVal);
-                }
+                // Log::info($request->development_status);
+                $pp->orWhere('developments.development_status', '=', $request->development_status);
+
             });      
         }
 
         if ($request->overruning_days) {
+            Log::info($request->overruning_days);
             $developments = $developments->where(function($pp) use ($request) {
-                foreach ($request->property_phase as $ppKey => $ppVal) {
-                    $pp->orWhere('developments.overruning', '=', $ppVal);
-                }
+                $pp->orWhere('developments.over_running', '=', $request->over_running);
             });      
         }
 
         if ($request->project_start_date) {
             $developments = $developments->where(function($pp) use ($request) {
-                foreach ($request->property_phase as $ppKey => $ppVal) {
-                    $pp->orWhere('developments.project_start_date', '=', $ppVal);
-                }
+                $pp->orWhere('developments.project_start_date', '=', $request->project_start_date);
             });      
         }
 
         if ($request->est_completion_date) {
             $developments = $developments->where(function($pp) use ($request) {
-                foreach ($request->property_phase as $ppKey => $ppVal) {
-                    $pp->orWhere('developments.projected_completion_date', '=', $ppVal);
-                }
+                $pp->orWhere('developments.projected_completion_date', '=', $request->est_completion_date);
             });      
         }
 
@@ -162,18 +158,21 @@ class Development extends Model
                 }
             });      
         }
+        Log::info($request);
+        Log::info($request->no_bric_beds);
         if ($request->no_bric_beds) {
+            Log::info($request->no_bric_beds);
             $developments = $developments->where(function($nbb) use ($request) {
-                foreach ($request->no_bric_beds as $nbbKey => $nbbVal) {
-                    $nbb->orWhere('properties.no_bric_beds', '=', $nbbVal);
-                }
+                $nbb->orWhere('properties.no_bric_beds', '=', $request->no_bric_beds);
+
             });      
         }
         if ($request->status) {
             $developments = $developments->where(function($s) use ($request) {
-                foreach ($request->status as $sKey => $sVal) {
-                    $s->orWhere('properties.status', '=', $sVal);
-                }
+                $s->orWhere('properties.status', '=', $request->status);
+                // foreach ($request->status as $sKey => $sVal) {
+                //     $s->orWhere('properties.status', '=', $sVal);
+                // }
             });      
         }
         if ($request->postcode) {
