@@ -222,4 +222,8 @@ class SettingController extends Controller
         ];
         dd(response()->json($data));
     }
+
+    public function advancedSearchView(){
+        return view('setting.advanced-search'); 
+    }
 }

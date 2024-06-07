@@ -62,6 +62,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/add-location-postcode', [App\Http\Controllers\LocationController::class, 'store_new'])->name('location.add_new');
 
     Route::get('/settings/getUserAccounts', [App\Http\Controllers\SettingController::class, 'getSettingsUsers'])->name('get.user-accounts');
+    Route::get('/settings/advanced-search', [App\Http\Controllers\SettingController::class, 'advancedSearchView'])->name('get.advanced-search');
     Route::post('/settings/updateProfileImage/{id}', [App\Http\Controllers\SettingController::class, 'updateUserProfileImage'])->name('update.user-profile-image');
     Route::post('/settings/updateUserInfo/{id}', [App\Http\Controllers\SettingController::class, 'updateUserInfo'])->name('update.user-info');
     Route::post('/settings/updateUserPassword/{id}', [App\Http\Controllers\SettingController::class, 'updateUserPassword'])->name('update.user-password');
