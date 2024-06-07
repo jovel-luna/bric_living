@@ -388,11 +388,10 @@
                                                         <label for="capex_budget" class="col-form-label">{{ __('CAPEX Budget') }}<span class="isRequired"> * </span></label>
                                                         <input id="capex_budget" type="text" onkeyup="formatNumber(this.id)" class="form-control @error('capex_budget') is-invalid @enderror" name="capex_budget" value="{{ old('capex_budget', $data->capex_budget) }}" autocomplete="capex_budget">
 
-                                                        @error('capex_budget')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
+                                                        <span class="invalid-feedback capex_budget" role="alert">
+                                                            
                                                         </span>
-                                                        @enderror
+                                            
                                                     </div>
                                                 </div>
                                             </div>
@@ -1371,6 +1370,7 @@
                     break;
             }
         });
+
         $(document).on('change', '#property_phase, #entity, #house_no, #street, #postcode, #acquisition_status, #asking_price, #existing_beds, #agent, #tennure, #portfolio, #existing_bedroom_no, #estimated_period, #status, #insurance_value, #insurance_in_cost, #development_status', function(e) {
             if (e.target.value != "") {
                 $(this).removeClass("is-invalid");
@@ -1459,7 +1459,7 @@
 
         });
 
-        $( ".has-datepicker" ).datepicker({
+        $(".has-datepicker").datepicker({
             dateFormat: "dd-mm-yy",
             onSelect: function(date) {
                 $('#ui-datepicker-div').css('position', 'relative');
@@ -1479,8 +1479,8 @@
                         break;
                     default:
                         break;
-                    }
                 }
+            }
         });
 
 
@@ -1503,58 +1503,51 @@
                 contentType: false,
 
                 success: function(response) {
-
-                    if (response.errors) {
-                        var errorMsg = '';
-                        $.each(response.errors, function(field, errors) {
-                            $.each(errors, function(index, error) {
-                                errorMsg += error + '<br>';
-                            });
-                        });
-                        console.log(errorMsg)
-                        Swal.fire({
-                            title: 'Warning',
-                            text: "Review your inputs and try again",
-                            icon: 'warning',
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Continue'
-                        }).then((result) => {
-                            // $('#letting_status_name').addClass('is-invalid');
-                        })
-
-                    } else {
-                        Swal.fire({
-                            title: 'Success',
-                            text: "Acquisition Successfully Updated!",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Continue'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = baseUrl + "/property/details/" + response['id'];
-                            } else {
-                                window.location.href = baseUrl + "/property/details/" + response['id'];
-                            }
-                        })
-                    }
+                    Swal.fire({
+                        title: 'Success',
+                        text: "Acquisition Successfully Updated!",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Continue'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = baseUrl + "/property/details/" + response['id'];
+                        } else {
+                            window.location.href = baseUrl + "/property/details/" + response['id'];
+                        }
+                    })
 
                 },
                 error: function(xhr, status, error) {
 
+                    console.log(xhr.responseJSON.errors)
+                    console.log(typeof(xhr.responseJSON.errors))
+                    console.log(status)
+                    console.log(error)
                     Swal.fire({
                         title: 'Error',
-                        text: "An error occurred. Try again later.",
+                        text: "Review your inputs and try again",
                         icon: 'error',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'Continue'
                     }).then((result) => {
-                        // $('#letting_status_name').addClass('is-invalid');
+                        // capex_budget
+                        // xhr.responseJSON.errors.forEach(function (value, index, array) {
+                        //     console.log(value)
+                        //     // $('#').addClass('is-invalid');
+                        // });
+
+                        for (const property in xhr.responseJSON.errors) {
+                            // console.log(`${property}: ${xhr.responseJSON.errors[property]}`);
+                            $('#'+property).addClass('is-invalid');
+                            $('.invalid-feedback.'+property).addClass('is-invalid').html('<strong>' + xhr.responseJSON.errors[property] + '</strong>');
+                            // <span class="invalid-feedback capex_budget" role="alert">
+                        }
+
                     })
                 }
 

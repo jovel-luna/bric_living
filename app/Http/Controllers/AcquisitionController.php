@@ -635,7 +635,16 @@ class AcquisitionController extends Controller
 
         LogFacade::info($request);
 
-        $validated = $request->validate([]);
+        $validated = $request->validate([
+            'acquisition_status' => 'required',
+            'agent' => 'required',
+            'single_asset_portfolio' => 'required',
+            'existing_bedroom_no' => 'required',
+            'asking_price' => 'required',
+            'estimated_period' => 'required|numeric',
+            'capex_budget' => 'required',
+            'tennure' => 'required',
+        ]);
 
         $acquisition = Acquisition::find($request->id);
         $acquisition->fill($validated);
