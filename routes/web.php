@@ -84,6 +84,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('acquisition/fetch/{id}', [App\Http\Controllers\AcquisitionController::class, 'getAcquisitionById'])->name('get.acquisition');
     Route::post('acquisition/getAcquisitionFieldData', [App\Http\Controllers\AcquisitionController::class, 'getAcquisitionFieldData'])->name('get.acquisition-field-data');
     Route::post('acquisition/updateAcquisition/{id}', [App\Http\Controllers\AcquisitionController::class, 'updateAcquisition'])->name('get.update-acquisition');
+    Route::post('acquisition/updateSideAcquisition/{id}', [App\Http\Controllers\AcquisitionController::class, 'updateSideAcquisition'])->name('get.update-updateSideAcquisition');
     Route::get('acquisition/getPlanning/{id}', [App\Http\Controllers\AcquisitionController::class, 'getPlanning'])->name('get.planning');
     Route::post('acquisition/savePlanning/{id}', [App\Http\Controllers\AcquisitionController::class, 'savePlanning'])->name('store.planning');
     Route::get('acquisition/removePlanning/{id}', [App\Http\Controllers\AcquisitionController::class, 'removePlanning'])->name('remove.planning');

@@ -1,5 +1,5 @@
 <div class="sidebar-popup">
-    <form action="#" id="side-popup-form">
+    <form action="#" id="side-popup-form-acqui">
         <span id="close-sidebar-btn" aria-hidden="true" class="fa-regular fa-circle-xmark"></span>
         <div class="action-btns mb-4 d-flex gap-1">
             <span class="action-option d-inline-flex gap-1">

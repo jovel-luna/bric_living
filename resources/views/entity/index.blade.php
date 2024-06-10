@@ -76,8 +76,8 @@
                         lengthMenu: "_MENU_"
                     },
                     lengthMenu: [
-                        [10, 25, 50, 100, -1],
-                        [10, 25, 50, 100, 'All']
+                        [20, 50, 100, -1],
+                        [20, 50, 100, 'All']
                     ],
                     // processing: true,
                     // serverSide: true,
@@ -254,7 +254,8 @@
                     getAcquisitionData(rowID);
                 });
 
-                $('form#side-popup-form').submit(function(e) {
+                $('form#side-popup-form-acqui').submit(function(e) {
+                    console.log('here')
                     e.preventDefault();
                     var rowID = $(this).parents('.sidebar-popup').attr('data-id');
                     var currentRow = $(this).parents('.sidebar-popup').find('form > .side-content div');
