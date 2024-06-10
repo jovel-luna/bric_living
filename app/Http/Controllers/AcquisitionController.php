@@ -633,8 +633,6 @@ class AcquisitionController extends Controller
     public function updateAcquisition(Request $request)
     {
 
-        LogFacade::info($request);
-
         // Acquisition edit form validation
         $validated = $request->validate([
             'acquisition_status' => 'required',
@@ -647,7 +645,11 @@ class AcquisitionController extends Controller
             'tennure' => 'required',
         ]);
 
+        LogFacade::info($request->id);
         $acquisition = Acquisition::find($request->id);
+
+        LogFacade::info($acquisition);
+
         $acquisition->fill($validated);
         $acquisition->save();
 

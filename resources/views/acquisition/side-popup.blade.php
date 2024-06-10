@@ -1,5 +1,6 @@
 <div class="sidebar-popup">
-    <form action="#" id="side-popup-form-acqui">
+    <form method="POST" enctype="multipart/form-data" id="side-popup-form-acqui">
+        @csrf
         <span id="close-sidebar-btn" aria-hidden="true" class="fa-regular fa-circle-xmark"></span>
         <div class="action-btns mb-4 d-flex gap-1">
             <span class="action-option d-inline-flex gap-1">
@@ -19,9 +20,9 @@
                     <textarea rows="4" id="side-col_status_log" type="text" class="form-control @error('col_status_log') is-invalid @enderror is-disabled" name="col_status_log" value="{{ old('col_status_log') }}" autocomplete="col_status_log" required></textarea>
 
                     @error('col_status_log')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
                     @enderror
                 </div>
                 <div class="row">
@@ -31,9 +32,9 @@
                             <select name="col_status" id="side-col_status" class="form-control form-control-alternative{{ $errors->has('col_status') ? ' is-invalid' : '' }} is-disabled">
                                 <option value="">Please Select</option>
                                 @foreach($data['col_status'] as $col_status_key => $col_status_val)
-                                    <option value="{{ $col_status_key }}">{{ $col_status_val }}</option>
+                                <option value="{{ $col_status_key }}">{{ $col_status_val }}</option>
                                 @endforeach
-                            </select> 
+                            </select>
                         </div>
                         <div class="row">
                             <div class="col-md-3">
@@ -66,9 +67,9 @@
                             <select name="acquisition_status" id="side-acquisition_status" class="form-control form-control-alternative{{ $errors->has('acquisition_status') ? ' is-invalid' : '' }} is-disabled">
                                 <option value="">Please Select</option>
                                 @foreach($data['acquisition_status'] as $acquisition_status_key => $acquisition_status_val)
-                                    <option value="{{ $acquisition_status_key }}">{{ $acquisition_status_val }}</option>
+                                <option value="{{ $acquisition_status_key }}">{{ $acquisition_status_val }}</option>
                                 @endforeach
-                            </select> 
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -84,7 +85,7 @@
                             <label for="single_asset_portfolio" class="col-form-label">{{ __('Single Asset / Portfolio:') }}<span class="isRequired"> * </span></label>
                             <select name="single_asset_portfolio" id="side-single_asset_portfolio" class="form-control form-control-alternative{{ $errors->has('single_asset_portfolio') ? ' is-invalid' : '' }} is-disabled">
                                 @foreach($data['single_asset_portfolio'] as $single_asset_portfolio_key => $single_asset_portfolio_val)
-                                    <option value="{{ $single_asset_portfolio_key }}">{{ $single_asset_portfolio_val }}</option>
+                                <option value="{{ $single_asset_portfolio_key }}">{{ $single_asset_portfolio_val }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -100,12 +101,14 @@
                             <label for="entity" class="col-form-label">{{ __('Entity:') }}<span class="isRequired"> * </span></label>
                             <select name="entity" id="side-entity" class="form-control form-control-alternative{{ $errors->has('entity') ? ' is-invalid' : '' }} is-disabled">
                                 @foreach($data['entity'] as $eKey => $eVal)
-                                    <option value="{{ $eVal->id }}">{{ $eVal->entity }}</option>
+                                <option value="{{ $eVal->id }}">{{ $eVal->entity }}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                 </div>
+
+                
             </div>
             <input type="hidden" class="form-control" id="side-agent_fee_percentage" name="agent_fee_percentage">
             <input type="hidden" class="form-control" id="side-agent_fee" name="agent_fee">
@@ -117,6 +120,7 @@
             <input type="hidden" class="form-control" id="side-stamp_duty" name="stamp_duty">
             <input type="hidden" class="form-control" id="side-estimated_tpc" name="estimated_tpc">
             <input type="hidden" class="form-control" id="side-acquisition_cost" name="acquisition_cost">
+            <input type="hidden" class="form-control" id="side-tennure" name="tennure">
             <input type="hidden" class="form-control" id="side-capex_budget" name="capex_budget">
             <input type="hidden" class="form-control" id="side-completion_date" name="completion_date">
             <input type="hidden" class="form-control" id="side-offer_price" name="offer_price">

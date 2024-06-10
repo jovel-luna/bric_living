@@ -41,6 +41,7 @@ class Acquisition extends Model
         'col_status',
         'col_status_log',
         'financing_status',
+        'capex_budget',
         'bric_purchase_yield_percentage',
         'tpc_bedspace',
         'purchase_price_bedspace',
