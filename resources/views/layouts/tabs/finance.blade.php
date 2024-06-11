@@ -167,7 +167,7 @@
                                 <p><strong>Account No:</strong></p>
                             </div>
                             <div class="col-md-6">
-                                {{ $data['finance']['m_provider'] ? $data['finance']['m_provider'] : 'N/A' }}
+                                {{ $data['finance']['m_account_no'] ? $data['finance']['m_account_no'] : 'N/A' }}
                             </div>
                         </div>
                     </div>

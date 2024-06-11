@@ -9,6 +9,7 @@ use App\Models\Finance;
 use DataTables;
 use Illuminate\Support\Facades\Response;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Illuminate\Support\Facades\Log;
 
 class FinanceController extends Controller
 {
@@ -27,8 +28,8 @@ class FinanceController extends Controller
 
             /* This is the code that is being used to return the data to the datatable. */
             return Datatables::of($finance)
-                    ->addIndexColumn()
-                    ->make(true);
+                ->addIndexColumn()
+                ->make(true);
         }
         return view('finance.index', compact('filters'));
     }
@@ -75,7 +76,8 @@ class FinanceController extends Controller
     {
         $finance = Finance::findorfail($id);
         return view('finance.edit', [
-            'data' => $finance
+            'data' => $finance, 
+            'id' => $id
         ]);
     }
 
@@ -89,6 +91,23 @@ class FinanceController extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+
+    public function updateFinance(Request $request) {
+        // Log::info($request);
+
+        $finance = Finance::find($request->id);
+
+        $finance->fill($request->all());
+        $finance->save();
+
+        
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'success',
+            'id' => $finance->property_id
+        ], 200);
     }
 
     /**

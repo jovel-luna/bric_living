@@ -16,8 +16,8 @@
             <!-- <input type="hidden" id="" name=""> -->
             <div class="row">
                 <div class="mb-3">
-                    <label for="col_status_log" class="col-form-label">{{ __('COL Log:') }}</label>
-                    <textarea rows="4" id="side-col_status_log" type="text" class="form-control @error('col_status_log') is-invalid @enderror is-disabled" name="col_status_log" value="{{ old('col_status_log') }}" autocomplete="col_status_log" required></textarea>
+                    <label for="col_status_log" class="col-form-label">{{ __('COL Log:') }} </label>
+                    <textarea rows="4" id="side-col_status_log" type="text" class="form-control @error('description') is-invalid @enderror is-disabled" name="description" value="{{ old('description') }}" autocomplete="description" required></textarea>
 
                     @error('col_status_log')
                     <span class="invalid-feedback" role="alert">
@@ -91,7 +91,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="target_completion_date" class="col-form-label">{{ __('Target Completion Date:') }}</label>
-                            <input id="side-target_completion_date" type="text" class="form-control @error('target_completion_date') is-invalid @enderror has-datepicker is-disabled" name="target_completion_date" value="{{ old('target_completion_date') }}" autocomplete="target_completion_date" required>
+                            <input id="side-target_completion_date" type="text" class="form-control @error('target_completion_date') is-invalid @enderror has-datepicker is-disabled" name="target_completion_date" value="{{ old('target_completion_date') }}" autocomplete="target_completion_date">
                         </div>
                         <div class="mb-3">
                             <label for="existing_bedroom_no" class="col-form-label">{{ __('Existing Bedroom No.:') }}<span class="isRequired"> * </span></label>

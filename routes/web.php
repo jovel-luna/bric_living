@@ -51,6 +51,10 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('development', App\Http\Controllers\DevelopmentController::class);
     Route::resource('letting', App\Http\Controllers\LettingController::class);
     Route::resource('finance', App\Http\Controllers\FinanceController::class);
+
+    Route::post('finance/update-finance/{id}', [App\Http\Controllers\FinanceController::class, 'updateFinance'])->name('get.update-finance');
+
+
     Route::resource('setting', App\Http\Controllers\SettingController::class);
     Route::resource('report', App\Http\Controllers\ReportController::class);
     Route::resource('tenant', App\Http\Controllers\TenantController::class);
@@ -82,6 +86,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('entity/updateEntity/{id}', [App\Http\Controllers\EntityController::class, 'updateEntity'])->name('get.update-entity');
     
     Route::post('acquisition/fetch/{id}', [App\Http\Controllers\AcquisitionController::class, 'getAcquisitionById'])->name('get.acquisition');
+    Route::post('acquisition/last-col-fetch/{id}', [App\Http\Controllers\AcquisitionController::class, 'getLastCOLLog'])->name('get.last-log');
     Route::post('acquisition/getAcquisitionFieldData', [App\Http\Controllers\AcquisitionController::class, 'getAcquisitionFieldData'])->name('get.acquisition-field-data');
     Route::post('acquisition/updateAcquisition/{id}', [App\Http\Controllers\AcquisitionController::class, 'updateAcquisition'])->name('get.update-acquisition');
     Route::post('acquisition/updateSideAcquisition/{id}', [App\Http\Controllers\AcquisitionController::class, 'updateSideAcquisition'])->name('get.update-updateSideAcquisition');

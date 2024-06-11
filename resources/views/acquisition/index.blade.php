@@ -328,7 +328,7 @@
             console.log(formData['id'])
 
             $.ajax({
-                url: "/acquisition/updateAcquisition/"+formData['id']+"",
+                url: "/acquisition/updateAcquisition/" + formData['id'] + "",
                 type: "POST",
                 data: fData,
                 dataType: "JSON",
@@ -346,9 +346,9 @@
                         confirmButtonText: 'Continue'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = baseUrl + "/property/details/" + response['id'];
+                            // window.location.href = baseUrl + "/property/details/" + response['id'];
                         } else {
-                            window.location.href = baseUrl + "/property/details/" + response['id'];
+                            // window.location.href = baseUrl + "/property/details/" + response['id'];
                         }
                     })
 
@@ -684,6 +684,7 @@
                 },
                 success: function(response) {
                     if (response) {
+                        console.log(response)
                         $('#side-col_status_log').val(response['data']['col_status_log']);
                         $('#side-house_no_or_name').val(response['data']['house_no_or_name']);
                         $('#side-street').val(response['data']['street']);
@@ -729,10 +730,38 @@
                         $('#side-tpc_bedspace').val(response['data']['tpc_bedspace']);
                         $('#side-purchase_price_bedspace').val(response['data']['purchase_price_bedspace']);
                         $('#side-entity').val(response['data']['entity_id']);
+
+
+                        // Create a hidden input element
+                        var hiddenInput = $('<input type="hidden">');
+
+                        // Set the name and value attributes
+                        hiddenInput.attr('name', 'location_id');
+                        hiddenInput.val(response['data']['location_id']);
+
+                        // Append the hidden input element to a specific element in the DOM, for example, the body
+                        $('#side-popup-form-acqui').append(hiddenInput);
+
                     }
                     $('.sidebar-popup .back-overlay').remove();
                 }
             });
+            jQuery.ajax({
+                url: 'acquisition/last-col-fetch/' + rowID,
+                method: 'post',
+                success: function(response) {
+                    $('#side-col_status_log').val(response.last_col_log);
+                    // Create a hidden input element
+                    var hiddenInput = $('<input type="hidden">');
+
+                    // Set the name and value attributes
+                    hiddenInput.attr('name', 'log_id');
+                    hiddenInput.val(response.log_id);
+
+                    // Append the hidden input element to a specific element in the DOM, for example, the body
+                    $('#side-popup-form-acqui').append(hiddenInput);
+                }
+            })
         }
 
         function formatAsPercentage(num, decimal) {
