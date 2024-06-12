@@ -36,12 +36,12 @@
                             <!-- {{ $changes }} -->
 
                             @if($details)
-                            @foreach($details->properties as $key => $value)
+                            @foreach($changes as $key => $value)
                             @php
                             // Define key mappings
                             $keyMappings = [
                             'old' => 'Old Data',
-                            'attributes' => 'Attributes',
+                            'attributes' => 'New Data',
 
                             ];
 
@@ -58,8 +58,10 @@
                                     <th>Value</th>
                                 </tr>
                                 @foreach($value as $subKey => $subValue)
+                                
                                 @if($subValue != '')
                                 <tr>
+
                                     <td>{{$subKey}}</td>
 
                                     <td>{{$subValue}}</td>
