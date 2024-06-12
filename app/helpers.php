@@ -257,3 +257,13 @@ if (!function_exists('map_activity_log_keys')) {
         return $changed;
     }
 }
+
+if (!function_exists('search_database')) { 
+    function search_database($query) {
+        Log::info('performing search for ' . $query);
+        $results = DB::select("select * from properties, acquisitions, developments where match(street) against (:query IN NATURAL LANGUAGE MODE) AND properties.id = acquisitions.property_id AND acquisitions.property_id = developments.property_id", ['query' => $query]);
+        Log::info('results found!');
+        return $results;
+    }
+
+}
