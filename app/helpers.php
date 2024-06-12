@@ -261,7 +261,7 @@ if (!function_exists('map_activity_log_keys')) {
 if (!function_exists('search_database')) { 
     function search_database($query) {
         Log::info('performing search for ' . $query);
-        $results = DB::select("select * from properties, acquisitions, developments where match(street) against (:query IN NATURAL LANGUAGE MODE) AND properties.id = acquisitions.property_id AND acquisitions.property_id = developments.property_id", ['query' => $query]);
+        $results = DB::select("select * from properties, acquisitions, developments where match(street) against (:query IN NATURAL LANGUAGE MODE) AND properties.id = acquisitions.property_id AND acquisitions.property_id = developments.property_id OR MATCH (developments.development_status) AGAINST (:query2 IN NATURAL LANGUAGE MODE) AND properties.id = acquisitions.property_id AND acquisitions.property_id = developments.property_id ", ['query' => $query, 'query2' => $query]);
         Log::info('results found!');
         return $results;
     }
