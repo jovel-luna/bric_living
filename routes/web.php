@@ -6,6 +6,9 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\EntityController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AcquisitionController;
+use App\Http\Controllers\SearchController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -169,4 +172,5 @@ Route::group(['middleware' => ['auth']], function() {
     
     Route::get('external', [App\Http\Controllers\PropertyController::class, 'viewExternal'])->name('get.property-external');
     // Route::get('upload/entities', [App\Http\Controllers\EntityController::class, 'upload'])->name('entity.upload');
+    Route::get('/search', [SearchController::class, 'searchterm']);
 });

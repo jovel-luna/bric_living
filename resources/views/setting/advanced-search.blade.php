@@ -11,7 +11,7 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Advance Search</li>
+                    <li class="breadcrumb-item active">Advanced Search</li>
                 </ol>
             </div>
         </div>
@@ -43,90 +43,73 @@
 
 @push('scripts')
 <script>
-    function property_search(id = '', postcode = '', city = '', area = '', house_street_no = '') {
-
-        var paginateStat = false;
-        var locations = $('#locations-table').DataTable({
+    function property_search_table(ref_no = '', postcode = '', city = '', area = '', house_street_no = '') {
+        var table = $('#property-search-table').DataTable({
+            destroy: true,
+            pagingType: 'simple',
+            // bFilter: false,
+            bLengthChange: false, 
             language: {
                 processing: 'Loading. Please wait...',
+                lengthMenu: "_MENU_",
                 search: "_INPUT_",
                 searchPlaceholder: "Search",
-                lengthMenu: "_MENU_"
+                emptyTable: 'No results matched your query'
             },
-            responsive: true,
             processing: true,
             serverSide: true,
-            order: [],
+            // bPaginate: true,
+            // ordering: false,
+            // order: [],
             ajax: {
-                url: "{{ route('location.index') }}",
+                url: "/search",
                 type: "GET",
                 beforeSend: function() {
                     $('.loading-container').show();
-                },
-                data: {
-                    id: id,
-                    postcode: postcode,
-                    city: city,
-                    area: area,
-                    house_street_no: house_street_no
-                },
-                dataSrc: function(json) {
-                    console.log('Received data:', json); // Debug received data
-                    return json.data; // Ensure it matches the structure expected by DataTables
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.error('AJAX Error:', textStatus, errorThrown); // Debug any AJAX errors
                 }
             },
             columns: [{
-                    data: 'id',
-                    name: 'id',
-                    orderable: true
+                    data: 'ref_no',
+                    name: 'ref_no',
+                    orderable: false
                 },
                 {
                     data: 'postcode',
                     name: 'postcode',
-                    orderable: true
-                },
-                {
-                    data: 'area',
-                    name: 'area',
-                    orderable: true
+                    orderable: false
                 },
                 {
                     data: 'city',
                     name: 'city',
-                    orderable: true
+                    orderable: false
+                },
+                {
+                    data: 'area',
+                    name: 'area',
+                    orderable: false,
+
                 },
                 {
                     data: 'house_street_no',
                     name: 'house_street_no',
-                    orderable: true
+                    orderable: false,
                 },
                 {
-                    data: null,
-                    orderable: false, // <i class="fa-solid fa-trash-can"></i>
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
                     render: function(data, type, row) {
-                        return '<div class="action-btn d-flex gap-1 justify-content-center"><a href="' +
-                            baseUrl + '/' + 'location/' + row.id +
-                            '" id="view-txt-btn" class="view" title="View"><i class="view icon fa-regular fa-eye" style="color: #005eff;"></i></a></div>'; // Adjust this as needed
-                    }
-                }
+                        return '<div class="action-btn d-flex gap-1 justify-content-center"><a href="" id="view-txt-btn" class="view" title="View"><i class="fa-regular fa-eye" style="color: #005eff;"></i></a></div>';
+                    },
+                },
             ]
-        });
+        })
+
     }
 
     // Initialize the DataTable
     $(document).ready(function() {
-        $('#property-search-table').DataTable({
-            language: {
-                processing: 'Loading. Please wait...',
-                search: "_INPUT_",
-                searchPlaceholder: "Search",
-                lengthMenu: "_MENU_"
-            }
-        })
-        // property_search();
+        property_search_table(ref_no = '', postcode = '', city = '', area = '', house_street_no = '')
     });
 </script>
 @endpush

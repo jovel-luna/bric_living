@@ -40,8 +40,6 @@ class ActivityLogController extends Controller
 
         $activity = Activity::where('id', $id)->first();
         $changed = map_activity_log_keys($activity->properties);
-        $results = search_database('completed');
-        // Log::info($results);
         return view('setting\activity-details', ['details' => $activity , 'changes' => $changed]);
  
 

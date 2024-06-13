@@ -258,10 +258,86 @@ if (!function_exists('map_activity_log_keys')) {
     }
 }
 
+if (!function_exists('search_database_count')) { 
+    function search_database_count($query){
+        $count = DB::select("
+        select count(*) as count
+        
+        from properties, locations, acquisitions, developments 
+        where match(street) against (:query IN NATURAL LANGUAGE MODE) 
+        AND properties.id = acquisitions.property_id
+        AND properties.location_id = locations.id
+        AND acquisitions.property_id = developments.property_id 
+         
+        OR MATCH (developments.development_status) AGAINST (:query2 IN NATURAL LANGUAGE MODE) 
+        AND properties.id = acquisitions.property_id 
+        AND acquisitions.property_id = developments.property_id 
+        ", 
+        
+        
+        ['query' => $query, 'query2' => $query]);
+        Log::info($count[0]->count);
+        return $count[0]->count;
+    }
+
+}
+
+if (!function_exists('search_database_count_filtered')) { 
+    function search_database_count_filtered($query, $offset){
+        $count = DB::select("
+        select count(*) as count
+        
+        from properties, locations, acquisitions, developments 
+        where match(street) against (:query IN NATURAL LANGUAGE MODE) 
+        AND properties.id = acquisitions.property_id
+        AND properties.location_id = locations.id
+        AND acquisitions.property_id = developments.property_id 
+         
+        OR MATCH (developments.development_status) AGAINST (:query2 IN NATURAL LANGUAGE MODE) 
+        AND properties.id = acquisitions.property_id 
+        AND acquisitions.property_id = developments.property_id 
+
+        LIMIT 10 OFFSET :offset
+        ", 
+        
+        
+        ['query' => $query, 'query2' => $query, 'offset' => $offset]);
+        Log::info($query);
+        Log::info($offset);
+        Log::info('search_database_count_filtered count');
+        Log::info($count);
+        return $count[0]->count;
+    }
+
+}
+
+
 if (!function_exists('search_database')) { 
-    function search_database($query) {
+    function search_database($query, $offset) {
         Log::info('performing search for ' . $query);
-        $results = DB::select("select * from properties, acquisitions, developments where match(street) against (:query IN NATURAL LANGUAGE MODE) AND properties.id = acquisitions.property_id AND acquisitions.property_id = developments.property_id OR MATCH (developments.development_status) AGAINST (:query2 IN NATURAL LANGUAGE MODE) AND properties.id = acquisitions.property_id AND acquisitions.property_id = developments.property_id ", ['query' => $query, 'query2' => $query]);
+        $results = DB::select("
+        select 
+
+            properties.ref_no as ref_no, 
+            locations.postcode as postcode, 
+            locations.city as city, 
+            locations.area as area, 
+            CONCAT(properties.house_no_or_name,' ',properties.street) as house_street_no 
+        
+        from properties, locations, acquisitions, developments 
+        where match(street) against (:query IN NATURAL LANGUAGE MODE) 
+        AND properties.id = acquisitions.property_id
+        AND properties.location_id = locations.id
+        AND acquisitions.property_id = developments.property_id 
+         
+        OR MATCH (developments.development_status) AGAINST (:query2 IN NATURAL LANGUAGE MODE) 
+        AND properties.id = acquisitions.property_id 
+        AND acquisitions.property_id = developments.property_id 
+        LIMIT 10 OFFSET :offset
+        ", 
+        
+        
+        ['query' => $query, 'query2' => $query, 'offset' => $offset]);
         Log::info('results found!');
         return $results;
     }
