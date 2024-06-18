@@ -264,14 +264,7 @@ if (!function_exists('search_database_count')) {
         select count(*) as count
         
         from properties, locations, acquisitions, developments 
-        where match(street) against (:query IN NATURAL LANGUAGE MODE) 
-        AND properties.id = acquisitions.property_id
-        AND properties.location_id = locations.id
-        AND acquisitions.property_id = developments.property_id 
-         
-        OR MATCH (developments.development_status) AGAINST (:query2 IN NATURAL LANGUAGE MODE) 
-        AND properties.id = acquisitions.property_id 
-        AND acquisitions.property_id = developments.property_id 
+       
         ", 
         
         
@@ -297,11 +290,10 @@ if (!function_exists('search_database_count_filtered')) {
         AND properties.id = acquisitions.property_id 
         AND acquisitions.property_id = developments.property_id 
 
-        LIMIT 10 OFFSET :offset
         ", 
         
         
-        ['query' => $query, 'query2' => $query, 'offset' => $offset]);
+        ['query' => $query, 'query2' => $query]);
         Log::info($query);
         Log::info($offset);
         Log::info('search_database_count_filtered count');
