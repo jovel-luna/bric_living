@@ -263,7 +263,7 @@ if (!function_exists('search_database_count')) {
         $count = DB::select("
         select count(*) as count
         
-        from properties, locations, acquisitions, developments 
+        from properties
        
         ", 
         

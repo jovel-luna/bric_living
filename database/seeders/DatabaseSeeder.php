@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Location;
+use App\Models\Entity;
 use App\Models\Property;
 use App\Models\Role;
 use App\Models\User;
@@ -52,11 +53,20 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Location::create([
-                'postcode' => 'postcode',
-                'city' => 'city',
-                'area' => 'area'
+            'postcode' => 'postcode',
+            'city' => 'city',
+            'area' => 'area'
         ]);
 
+        Entity::create([
+            'company_registration_number' => 123456,
+            'entity' => 'Default',
+            'registered_address' => 'N/A',
+            'entity_date_created' => 'N/A',
+            'statement_due_date' => 'N/A',
+            'financial_year_start_date' => 'N/A',
+            'financial_year_end_date' => 'N/A',
+        ]);
 
     }
 }

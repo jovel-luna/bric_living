@@ -12,8 +12,8 @@ class SearchController extends Controller
     {
         $offset = $request->input('start');
         $draw = $request->input('draw');
-        Log::info($offset);
-        Log::info($request);
+        // Log::info($offset);
+        // Log::info($request);
         if ($request->has('search.value')) {
             $term = $request->input('search.value');
         } else {
