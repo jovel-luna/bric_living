@@ -4,8 +4,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\ActivityLog;
+use App\Models\Property;
+use App\Models\Acquisition;
 use App\Models\UserAccess;
 use Illuminate\Support\Facades\Log;
+use Spatie\Searchable\Search;
+use Spatie\Searchable\ModelSearchAspect;
 
 if (!function_exists('user_email')) {
     function user_email()
@@ -164,12 +168,12 @@ if (!function_exists('map_activity_log_keys')) {
                 'project_start_date' => 'Project Start Date',
                 'projected_completion_date' => 'Projected Completion Date',
                 'over_running' => 'Over running',
-                'development_status'=>'Development Status',
+                'development_status' => 'Development Status',
                 'pc_company' => 'Company (Principal Contractor)',
                 'pc_name' => 'Name (Principal Contractor)',
                 'pc_mobile' => 'Mobile (Principal Contractor)',
                 'pc_email' => 'Email (Principal Contractor)',
-                'bc_company' => 'Company (Building Control)' ,
+                'bc_company' => 'Company (Building Control)',
                 'bc_name' => 'Name (Building Control)',
                 'bc_mobile' => 'Mobile (Building Control)',
                 'bc_email' => 'Email (Building Control)',
@@ -185,12 +189,12 @@ if (!function_exists('map_activity_log_keys')) {
                 'floorplan' => 'Floorplan',
                 'date_of_refurb' => 'Date of Refurb',
                 'tv' => 'TV',
-                'archive'=> 'Archive',
+                'archive' => 'Archive',
                 // Finance
                 'cm_mortgage_status' => 'Mortage Status (Current Mortgage)',
                 'cm_provider' => 'Provider (Current Mortgage)',
                 'cm_account_no' => 'Account No (Current Mortgage)',
-                'cm_start_date'=> 'Start Date (Current Mortgage)',
+                'cm_start_date' => 'Start Date (Current Mortgage)',
                 'cm_expiration_date' => 'Expiration Date (Current Mortgage)',
                 'cm_loan_period' => 'Loan Period (Current Mortgage)',
                 'cm_current_valuation' => 'Current Valuation (Current Mortgage)',
@@ -258,26 +262,30 @@ if (!function_exists('map_activity_log_keys')) {
     }
 }
 
-if (!function_exists('search_database_count')) { 
-    function search_database_count($query){
-        $count = DB::select("
+if (!function_exists('search_database_count')) {
+    function search_database_count($query)
+    {
+        $count = DB::select(
+            "
         select count(*) as count
         
         from properties
        
-        ", 
-        
-        
-        ['query' => $query, 'query2' => $query]);
+        ",
+
+
+            ['query' => $query, 'query2' => $query]
+        );
         Log::info($count[0]->count);
         return $count[0]->count;
     }
-
 }
 
-if (!function_exists('search_database_count_filtered')) { 
-    function search_database_count_filtered($query, $offset){
-        $count = DB::select("
+if (!function_exists('search_database_count_filtered')) {
+    function search_database_count_filtered($query, $offset)
+    {
+        $count = DB::select(
+            "
         select count(*) as count
         
         from properties, locations, acquisitions, developments 
@@ -290,48 +298,70 @@ if (!function_exists('search_database_count_filtered')) {
         AND properties.id = acquisitions.property_id 
         AND acquisitions.property_id = developments.property_id 
 
-        ", 
-        
-        
-        ['query' => $query, 'query2' => $query]);
-        Log::info($query);
-        Log::info($offset);
+        ",
+
+
+            ['query' => $query, 'query2' => $query]
+        );
         Log::info('search_database_count_filtered count');
         Log::info($count);
         return $count[0]->count;
     }
-
 }
 
+if (!function_exists('search_database')) {
+    function search_database($query, $offset)
+    {
+        // Or an array of model attributes
+        $searchResults = (new Search())
+            ->registerModel(Property::class, [
+                'property_phase',
+                'house_no_or_name',
+                'street',
+                'no_bric_beds',
+                'no_bric_bathrooms',
+                'purchase_date',
+                'status',
+            ])
+            ->registerModel(Acquisition::class, [
+                'acquisition_status',
+                'single_asset_portfolio',
+                'portfolio',
+                'existing_bedroom_no',
+                'asking_price',
+                'offer_price',
+                'agreed_purchase_price',
+                'difference',
+                'stamp_duty',
+                'acquisition_cost',
+                'agent',
+                'agent_fee_percentage',
+                'agent_fee',
+                'bridge_loan',
+                'estimated_period',
+                'loan_percentage',
+                'estimated_interest',
+                'estimated_tpc',
+                'offer_date',
+                'target_completion_date',
+                'completion_date',
+                'col_status',
+                'col_status_log',
+                'financing_status',
+                'capex_budget',
+                'bric_purchase_yield_percentage',
+                'tpc_bedspace',
+                'purchase_price_bedspace',
+                'bric_y1_proposed_rent_pppw',
+                'tenancy_length_weeks',
+                'tennure',
+                'ground_rent',
+                'ground_rent_due',
+            ], function(ModelSearchAspect $modelSearchAspect){
+                $modelSearchAspect->hasOne(Property::class);
+            })
+            ->search($query);
 
-if (!function_exists('search_database')) { 
-    function search_database($query, $offset) {
-        Log::info('performing search for ' . $query);
-        $results = DB::select("
-        select 
-
-            properties.ref_no as ref_no, 
-            locations.postcode as postcode, 
-            locations.city as city, 
-            locations.area as area, 
-            CONCAT(properties.house_no_or_name,' ',properties.street) as house_street_no 
-        
-        from properties, locations, acquisitions, developments 
-        where match(street) against (:query IN NATURAL LANGUAGE MODE) 
-        AND properties.id = acquisitions.property_id
-        AND properties.location_id = locations.id
-        AND acquisitions.property_id = developments.property_id 
-         
-        OR MATCH (developments.development_status) AGAINST (:query2 IN NATURAL LANGUAGE MODE) 
-        AND properties.id = acquisitions.property_id 
-        AND acquisitions.property_id = developments.property_id 
-        LIMIT 10 OFFSET :offset
-        ", 
-        
-        
-        ['query' => $query, 'query2' => $query, 'offset' => $offset]);
-        Log::info('results found!');
-        return $results;
+        return $searchResults;
     }
-
 }

@@ -10,7 +10,10 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Contracts\Activity;
 use Spatie\Activitylog\LogOptions;
 
-class Acquisition extends Model
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
+
+class Acquisition extends Model implements Searchable
 {
     use HasFactory;
     use LogsActivity;
@@ -23,7 +26,7 @@ class Acquisition extends Model
         'existing_bedroom_no',
         'asking_price',
         'offer_price',
-        'agreed_purchace_price',
+        'agreed_purchase_price',
         'difference',
         'stamp_duty',
         'acquisition_cost',
@@ -54,6 +57,47 @@ class Acquisition extends Model
 
     protected static $logName = 'Acquisition';
     protected static $logFillable = true;
+
+    public function getSearchResult(): SearchResult
+    {
+        return new \Spatie\Searchable\SearchResult(
+            $this,
+            $this->acquisition_status,
+            $this->single_asset_portfolio,
+            $this->portfolio,
+            $this->existing_bedroom_no,
+            $this->asking_price,
+            $this->offer_price,
+            $this->agreed_purchase_price,
+            $this->difference,
+            $this->stamp_duty,
+            $this->acquisition_cost,
+            $this->agent,
+            $this->agent_fee_percentage,
+            $this->agent_fee,
+            $this->bridge_loan,
+            $this->estimated_period,
+            $this->loan_percentage,
+            $this->estimated_interest,
+            $this->estimated_tpc,
+            $this->offer_date,
+            $this->target_completion_date,
+            $this->completion_date,
+            $this->col_status,
+            $this->col_status_log,
+            $this->financing_status,
+            $this->capex_budget,
+            $this->bric_purchase_yield_percentage,
+            $this->tpc_bedspace,
+            $this->purchase_price_bedspace,
+            $this->purchase_price_bedspace,
+            $this->bric_y1_proposed_rent_pppw,
+            $this->tenancy_length_weeks,
+            $this->tennure,
+            $this->ground_rent,
+            $this->ground_rent_due,
+        );
+    }
 
 
     public function getDescriptionForEvent(string $eventName): string

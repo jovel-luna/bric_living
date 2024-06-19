@@ -10,29 +10,23 @@ class SearchController extends Controller
 {
     public function searchterm(Request $request)
     {
-        $offset = $request->input('start');
-        $draw = $request->input('draw');
-        // Log::info($offset);
-        // Log::info($request);
-        if ($request->has('search.value')) {
-            $term = $request->input('search.value');
-        } else {
+        Log::info($request);
+        Log::info($request->input('query'));
+        $offset = 0;
+        // $draw = $request->input('draw');
+
+        if ($request->input('query') == null) {
             $term = ' ';
         }
-
-        $totalRecords = search_database_count($term);
+        else {
+            $term = $request->input('query');
+        }
         $results = search_database($term, $offset);
-        $recordsFiltered = search_database_count_filtered($term, $offset);
 
-        // return Datatables::of($results)
-        //     ->addIndexColumn()
-        //     ->make(true);
 
-        return response()->json([
-            'draw' => $draw,
-            'recordsTotal' =>  $totalRecords,
-            'recordsFiltered' => $recordsFiltered,
-            'data' => $results,
-        ]);
+        Log::info($results);
+        $count = $results->count();
+ 
+        return view('setting.advanced-search-results', compact('results', 'count', 'term'));
     }
 }

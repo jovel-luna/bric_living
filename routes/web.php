@@ -172,5 +172,5 @@ Route::group(['middleware' => ['auth']], function() {
     
     Route::get('external', [App\Http\Controllers\PropertyController::class, 'viewExternal'])->name('get.property-external');
     // Route::get('upload/entities', [App\Http\Controllers\EntityController::class, 'upload'])->name('entity.upload');
-    Route::get('/search', [SearchController::class, 'searchterm']);
+    Route::get('/search', [SearchController::class, 'searchterm'])->name('search-term');
 });
