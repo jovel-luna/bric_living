@@ -118,6 +118,11 @@ class Acquisition extends Model implements Searchable
         }
 
     }
+
+    public function property()
+    {
+        return $this->belongsTo(Property::class);
+    }
 }
 
 ?>

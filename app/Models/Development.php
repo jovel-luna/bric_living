@@ -13,7 +13,10 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Contracts\Activity;
 use Spatie\Activitylog\LogOptions;
 
-class Development extends Model
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
+
+class Development extends Model implements Searchable
 {
     use HasFactory;
     use LogsActivity;
@@ -43,6 +46,23 @@ class Development extends Model
     protected static $logName = 'Development';
     protected static $logFillable = true;
 
+    public function getSearchResult(): SearchResult
+    {
+        return new \Spatie\Searchable\SearchResult(
+            $this,
+
+            $this->project_start_date,
+            $this->projected_completion_date,
+            $this->over_running,
+            $this->development_status,
+            $this->pc_company,
+
+        );
+    }
+
+    public function property(){
+        return $this->belongsTo(Property::class);
+    }
 
     public function getDescriptionForEvent(string $eventName): string
     {
@@ -360,4 +380,6 @@ class Development extends Model
 
         return true;
     }
+
+
 }

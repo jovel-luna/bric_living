@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\ActivityLog;
+use App\Models\Development;
 use App\Models\Property;
 use App\Models\Acquisition;
 use App\Models\UserAccess;
@@ -312,7 +313,7 @@ if (!function_exists('search_database_count_filtered')) {
 if (!function_exists('search_database')) {
     function search_database($query, $offset)
     {
-        // Or an array of model attributes
+
         $searchResults = (new Search())
             ->registerModel(Property::class, [
                 'property_phase',
@@ -323,44 +324,68 @@ if (!function_exists('search_database')) {
                 'purchase_date',
                 'status',
             ])
-            ->registerModel(Acquisition::class, [
-                'acquisition_status',
-                'single_asset_portfolio',
-                'portfolio',
-                'existing_bedroom_no',
-                'asking_price',
-                'offer_price',
-                'agreed_purchase_price',
-                'difference',
-                'stamp_duty',
-                'acquisition_cost',
-                'agent',
-                'agent_fee_percentage',
-                'agent_fee',
-                'bridge_loan',
-                'estimated_period',
-                'loan_percentage',
-                'estimated_interest',
-                'estimated_tpc',
-                'offer_date',
-                'target_completion_date',
-                'completion_date',
-                'col_status',
-                'col_status_log',
-                'financing_status',
-                'capex_budget',
-                'bric_purchase_yield_percentage',
-                'tpc_bedspace',
-                'purchase_price_bedspace',
-                'bric_y1_proposed_rent_pppw',
-                'tenancy_length_weeks',
-                'tennure',
-                'ground_rent',
-                'ground_rent_due',
-            ], function(ModelSearchAspect $modelSearchAspect){
-                $modelSearchAspect->hasOne(Property::class);
+            ->registerModel(Acquisition::class, function(ModelSearchAspect $modelSearchAspect) {
+                $modelSearchAspect
+                ->addSearchableAttribute('acquisition_status') 
+                ->addSearchableAttribute('single_asset_portfolio') 
+                ->addSearchableAttribute('portfolio') 
+                ->addSearchableAttribute('existing_bedroom_no') 
+                ->addSearchableAttribute('asking_price') 
+                ->addSearchableAttribute('offer_price') 
+                ->addSearchableAttribute('agreed_purchase_price') 
+                ->addSearchableAttribute('difference') 
+                ->addSearchableAttribute('stamp_duty') 
+                ->addSearchableAttribute('acquisition_cost') 
+                ->addSearchableAttribute('agent') 
+                ->addSearchableAttribute('agent_fee_percentage') 
+                ->addSearchableAttribute('agent_fee') 
+                ->addSearchableAttribute('bridge_loan') 
+                ->addSearchableAttribute('estimated_period') 
+                ->addSearchableAttribute('loan_percentage') 
+                ->addSearchableAttribute('estimated_interest') 
+                ->addSearchableAttribute('estimated_tpc') 
+                ->addSearchableAttribute('offer_date') 
+                ->addSearchableAttribute('target_completion_date') 
+                ->addSearchableAttribute('completion_date') 
+                ->addSearchableAttribute('col_status') 
+                ->addSearchableAttribute('col_status_log') 
+                ->addSearchableAttribute('financing_status') 
+                ->addSearchableAttribute('capex_budget') 
+                ->addSearchableAttribute('bric_purchase_yield_percentage') 
+                ->addSearchableAttribute('tpc_bedspace') 
+                ->addSearchableAttribute('purchase_price_bedspace') 
+                ->addSearchableAttribute('bric_y1_proposed_rent_pppw') 
+                ->addSearchableAttribute('tenancy_length_weeks') 
+                ->addSearchableAttribute('tennure') 
+                ->addSearchableAttribute('ground_rent') 
+                ->addSearchableAttribute('ground_rent_due') 
+                ->with('property');
+            })
+            ->registerModel(Development::class, function(ModelSearchAspect $modelSearchAspect) {
+                $modelSearchAspect
+                ->addSearchableAttribute('existing_beds') 
+                ->addSearchableAttribute('existing_stories') 
+                ->addSearchableAttribute('bric_stories') 
+                ->addSearchableAttribute('bric_beds') 
+                ->addSearchableAttribute('project_start_date') 
+                ->addSearchableAttribute('projected_completion_date') 
+                ->addSearchableAttribute('over_running') 
+                ->addSearchableAttribute('development_status') 
+                ->addSearchableAttribute('pc_company') 
+                ->addSearchableAttribute('pc_name') 
+                ->addSearchableAttribute('pc_mobile') 
+                ->addSearchableAttribute('pc_email') 
+                ->addSearchableAttribute('bc_company') 
+                ->addSearchableAttribute('bc_name') 
+                ->addSearchableAttribute('bc_mobile') 
+                ->addSearchableAttribute('bc_email') 
+                ->addSearchableAttribute('hs_development_compliance') 
+                ->addSearchableAttribute('overall_budget') 
+                ->addSearchableAttribute('actual_spend') 
+                ->with('property');
             })
             ->search($query);
+
 
         return $searchResults;
     }
