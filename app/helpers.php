@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\ActivityLog;
 use App\Models\Development;
+use App\Models\OperationUtility;
+use App\Models\OperationInsurance;
+use App\Models\OperationExpenditure;
+use App\Models\OperationBudget;
 use App\Models\Property;
 use App\Models\Acquisition;
 use App\Models\UserAccess;
@@ -384,6 +388,7 @@ if (!function_exists('search_database')) {
                 ->addSearchableAttribute('actual_spend') 
                 ->with('property');
             })
+//  TODO Next - Register Model for Operation Utility
             ->search($query);
 
 
