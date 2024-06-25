@@ -427,8 +427,8 @@ if (!function_exists('search_database')) {
             ->registerModel(OperationExpenditure::class, function(ModelSearchAspect $modelSearchAspect) {
                 $modelSearchAspect
                 ->addSearchableAttribute('expenditure_year') 
-                ->addSearchableAttribute('hmo_license_fee') 
-                ->addSearchableAttribute('hmo_license_period') 
+                ->addSearchableAttribute('hmo_licence_fee') 
+                ->addSearchableAttribute('hmo_licence_period') 
                 ->addSearchableAttribute('hmo_fee_per_year') 
                 ->addSearchableAttribute('maintenance_property_year') 
                 ->addSearchableAttribute('maintenance_bed_year') 
@@ -440,30 +440,32 @@ if (!function_exists('search_database')) {
                 ->addSearchableAttribute('water_bed_year') 
                 ->addSearchableAttribute('internet_property_year') 
                 ->addSearchableAttribute('internet_bed_year') 
-                ->addSearchableAttribute('tv_license_per_house') 
+                ->addSearchableAttribute('tv_licence_per_house') 
                 ->addSearchableAttribute('property_insurance_annual_cost') 
                 ->addSearchableAttribute('total_opex_budget') 
                 ->with('property');
             })
             ->registerModel(OperationInsurance::class, function(ModelSearchAspect $modelSearchAspect) {
                 $modelSearchAspect
-                ->addSearchableAttribute('budget_year') 
-                ->addSearchableAttribute('hmo_license_fee') 
-                ->addSearchableAttribute('hmo_license_period') 
-                ->addSearchableAttribute('hmo_fee_per_year') 
-                ->addSearchableAttribute('maintenance_property_year') 
-                ->addSearchableAttribute('maintenance_bed_year') 
-                ->addSearchableAttribute('gas_property_year') 
-                ->addSearchableAttribute('gas_bed_year') 
-                ->addSearchableAttribute('electric_property_year') 
-                ->addSearchableAttribute('electric_bed_year') 
-                ->addSearchableAttribute('water_property_year') 
-                ->addSearchableAttribute('water_bed_year') 
-                ->addSearchableAttribute('internet_property_year') 
-                ->addSearchableAttribute('internet_bed_year') 
-                ->addSearchableAttribute('tv_license_per_house') 
-                ->addSearchableAttribute('property_insurance_annual_cost') 
-                ->addSearchableAttribute('total_opex_budget') 
+                ->addSearchableAttribute('insurer') 
+                ->addSearchableAttribute('insurance_in_place') 
+                ->addSearchableAttribute('insurance_account_no') 
+                ->addSearchableAttribute('insurance_value') 
+                ->addSearchableAttribute('insurance_annual_cost') 
+                ->addSearchableAttribute('insurance_renewal_date') 
+
+                ->with('property');
+            })
+            ->registerModel(Letting::class, function(ModelSearchAspect $modelSearchAspect) {
+                $modelSearchAspect
+                ->addSearchableAttribute('version') 
+                ->addSearchableAttribute('property_contract_status') 
+                ->addSearchableAttribute('target_weekly_rent') 
+                ->addSearchableAttribute('achieved_weekly_rent') 
+                ->addSearchableAttribute('floorplan') 
+                ->addSearchableAttribute('date_of_refurb') 
+                ->addSearchableAttribute('tv') 
+                ->addSearchableAttribute('archive') 
                 ->with('property');
             })
             ->registerModel(Finance::class, function(ModelSearchAspect $modelSearchAspect) {
@@ -494,19 +496,6 @@ if (!function_exists('search_database')) {
                 ->addSearchableAttribute('m_end_fixed_rate_period') 
                 ->addSearchableAttribute('m_monthly_repayment') 
                 ->addSearchableAttribute('m_monthly_payment_date') 
-
-                ->with('property');
-            })
-            ->registerModel(Letting::class, function(ModelSearchAspect $modelSearchAspect) {
-                $modelSearchAspect
-                ->addSearchableAttribute('version') 
-                ->addSearchableAttribute('property_contract_status') 
-                ->addSearchableAttribute('target_weekly_rent') 
-                ->addSearchableAttribute('achieved_weekly_rent') 
-                ->addSearchableAttribute('floorplan') 
-                ->addSearchableAttribute('date_of_refurb') 
-                ->addSearchableAttribute('tv') 
-                ->addSearchableAttribute('archive') 
                 ->with('property');
             })
             ->search($query);

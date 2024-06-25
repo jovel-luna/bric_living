@@ -68,7 +68,7 @@
                                                 <!-- Provider -->
                                                 <div class="mb-3 form-group">
                                                     <label for="cm_provider" class="col-form-label">{{ __('Provider') }}</label>
-                                                    <input id="cm_provider" type="text" class="form-control @error('cm_provider') is-invalid @enderror" name="provider" value="{{ old('cm_provider', $data->cm_provider) }}" autocomplete="cm_provider">
+                                                    <input id="cm_provider" type="text" class="form-control @error('cm_provider') is-invalid @enderror" name="cm_provider" value="{{ old('cm_provider', $data->cm_provider) }}" autocomplete="cm_provider">
                                                 </div>
                                             </div>
                                             <div class="col-md-3">

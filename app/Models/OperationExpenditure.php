@@ -26,8 +26,8 @@ class OperationExpenditure extends Model implements Searchable
         return new \Spatie\Searchable\SearchResult(
             $this,
             $this->expenditure_year,
-            $this->hmo_license_fee,
-            $this->hmo_license_period,
+            $this->hmo_licence_fee,
+            $this->hmo_licence_period,
             $this->hmo_fee_per_year,
             $this->maintenance_property_year,
             $this->maintenance_bed_year,
@@ -40,7 +40,7 @@ class OperationExpenditure extends Model implements Searchable
             $this->water_bed_year,
             $this->internet_property_year,
             $this->internet_bed_year,
-            $this->tv_license_per_house,
+            $this->tv_licence_per_house,
             $this->property_insurance_annual_cost,
             $this->total_opex_budget,
 

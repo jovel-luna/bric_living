@@ -54,8 +54,8 @@ class Finance extends Model implements Searchable
     {
         return new \Spatie\Searchable\SearchResult(
             $this,
-            $this->cm_mortgage_status,
             $this->cm_provider,
+            $this->cm_mortgage_status,
             $this->cm_account_no,
             $this->cm_start_date,
             $this->cm_expiration_date,
@@ -79,7 +79,7 @@ class Finance extends Model implements Searchable
             $this->m_start_fixed_rate_period,
             $this->m_end_fixed_rate_period,
             $this->m_monthly_repayment,
-            $this->m_monthly_payment_date
+            $this->m_monthly_payment_date,
         );
     }
 

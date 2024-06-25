@@ -24,24 +24,12 @@ class OperationInsurance extends Model implements Searchable
     {
         return new \Spatie\Searchable\SearchResult(
             $this,
-            $this->budget_year,
-            $this->hmo_license_fee,
-            $this->hmo_license_period,
-            $this->hmo_fee_per_year,
-            $this->maintenance_property_year,
-            $this->maintenance_bed_year,
-            $this->gas_property_year,
-            $this->gas_bed_year,
-            $this->electric_property_year,
-            $this->electric_bed_year,
-
-            $this->water_property_year,
-            $this->water_bed_year,
-            $this->internet_property_year,
-            $this->internet_bed_year,
-            $this->tv_license_per_house,
-            $this->property_insurance_annual_cost,
-            $this->total_opex_budget,
+            $this->insurer,
+            $this->insurance_in_place,
+            $this->insurance_account_no,
+            $this->insurance_value,
+            $this->insurance_annual_cost,
+            $this->insurance_renewal_date,
 
         );
     }
