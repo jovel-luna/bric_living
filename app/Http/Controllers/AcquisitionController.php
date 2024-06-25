@@ -637,6 +637,7 @@ class AcquisitionController extends Controller
                 return [
                     "status" => 1,
                     "data" => 'Success',
+                    "request" => $request,
                     "id" => $request->formData['property_id']
                 ];
             } catch (\Throwable $th) {
@@ -662,7 +663,7 @@ class AcquisitionController extends Controller
             'tennure' => 'required',
         ]);
 
-        LogFacade::info($request->id);
+        LogFacade::info($request->property_id);
         $acquisition = Acquisition::find($request->id);
 
         LogFacade::info($acquisition);
@@ -699,10 +700,11 @@ class AcquisitionController extends Controller
             //     ->log('Location has been updated');
         }
 
+        LogFacade::info($request); 
         return response()->json([
             'status' => 1,
             'message' => 'success',
-            'id' => $request->id
+            'id' => $request->property_id
         ], 200);
     }
 

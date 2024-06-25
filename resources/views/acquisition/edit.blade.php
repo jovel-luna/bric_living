@@ -46,6 +46,9 @@
                                                     <div class="col-md-3 mb-3">
                                                         <!-- Aquisition Status -->
                                                         <div class="mb-3">
+                                                            
+                                                            <input type="hidden" name="property_id" value="{{ $data->property_id }}">
+                                                        
                                                             <label for="acquisition_status" class="col-form-label">{{ __('Acquisition Status') }}<span class="isRequired"> * </span></label>
                                                             <select name="acquisition_status" id="acquisition_status" class="form-control form-control-alternative{{ $errors->has('acquisition_status') ? ' is-invalid' : '' }}">
                                                                 <option value="">Please Select</option>
