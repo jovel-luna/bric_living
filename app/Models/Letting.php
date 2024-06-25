@@ -13,8 +13,11 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Contracts\Activity;
 use Spatie\Activitylog\LogOptions;
 
-class Letting extends Model
-{
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
+
+class Letting extends Model implements Searchable
+{ 
     use HasFactory;
     use LogsActivity;
 
@@ -59,6 +62,25 @@ class Letting extends Model
     protected static $logName = 'Letting';
     protected static $logFillable = true;
 
+    public function getSearchResult(): SearchResult
+    {
+        return new \Spatie\Searchable\SearchResult(
+            $this,
+            $this->version,
+            $this->property_contract_status,
+            $this->target_weekly_rent,
+            $this->achieved_weekly_rent,
+            $this->floorplan,
+            $this->date_of_refurb,
+            $this->tv,
+            $this->archive
+
+        );
+    }
+
+    public function property(){
+        return $this->belongsTo(Property::class);
+    }
 
     public function getDescriptionForEvent(string $eventName): string
     {

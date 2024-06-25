@@ -9,6 +9,9 @@ use App\Models\OperationUtility;
 use App\Models\OperationInsurance;
 use App\Models\OperationExpenditure;
 use App\Models\OperationBudget;
+
+use App\Models\Finance;
+use App\Models\Letting;
 use App\Models\Property;
 use App\Models\Acquisition;
 use App\Models\UserAccess;
@@ -388,7 +391,124 @@ if (!function_exists('search_database')) {
                 ->addSearchableAttribute('actual_spend') 
                 ->with('property');
             })
-//  TODO Next - Register Model for Operation Utility
+            ->registerModel(OperationUtility::class, function(ModelSearchAspect $modelSearchAspect) {
+                $modelSearchAspect
+                ->addSearchableAttribute('gas_provider') 
+                ->addSearchableAttribute('gas_contract_start_date') 
+                ->addSearchableAttribute('gas_contract_end_date') 
+                ->addSearchableAttribute('gas_account_number') 
+                ->addSearchableAttribute('electric_provider') 
+                ->addSearchableAttribute('electric_contract_start_date') 
+                ->addSearchableAttribute('electric_contract_end_date') 
+                ->addSearchableAttribute('electric_account_number') 
+                ->addSearchableAttribute('water_provider') 
+                ->addSearchableAttribute('water_account_number') 
+                ->addSearchableAttribute('tv_licence') 
+                ->addSearchableAttribute('tv_licence_contract_start_date') 
+                ->addSearchableAttribute('tv_licence_contract_end_date') 
+                ->addSearchableAttribute('broadband_provider') 
+                ->addSearchableAttribute('broadband_account_number') 
+                ->addSearchableAttribute('insurance_in_place') 
+                ->addSearchableAttribute('insurance_provider') 
+                ->addSearchableAttribute('insurance_annual_cost') 
+                ->addSearchableAttribute('insurance_start_date') 
+                ->addSearchableAttribute('insurance_end_date') 
+                ->addSearchableAttribute('insurance_policy_no') 
+                ->addSearchableAttribute('insurance_account_no') 
+                ->addSearchableAttribute('insurance_value') 
+                ->addSearchableAttribute('insurance_renewal_date') 
+                ->addSearchableAttribute('bills_received') 
+                ->addSearchableAttribute('exempt') 
+                ->addSearchableAttribute('exemption_date') 
+                ->addSearchableAttribute('council_account_no') 
+                ->addSearchableAttribute('operation_log') 
+                ->with('property');
+            })
+            ->registerModel(OperationExpenditure::class, function(ModelSearchAspect $modelSearchAspect) {
+                $modelSearchAspect
+                ->addSearchableAttribute('expenditure_year') 
+                ->addSearchableAttribute('hmo_license_fee') 
+                ->addSearchableAttribute('hmo_license_period') 
+                ->addSearchableAttribute('hmo_fee_per_year') 
+                ->addSearchableAttribute('maintenance_property_year') 
+                ->addSearchableAttribute('maintenance_bed_year') 
+                ->addSearchableAttribute('gas_property_year') 
+                ->addSearchableAttribute('gas_bed_year') 
+                ->addSearchableAttribute('electric_property_year') 
+                ->addSearchableAttribute('electric_bed_year') 
+                ->addSearchableAttribute('water_property_year') 
+                ->addSearchableAttribute('water_bed_year') 
+                ->addSearchableAttribute('internet_property_year') 
+                ->addSearchableAttribute('internet_bed_year') 
+                ->addSearchableAttribute('tv_license_per_house') 
+                ->addSearchableAttribute('property_insurance_annual_cost') 
+                ->addSearchableAttribute('total_opex_budget') 
+                ->with('property');
+            })
+            ->registerModel(OperationInsurance::class, function(ModelSearchAspect $modelSearchAspect) {
+                $modelSearchAspect
+                ->addSearchableAttribute('budget_year') 
+                ->addSearchableAttribute('hmo_license_fee') 
+                ->addSearchableAttribute('hmo_license_period') 
+                ->addSearchableAttribute('hmo_fee_per_year') 
+                ->addSearchableAttribute('maintenance_property_year') 
+                ->addSearchableAttribute('maintenance_bed_year') 
+                ->addSearchableAttribute('gas_property_year') 
+                ->addSearchableAttribute('gas_bed_year') 
+                ->addSearchableAttribute('electric_property_year') 
+                ->addSearchableAttribute('electric_bed_year') 
+                ->addSearchableAttribute('water_property_year') 
+                ->addSearchableAttribute('water_bed_year') 
+                ->addSearchableAttribute('internet_property_year') 
+                ->addSearchableAttribute('internet_bed_year') 
+                ->addSearchableAttribute('tv_license_per_house') 
+                ->addSearchableAttribute('property_insurance_annual_cost') 
+                ->addSearchableAttribute('total_opex_budget') 
+                ->with('property');
+            })
+            ->registerModel(Finance::class, function(ModelSearchAspect $modelSearchAspect) {
+                $modelSearchAspect
+                ->addSearchableAttribute('cm_mortgage_status') 
+                ->addSearchableAttribute('cm_provider') 
+                ->addSearchableAttribute('cm_account_no') 
+                ->addSearchableAttribute('cm_start_date') 
+                ->addSearchableAttribute('cm_expiration_date') 
+                ->addSearchableAttribute('cm_loan_period') 
+                ->addSearchableAttribute('cm_current_valuation') 
+                ->addSearchableAttribute('cm_loan_amount') 
+                ->addSearchableAttribute('cm_loan') 
+                ->addSearchableAttribute('cm_interest_rate') 
+                ->addSearchableAttribute('cm_monthly_repayments') 
+                ->addSearchableAttribute('cm_monthly_payment_date') 
+                ->addSearchableAttribute('m_provider') 
+                ->addSearchableAttribute('m_account_no') 
+                ->addSearchableAttribute('m_start_date') 
+                ->addSearchableAttribute('m_expiration_date') 
+                ->addSearchableAttribute('m_loan_period') 
+                ->addSearchableAttribute('m_estimated_loan') 
+                ->addSearchableAttribute('m_agreed_loan') 
+                ->addSearchableAttribute('m_estimated_equity_release') 
+                ->addSearchableAttribute('m_equity_release') 
+                ->addSearchableAttribute('m_loan') 
+                ->addSearchableAttribute('m_start_fixed_rate_period') 
+                ->addSearchableAttribute('m_end_fixed_rate_period') 
+                ->addSearchableAttribute('m_monthly_repayment') 
+                ->addSearchableAttribute('m_monthly_payment_date') 
+
+                ->with('property');
+            })
+            ->registerModel(Letting::class, function(ModelSearchAspect $modelSearchAspect) {
+                $modelSearchAspect
+                ->addSearchableAttribute('version') 
+                ->addSearchableAttribute('property_contract_status') 
+                ->addSearchableAttribute('target_weekly_rent') 
+                ->addSearchableAttribute('achieved_weekly_rent') 
+                ->addSearchableAttribute('floorplan') 
+                ->addSearchableAttribute('date_of_refurb') 
+                ->addSearchableAttribute('tv') 
+                ->addSearchableAttribute('archive') 
+                ->with('property');
+            })
             ->search($query);
 
 

@@ -11,7 +11,10 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Contracts\Activity;
 use Spatie\Activitylog\LogOptions;
 
-class Finance extends Model
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
+
+class Finance extends Model implements Searchable
 {
     use HasFactory;
     use LogsActivity;
@@ -47,6 +50,42 @@ class Finance extends Model
     protected static $logName = 'Finance';
     protected static $logFillable = true;
 
+    public function getSearchResult(): SearchResult
+    {
+        return new \Spatie\Searchable\SearchResult(
+            $this,
+            $this->cm_mortgage_status,
+            $this->cm_provider,
+            $this->cm_account_no,
+            $this->cm_start_date,
+            $this->cm_expiration_date,
+            $this->cm_loan_period,
+            $this->cm_current_valuation,
+            $this->cm_loan_amount,
+            $this->cm_loan,
+            $this->cm_interest_rate,
+            $this->cm_monthly_repayments,
+            $this->cm_monthly_payment_date,
+            $this->m_provider,
+            $this->m_account_no,
+            $this->m_start_date,
+            $this->m_expiration_date,
+            $this->m_loan_period,
+            $this->m_estimated_loan,
+            $this->m_agreed_loan,
+            $this->m_estimated_equity_release,
+            $this->m_equity_release,
+            $this->m_loan,
+            $this->m_start_fixed_rate_period,
+            $this->m_end_fixed_rate_period,
+            $this->m_monthly_repayment,
+            $this->m_monthly_payment_date
+        );
+    }
+
+    public function property(){
+        return $this->belongsTo(Property::class);
+    }
 
     public function getDescriptionForEvent(string $eventName): string
     {
