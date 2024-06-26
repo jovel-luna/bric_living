@@ -21,7 +21,7 @@ class SearchController extends Controller
         else {
             $term = $request->input('query');
         }
-        $results = search_database($term, $offset);
+        $results = search_database($term);
 
 
         Log::info($results);

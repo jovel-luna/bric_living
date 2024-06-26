@@ -318,7 +318,7 @@ if (!function_exists('search_database_count_filtered')) {
 }
 
 if (!function_exists('search_database')) {
-    function search_database($query, $offset)
+    function search_database($query)
     {
 
         $searchResults = (new Search())

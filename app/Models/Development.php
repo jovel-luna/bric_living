@@ -50,7 +50,6 @@ class Development extends Model implements Searchable
     {
         return new \Spatie\Searchable\SearchResult(
             $this,
-
             $this->project_start_date,
             $this->projected_completion_date,
             $this->over_running,
