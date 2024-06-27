@@ -1,5 +1,8 @@
-
 @extends('layouts.app', ['pageSlug' => 'advanced-search'])
+
+@push('styles')
+<!-- <link href="{{ asset('/css/search-form.css')}}" rel="stylesheet"> -->
+@endpush
 
 @section('content')
 
@@ -18,18 +21,21 @@
         </div>
     </div>
 </div>
-<section class="content">
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <form action="{{ route('search-term') }}" method="get">
-                @csrf
-                <input type="text" name="query" />
-                <input type="submit" class="btn btn-sm btn-primary" value="Search" />
-            </form>
 
+<section class="content">
+    <div class="row justify-content-center align-items-center" style="height: 50vh;">
+        <div class="col-md-6">
+            <form action="{{ route('search-term') }}" method="get" class="search-form">
+                @csrf
+                <div class="input-group mb-3">
+                    <input type="text" name="query" class="form-control search-text-field" placeholder="Search term" />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </section>
-</div>
 
 @endsection
