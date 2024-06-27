@@ -23,26 +23,44 @@ class OperationExpenditure extends Model implements Searchable
 
     public function getSearchResult(): SearchResult
     {
+
+        $expenditure_year = $this->expenditure_year ?? '';
+        $hmo_licence_fee = $this->hmo_licence_fee ?? '';
+        $hmo_licence_period = $this->hmo_licence_period ?? '';
+        $hmo_fee_per_year = $this->hmo_fee_per_year ?? '';
+        $maintenance_property_year = $this->maintenance_property_year ?? '';
+        $maintenance_bed_year = $this->maintenance_bed_year ?? '';
+        $gas_property_year = $this->gas_property_year ?? '';
+        $gas_bed_year = $this->gas_bed_year ?? ''; 
+        $electric_property_year = $this->electric_property_year ?? '';
+        $electric_bed_year = $this->electric_bed_year ?? '';
+        $water_property_year = $this->water_property_year ?? '';
+        $water_bed_year = $this->water_bed_year ?? '';
+        $internet_property_year = $this->internet_property_year ?? '';
+        $internet_bed_year = $this->internet_bed_year ?? '';
+        $tv_licence_per_house = $this->tv_licence_per_house ?? '';
+        $property_insurance_annual_cost = $this->property_insurance_annual_cost ?? '';
+        $total_opex_budget = $this->total_opex_budget ?? '';
+
         return new \Spatie\Searchable\SearchResult(
             $this,
-            $this->expenditure_year,
-            $this->hmo_licence_fee,
-            $this->hmo_licence_period,
-            $this->hmo_fee_per_year,
-            $this->maintenance_property_year,
-            $this->maintenance_bed_year,
-            $this->gas_property_year,
-            $this->gas_bed_year,
-            $this->electric_property_year,
-            $this->electric_bed_year,
-
-            $this->water_property_year,
-            $this->water_bed_year,
-            $this->internet_property_year,
-            $this->internet_bed_year,
-            $this->tv_licence_per_house,
-            $this->property_insurance_annual_cost,
-            $this->total_opex_budget,
+            $expenditure_year,
+            $hmo_licence_fee,
+            $hmo_licence_period,
+            $hmo_fee_per_year,
+            $maintenance_property_year,
+            $maintenance_bed_year,
+            $gas_property_year,
+            $gas_bed_year,
+            $electric_property_year,
+            $electric_bed_year,
+            $water_property_year,
+            $water_bed_year,
+            $internet_property_year,
+            $internet_bed_year,
+            $tv_licence_per_house,
+            $property_insurance_annual_cost,
+            $total_opex_budget,
 
         );
     }

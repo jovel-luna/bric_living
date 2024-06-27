@@ -48,13 +48,19 @@ class Development extends Model implements Searchable
 
     public function getSearchResult(): SearchResult
     {
+        $project_start_date = $this->project_start_date ?? '';
+        $projected_completion_date = $this->projected_completion_date ?? '';
+        $over_running = $this->over_running ?? '';
+        $development_status = $this->development_status ?? '';
+        $pc_company = $this->pc_company ?? '';
+
         return new \Spatie\Searchable\SearchResult(
             $this,
-            $this->project_start_date,
-            $this->projected_completion_date,
-            $this->over_running,
-            $this->development_status,
-            $this->pc_company,
+            $project_start_date,
+            $projected_completion_date,
+            $over_running,
+            $development_status,
+            $pc_company,
 
         );
     }

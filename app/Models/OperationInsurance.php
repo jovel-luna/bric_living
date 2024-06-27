@@ -24,12 +24,12 @@ class OperationInsurance extends Model implements Searchable
     {
         return new \Spatie\Searchable\SearchResult(
             $this,
-            $this->insurer,
-            $this->insurance_in_place,
-            $this->insurance_account_no,
-            $this->insurance_value,
-            $this->insurance_annual_cost,
-            $this->insurance_renewal_date,
+            $this->insurer ?? '',
+            $this->insurance_in_place ?? '',
+            $this->insurance_account_no ?? '',
+            $this->insurance_value ?? '',
+            $this->insurance_annual_cost ?? '',
+            $this->insurance_renewal_date ?? '',
 
         );
     }

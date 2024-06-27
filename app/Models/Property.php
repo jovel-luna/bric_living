@@ -50,13 +50,13 @@ class Property extends Model implements Searchable
     {
         return new \Spatie\Searchable\SearchResult(
             $this,
-            $this->property_phase,
-            $this->house_no_or_name,
-            $this->street,
-            $this->no_bric_beds,
-            $this->no_bric_bathrooms,
-            $this->purchase_date,
-            $this->status,
+            $this->property_phase ?? '',
+            $this->house_no_or_name ?? '',
+            $this->street ?? '',
+            $this->no_bric_beds ?? '',
+            $this->no_bric_bathrooms ?? '',
+            $this->purchase_date ?? '',
+            $this->status ?? '',
             
         );
     }
