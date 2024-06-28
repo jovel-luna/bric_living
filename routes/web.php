@@ -7,7 +7,7 @@ use App\Http\Controllers\EntityController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\SearchController;
-
+use App\Http\Controllers\AdminCreateUser;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +36,7 @@ Route::group(['middleware' => ['web']], function() {
     
     // Registration Routes...
         Route::get('register', ['as' => 'register', 'uses' => 'App\Http\Controllers\Auth\RegisterController@showRegistrationForm']);
-        Route::post('register', ['as' => 'register.post', 'uses' => 'App\Http\Controllers\Auth\RegisterController@register']);
+        Route::post('register', ['as' => 'register.post', 'uses' => 'App\Http\Controllers\Auth\RegisterController@create']);
     
     // Password Reset Routes...
         Route::get('password/reset', ['as' => 'password.request', 'uses' => 'App\Http\Controllers\Auth\ForgotPasswordController@showLinkRequestForm']);
@@ -153,7 +153,6 @@ Route::group(['middleware' => ['auth']], function() {
 
     // Links
 
-
     Route::post('links/add-link', [App\Http\Controllers\LinkController::class, 'storeLink'])->name('store.links');
     Route::post('links/remove-link', [App\Http\Controllers\LinkController::class, 'removeLink'])->name('remove.links');
 
@@ -173,4 +172,5 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('external', [App\Http\Controllers\PropertyController::class, 'viewExternal'])->name('get.property-external');
     // Route::get('upload/entities', [App\Http\Controllers\EntityController::class, 'upload'])->name('entity.upload');
     Route::get('/search', [SearchController::class, 'searchterm'])->name('search-term');
+    Route::post('/create-user', [AdminCreateUser::class, 'create_user'])->name('create-user');
 });

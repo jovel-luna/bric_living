@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Role;
+use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;

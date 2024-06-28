@@ -268,7 +268,7 @@ class PropertyController extends Controller
                 $activity->type = 'CREATE';
                 $activity->save();
 
-                $location = Location::where('id', $request->formData['postcode'] )->first();
+                $location = Location::where('id', $formDataObject->postcode )->first();
 
                 return [
                     "status" => 1,

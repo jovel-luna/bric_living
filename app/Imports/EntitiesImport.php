@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use DateTime;
+use Illuminate\Support\Facades\Log;
 
 class EntitiesImport implements ToModel, SkipsEmptyRows, WithStartRow
 {
@@ -81,10 +82,10 @@ class EntitiesImport implements ToModel, SkipsEmptyRows, WithStartRow
             'company_registration_number' => $row[0],
             'entity' => $row[1],
             'registered_address' => $row[2],
-            'entity_date_created' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[3])->format('Y-m-d'),
-            'statement_due_date' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[4])->format('Y-m-d'),
-            'financial_year_start_date' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[5])->format('Y-m-d'),
-            'financial_year_end_date' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[6])->format('Y-m-d'),
+            'entity_date_created' => $row[3],
+            'statement_due_date' => $row[4],
+            'financial_year_start_date' => $row[5],
+            'financial_year_end_date' => $row[6],
             'no_of_properties' => $row[7],
             'no_of_beds' => $row[8],
             'pipeline' => $row[9],

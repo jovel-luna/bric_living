@@ -7,7 +7,7 @@
                     <div class="loading-container hide col p-0 text-end">
                         <div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>
                     </div>
-                    <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#addFileModal">
+                    <button type="button" id="AddUser" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#addFileModal">
                         <i class="fas fa-plus"></i>
                         Add User
                     </button>
@@ -32,3 +32,35 @@
         </table>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="AddUserModal" tabindex="-1" role="dialog" aria-labelledby="AddUserModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AddUserModalTitle">Add New User</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" id="adduser-form" action="{{route('create-user')}}">
+                @csrf
+                <div class="modal-body row g-3">
+                    @include('layouts.form.add-user')
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+
+        $('#AddUser').on('click', function() {
+            $('#AddUserModal').modal('show');
+        })
+    })
+</script>
+@endpush
