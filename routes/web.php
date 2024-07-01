@@ -7,7 +7,7 @@ use App\Http\Controllers\EntityController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\SearchController;
-use App\Http\Controllers\AdminCreateUser;
+use App\Http\Controllers\AdminUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -172,5 +172,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('external', [App\Http\Controllers\PropertyController::class, 'viewExternal'])->name('get.property-external');
     // Route::get('upload/entities', [App\Http\Controllers\EntityController::class, 'upload'])->name('entity.upload');
     Route::get('/search', [SearchController::class, 'searchterm'])->name('search-term');
-    Route::post('/create-user', [AdminCreateUser::class, 'create_user'])->name('create-user');
+    Route::post('/create-user', [AdminUserController::class, 'create_user'])->name('create-user');
+    Route::get('/delete-user/{id}', [AdminUserController::class, 'delete_user'])->name('delete-user');
+    Route::get('/edit-user/{id}', [AdminUserController::class, 'edit_user'])->name('edit-user');
 });

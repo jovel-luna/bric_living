@@ -220,7 +220,7 @@
                                     '" id="access-text-btn" class="access" title="Reset Password"><i class="view icon fa-solid fa-user-lock"></i></a>' +
                                     '<a href="#" data-id="' + row.id +
                                     '" id="access-text-btn" class="access" title="Access"><i class="info icon fa-solid fa-key"></i></a>' +
-                                    '<a href="#" data-id="' + row.id +
+                                    '<a href="/delete-user/' + row.id + '" data-id="' + row.id +
                                     '" id="remove-btn" class="delete" title="Delete"><i class="delete icon fa-solid fa-trash"></i></a>' +
                                     '</div>';
                             }
@@ -538,6 +538,7 @@
                         }
                     });
                 });
+                
             });
         </script>
     @endpush

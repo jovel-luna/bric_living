@@ -54,6 +54,27 @@
     </div>
 </div>
 
+<!-- Edit User Modal -->
+<div class="modal fade" id="EditUserModal" tabindex="-1" role="dialog" aria-labelledby="EditUserModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="EditUserModalTitle">Edit User</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" id="edituser-form">
+                @csrf
+                <div class="modal-body row g-3">
+                    @include('layouts.form.edit-user')
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script>
     $(document).ready(function() {
