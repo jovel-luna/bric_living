@@ -2,6 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Entity;
+use App\Models\Property;
+use App\Models\EntityProperties;
+
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
+
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -13,7 +20,8 @@ class ReportController extends Controller
      */
     public function index()
     {
-        return view('report.index');
+        $entities = Entity::all();
+        return view('report.index', compact('entities'));
     }
 
     /**
@@ -23,7 +31,6 @@ class ReportController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -34,7 +41,12 @@ class ReportController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Log::info($request);
+        $properties = Property::all();
+        // Log::info($properties);
+        // Log::info($properties->entity_properties);
+        // $props = $properties->entity_properties->whereIn('entity_id', $request->entities )->get();
+        // Log::info($props);
     }
 
     /**

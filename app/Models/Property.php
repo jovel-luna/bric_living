@@ -85,6 +85,12 @@ class Property extends Model implements Searchable
         return $this->belongsToMany(Entity::class);
     }
 
+    // get this property's owning entity
+    public function entity_properties()
+    {
+        return $this->hasOne(EntityProperties::class);
+    }
+
     public function acquisition()
     {
         return $this->hasOne(Acquisition::class, 'property_id');

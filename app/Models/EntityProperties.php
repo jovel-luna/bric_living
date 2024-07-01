@@ -17,6 +17,10 @@ class EntityProperties extends Model
     protected static $logName = 'Entity Properties';
     protected static $logFillable = true;
 
+    public function properties()
+    {
+        return $this->hasMany(Property::class);
+    }
 
     public function getDescriptionForEvent(string $eventName): string
     {
