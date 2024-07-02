@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Entity;
+use App\Models\Location;
 use App\Models\Property;
+use App\Models\LettingStatus;
 use App\Models\EntityProperties;
 
+use App\Exports\ReportsExports;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+
 
 use Illuminate\Http\Request;
 
@@ -21,7 +25,9 @@ class ReportController extends Controller
     public function index()
     {
         $entities = Entity::all();
-        return view('report.index', compact('entities'));
+        $locations = Location::all();
+        $letting_status = LettingStatus::all();
+        return view('report.index', compact('entities' , 'locations' , 'letting_status'));
     }
 
     /**
@@ -42,11 +48,25 @@ class ReportController extends Controller
     public function store(Request $request)
     {
         Log::info($request);
-        $properties = Property::all();
-        // Log::info($properties);
-        // Log::info($properties->entity_properties);
-        // $props = $properties->entity_properties->whereIn('entity_id', $request->entities )->get();
-        // Log::info($props);
+        $entities = $request->entities;
+
+        $properties = null;
+        
+        if ($request->has('entities')){
+            $properties = Property::whereHas('entity_properties', function ($query) use ($entities) {
+                $query->whereIn('entity_id', $entities);
+            })->with('entity_properties');
+        }
+        else {
+            $properties = Property::with('entity_properties');
+        }
+
+
+
+        $properties = $properties->get();
+        return Excel::download(new ReportsExports($properties), 
+        'reports.csv', \Maatwebsite\Excel\Excel::CSV);
+
     }
 
     /**
