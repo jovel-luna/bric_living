@@ -57,7 +57,7 @@ class Property extends Model implements Searchable
             $this->no_bric_bathrooms ?? '',
             $this->purchase_date ?? '',
             $this->status ?? '',
-            
+
         );
     }
 
@@ -89,6 +89,12 @@ class Property extends Model implements Searchable
     public function entity_properties()
     {
         return $this->hasOne(EntityProperties::class);
+    }
+
+    // get the location from which this property is located
+    public function location()
+    {
+        return $this->hasOne(Location::class, 'id');
     }
 
     public function acquisition()

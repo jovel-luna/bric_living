@@ -78,7 +78,7 @@
                         <div class="card-body">
                             <h6 class="m-0 font-weight-bold">{{ __('Property Phase') }}</h6>
                             <div class="form-group">
-                                <select class="duallistbox" multiple="multiple">
+                                <select class="duallistbox" multiple="multiple" name='property_phase[]'>
                                     <option value='Bric Property'>Bric Property</option>
                                     <option value='Inherited Tenant'>Inherited Tenant</option>
                                     <option value='In Development'>In Development</option>

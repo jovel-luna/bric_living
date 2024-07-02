@@ -61,11 +61,31 @@ class ReportController extends Controller
             $properties = Property::with('entity_properties');
         }
 
+        $cities = $request->cities;
+        if ($request->has('cities')){
+            $properties = Property::whereHas('location', function ($query) use ($cities) {
+                $query->whereIn('city', $cities);
+            })->with('location');
+        }
+        else {
+            $properties = Property::with('location');
+        }
+
+        $areas = $request->area;
+        if ($request->has('area')){
+            $properties = Property::whereHas('location', function ($query) use ($areas) {
+                $query->whereIn('area', $areas);
+            })->with('location');
+        }
+        else {
+            $properties = Property::with('location');
+        }
 
 
         $properties = $properties->get();
-        return Excel::download(new ReportsExports($properties), 
-        'reports.csv', \Maatwebsite\Excel\Excel::CSV);
+        Log::info($properties);
+        // return Excel::download(new ReportsExports($properties), 
+        // 'reports.csv', \Maatwebsite\Excel\Excel::CSV);
 
     }
 
